@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const withNx = require("@nrwl/next/plugins/with-nx");
 
 /**
@@ -8,14 +9,6 @@ const nextConfig = {
 		// Set this to true if you would like to to use SVGR
 		// See: https://github.com/gregberge/svgr
 		svgr: false,
-	},
-	output: "standalone",
-	webpackDevMiddleware: config => {
-		config.watchOptions = {
-			poll: 1000,
-			aggregateTimeout: 300,
-		};
-		return config;
 	},
 };
 

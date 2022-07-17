@@ -1,31 +1,6 @@
 version: "3.7"
 
 services:
-    frontend:
-        build:
-            context: .
-            dockerfile: ./apps/frontend/Dockerfile
-        container_name: finance.angelin.dev-frontend
-        restart: always
-        ports:
-            - 3080:3080
-        volumes:
-            - ./apps/frontend:/usr/src/app/apps/frontend
-            - ./apps/frontend/.next:/usr/src/app/apps/frontend/.next
-    api:
-        build:
-            context: .
-            dockerfile: ./apps/api/Dockerfile
-        container_name: finance.angelin.dev-api
-        restart: always
-        environment:
-            - PORT=3085
-        ports:
-            - 3085:3085
-        volumes:
-            - ./apps/api/src:/usr/src/app/apps/api/src
-        depends_on:
-            - db
     db:
         image: postgres
         restart: always
@@ -38,6 +13,5 @@ services:
             - POSTGRES_DB=finance
         ports:
             - 5432:5432
-
 volumes:
     db:
