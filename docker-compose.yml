@@ -2,20 +2,32 @@ version: "3.7"
 
 services:
     frontend:
-        build: apps/frontend
-        container_name: zeilar/finance.angelin.dev
+        build: .
+        container_name: finance.angelin.dev
+        restart: always
         depends_on:
             - postgres
         ports:
             - 3080:3080
+            - 3000:3000
         volumes:
-            - apps/frontend:/usr/src/app/
+            - ./apps/frontend:/usr/src/app/apps/frontend
+            - ./apps/frontend/.next:/usr/src/app/apps/frontend/.next
+            # - .:/usr/src/app/
+            # - /usr/src/app/node_modules
+            # - /usr/src/app/test
+            # - /usr/src/app/test/node_modules
     postgres:
         image: postgres
         restart: always
+        volumes:
+            - db:/var/lib/postgresql/data
         environment:
             - POSTGRES_USER=root
             - POSTGRES_PASSWORD=root
             - POSTGRES_DB=finance
         ports:
             - 5432:5432
+
+volumes:
+    db:
