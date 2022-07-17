@@ -6,17 +6,19 @@ COPY . .
 
 RUN npm i
 
-# FROM timbru31/node-alpine-git as main
+FROM timbru31/node-alpine-git as main
 
-# COPY --from=build /usr/src/app /usr/src/app
+COPY --from=build /usr/src/app /usr/src/app
 
 # RUN npm i -D @swc/cli @swc/core
 
 RUN npm i -g nx
 
-# WORKDIR /usr/src/app
+WORKDIR /usr/src/app
 
 CMD ["nx", "serve", "frontend", "--verbose"]
+
+
 
 # FROM node:16 as build
 
