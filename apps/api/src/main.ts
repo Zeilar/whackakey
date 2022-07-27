@@ -12,7 +12,7 @@ async function bootstrap() {
 	const GLOBAL_PREFIX = configService.get("GLOBAL_PREFIX", { infer: true });
 	const PORT = configService.get("PORT", { infer: true });
 
-	app.setGlobalPrefix(configService.get("GLOBAL_PREFIX", { infer: true }))
+	app.setGlobalPrefix(GLOBAL_PREFIX)
 		.use(
 			session({
 				secret: configService.get("SESSION_SECRET", { infer: true }),
