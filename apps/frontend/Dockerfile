@@ -14,4 +14,4 @@ RUN npm i -g nx
 
 WORKDIR /usr/src/app
 
-CMD ["nx", "serve", "frontend", "--verbose"]
+CMD ["nx", "serve", "frontend"]
