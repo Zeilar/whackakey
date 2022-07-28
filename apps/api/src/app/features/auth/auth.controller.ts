@@ -1,6 +1,6 @@
 import { Controller, Get, Req, Res, UseGuards } from "@nestjs/common";
 import { GithubOAuthGuard } from "../../common/guards/GitHubOAuth.guard";
-import { Response } from "express";
+import { Request, Response } from "express";
 
 @Controller("/auth")
 export class AuthController {
@@ -9,8 +9,15 @@ export class AuthController {
 	}
 
 	@Get("/whoami")
-	public whoami(@Req() req: Express.Request, @Res() res: Response) {
+	public whoami(@Req() req: Request, @Res() res: Response) {
 		req.isAuthenticated() ? res.send({ userId: req.user }) : res.sendStatus(401);
+	}
+
+	@Get("/logout")
+	public logout(@Req() req: Request, @Res() res: Response) {
+		req.logOut(() => {
+			res.redirect("/");
+		});
 	}
 
 	@Get("/github")
