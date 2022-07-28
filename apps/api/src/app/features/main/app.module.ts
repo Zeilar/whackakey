@@ -4,7 +4,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { Account } from "../account/account.entity";
 import { AccountModule } from "../account/account.module";
 import { AuthModule } from "../auth/auth.module";
-import envConfig from "../config/env";
+import envConfig from "../../config/env";
 import { User } from "../user/user.entity";
 import { UserModule } from "../user/user.module";
 import { AppController } from "./app.controller";

@@ -1,6 +1,6 @@
 import { Logger, ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
-import { AppModule } from "./app/main/app.module";
+import { AppModule } from "./app/features/main/app.module";
 import session from "express-session";
 import passport from "passport";
 import { ConfigService } from "@nestjs/config";

@@ -1,5 +1,5 @@
 import { Controller, Get, Req, Res, UseGuards } from "@nestjs/common";
-import { GithubOAuthGuard } from "../common/guards/GitHubOAuth.guard";
+import { GithubOAuthGuard } from "../../common/guards/GitHubOAuth.guard";
 import { Response } from "express";
 
 @Controller("/auth")

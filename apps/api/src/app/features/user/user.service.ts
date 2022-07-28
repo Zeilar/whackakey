@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { RegisterGitHubAccountDto } from "../../types/RegisterGitHubAccountDto";
+import { RegisterGitHubAccountDto } from "../../../types/RegisterGitHubAccountDto";
 import { Account } from "../account/account.entity";
 import { User } from "./user.entity";
 
