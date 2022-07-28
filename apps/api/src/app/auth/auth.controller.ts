@@ -1,27 +1,27 @@
-import { Controller, Get, Req, UseGuards } from "@nestjs/common";
+import { Controller, Get, Req, Res, UseGuards } from "@nestjs/common";
 import { GithubOAuthGuard } from "../common/guards/GitHubOAuth.guard";
-import { AuthService } from "./auth.service";
+import { Response } from "express";
 
 @Controller("/auth")
 export class AuthController {
-	constructor(private readonly authService: AuthService) {}
+	public constructor() {
+		//
+	}
 
 	@Get("/whoami")
-	public whoami(@Req() req: Express.Request) {
-		console.log(req.user);
-		return req.user;
+	public whoami(@Req() req: Express.Request, @Res() res: Response) {
+		req.isAuthenticated() ? res.send({ userId: req.user }) : res.sendStatus(401);
 	}
 
 	@Get("/github")
-	@UseGuards(GithubOAuthGuard)
-	public async github() {
+	@UseGuards(new GithubOAuthGuard())
+	public github() {
 		// Handled in GitHubOAuthGuard guard
 	}
 
 	@Get("/github/callback")
-	@UseGuards(GithubOAuthGuard)
-	public async githubCallback(@Req() req: Express.Request) {
-		console.log(req.authInfo, req.isAuthenticated());
-		console.log("USER", req.user);
+	@UseGuards(new GithubOAuthGuard())
+	public githubCallback(@Res() res: Response) {
+		res.redirect("/");
 	}
 }

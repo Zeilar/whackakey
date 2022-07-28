@@ -10,7 +10,7 @@ export class GithubOauthStrategy extends PassportStrategy(Strategy, "github") {
 	public constructor(private readonly userService: UserService, configService: ConfigService<EnvConfig, true>) {
 		super({
 			clientID: configService.get("OAUTH_GITHUB_CLIENT_ID", { infer: true }),
-			clientSecret: configService.get("OAUTH_GITHUB_CLIENT_ID", { infer: true }),
+			clientSecret: configService.get("OAUTH_GITHUB_SECRET", { infer: true }),
 			callbackURL: configService.get("OAUTH_GITHUB_CALLBACK_URL", { infer: true }),
 			scope: ["public_profile"],
 		});

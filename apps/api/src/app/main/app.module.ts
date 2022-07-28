@@ -12,8 +12,6 @@ import { AppService } from "./app.service";
 
 const { DB_HOST, DB_LOGGING, DB_NAME, DB_PASSWORD, DB_PORT, DB_SYNCHRONIZE, DB_TYPE, DB_USERNAME } = process.env;
 
-console.log(DB_PASSWORD);
-
 @Module({
 	imports: [
 		ConfigModule.forRoot({ load: [envConfig] }),
