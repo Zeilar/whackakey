@@ -8,6 +8,7 @@ import {
 	BaseEntity,
 } from "typeorm";
 import { Account } from "../account/account.entity";
+import { Transaction } from "../transaction/transaction.entity";
 
 @Entity()
 export class User extends BaseEntity {
@@ -16,6 +17,9 @@ export class User extends BaseEntity {
 
 	@OneToMany(() => Account, account => account.user, { cascade: true })
 	public accounts: Account[];
+
+	@OneToMany(() => Transaction, transaction => transaction.user, { cascade: true })
+	public transactions: Transaction[];
 
 	@Column({ unique: true })
 	public email: string;

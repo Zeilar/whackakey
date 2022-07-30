@@ -15,6 +15,10 @@ export class AuthController {
 
 	@Get("/logout")
 	public logout(@Req() req: Request, @Res() res: Response) {
+		if (req.isAuthenticated()) {
+			res.sendStatus(400);
+			return;
+		}
 		req.logOut(() => {
 			res.redirect("/");
 		});

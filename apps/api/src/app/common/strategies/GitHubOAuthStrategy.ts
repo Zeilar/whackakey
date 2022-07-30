@@ -1,18 +1,17 @@
 import { Injectable, BadRequestException } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
 import { PassportStrategy } from "@nestjs/passport";
 import { Profile, Strategy } from "passport-github2";
-import { EnvConfig } from "../../config/env";
+import config from "../../config";
 import { UserService } from "../../features/user/user.service";
 
 @Injectable()
 export class GithubOauthStrategy extends PassportStrategy(Strategy, "github") {
-	public constructor(private readonly userService: UserService, configService: ConfigService<EnvConfig, true>) {
+	public constructor(private readonly userService: UserService) {
 		super({
-			clientID: configService.get("OAUTH_GITHUB_CLIENT_ID", { infer: true }),
-			clientSecret: configService.get("OAUTH_GITHUB_SECRET", { infer: true }),
-			callbackURL: configService.get("OAUTH_GITHUB_CALLBACK_URL", { infer: true }),
-			scope: ["public_profile"],
+			clientID: config.oauth.github.clientId,
+			clientSecret: config.oauth.github.secret,
+			callbackURL: config.oauth.github.callbackUrl,
+			scope: config.oauth.github.scope,
 		});
 	}
 

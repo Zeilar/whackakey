@@ -1,5 +1,7 @@
 export {};
 
+import type { DatabaseType } from "node_modules/typeorm/driver/types/DatabaseType";
+
 type BooleanString = "true" | "false";
 
 declare global {
@@ -10,7 +12,7 @@ declare global {
 			CORS_ORIGIN: string;
 			SESSION_SECRET: string;
 			SECURE: BooleanString;
-			DB_TYPE: "mysql" | "postgres" | "mariadb" | "sqlite";
+			DB_TYPE: DatabaseType;
 			DB_HOST: string;
 			DB_PORT: string;
 			DB_USERNAME: string;
