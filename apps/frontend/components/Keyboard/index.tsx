@@ -9,18 +9,18 @@ const rows = [
 
 export default function Keyboard() {
 	return (
-		<Flex display="inline-flex" flexDir="column">
-			<Flex pl={8}>
+		<Flex display="inline-flex" flexDir="column" gap={4}>
+			<Flex pl={8} gap={2}>
 				{rows[0].map(key => (
 					<Key symbol={key} key={key} />
 				))}
 			</Flex>
-			<Flex mt="-2px" pl={14}>
+			<Flex pl={14} gap={2}>
 				{rows[1].map(key => (
 					<Key symbol={key} key={key} />
 				))}
 			</Flex>
-			<Flex mt="-2px">
+			<Flex gap={2}>
 				{rows[2].map(key => (
 					<Key symbol={key} key={key} />
 				))}

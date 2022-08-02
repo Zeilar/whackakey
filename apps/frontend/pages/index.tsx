@@ -3,15 +3,12 @@ import { useEffect, useState } from "react";
 import { alphabet } from "../common/constants";
 import Keyboard from "../components/Keyboard";
 import useLetterContext from "../hooks/useLetterContext";
-
-enum DifficultyTiming {
-	EASY = 1000,
-	MEDIUM = 500,
-	HARD = 250,
-}
+import useScoreContext from "../hooks/useScoreContext";
+import { DifficultyTiming } from "../types/game";
 
 export default function Index() {
 	const { letter, setIsLocked, setLetter } = useLetterContext();
+	const { score } = useScoreContext();
 	const [difficultyTiming, setDifficultyTiming] = useState<DifficultyTiming>(DifficultyTiming.EASY);
 	const [isPlaying, setIsPlaying] = useState(false);
 
@@ -47,7 +44,8 @@ export default function Index() {
 				{!isPlaying && <button onClick={() => setIsPlaying(true)}>play</button>}
 				{isPlaying && <button onClick={() => setIsPlaying(false)}>stop</button>}
 			</Box>
-			<Flex flexDir="column" gap={10}>
+			<Flex flexDir="column" gap={10} justifyContent="center" alignItems="center">
+				<h1>{score}</h1>
 				<h1>{letter ?? "..."}</h1>
 				<Keyboard />
 			</Flex>

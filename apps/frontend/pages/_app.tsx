@@ -2,6 +2,7 @@ import { AppProps } from "next/app";
 import Head from "next/head";
 import { ChakraProvider, CSSReset } from "@chakra-ui/react";
 import { LetterContextProvider } from "../contexts/LetterContext";
+import { ScoreContextProvider } from "../contexts/ScoreContext";
 
 function CustomApp({ Component, pageProps }: AppProps) {
 	return (
@@ -11,10 +12,12 @@ function CustomApp({ Component, pageProps }: AppProps) {
 			</Head>
 			<ChakraProvider>
 				<LetterContextProvider>
-					<CSSReset />
-					<main>
-						<Component {...pageProps} />
-					</main>
+					<ScoreContextProvider>
+						<CSSReset />
+						<main>
+							<Component {...pageProps} />
+						</main>
+					</ScoreContextProvider>
 				</LetterContextProvider>
 			</ChakraProvider>
 		</>
