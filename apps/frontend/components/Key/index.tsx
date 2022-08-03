@@ -1,4 +1,5 @@
-import { Box, Text } from "@chakra-ui/react";
+import { Flex, Text } from "@chakra-ui/react";
+import { playAudio } from "apps/frontend/common/helpers";
 import useLetterContext from "apps/frontend/hooks/useLetterContext";
 import useScoreContext from "apps/frontend/hooks/useScoreContext";
 import { useEffect, useMemo, useState } from "react";
@@ -15,11 +16,13 @@ export default function Key({ symbol }: Props) {
 
 	useEffect(() => {
 		function onKeyDown(e: KeyboardEvent) {
-			if (e.key !== symbol) {
+			if (e.key !== symbol || isPressed) {
 				return;
 			}
 			setIsPressed(true);
 			if (isLocked) {
+				console.log(isLocked, isPressed);
+				playAudio("click");
 				return;
 			}
 			setIsLocked(true);
@@ -41,25 +44,23 @@ export default function Key({ symbol }: Props) {
 			document.removeEventListener("keydown", onKeyDown);
 			document.removeEventListener("keyup", onKeyUp);
 		};
-	}, [symbol, letter, setIsLocked, isLocked]);
-
-	function getBgColor() {
-		return isPressed ? "blackAlpha.200" : undefined;
-	}
+	}, [symbol, letter, setIsLocked, isLocked, hit, miss]);
 
 	return (
-		<Box
+		<Flex
+			justifyContent="center"
+			alignItems="center"
 			w={100}
 			h={100}
-			borderWidth={2}
-			borderColor="black"
-			bgColor={getBgColor()}
-			transition="0.15s ease-in-out"
-			transform={`translateY(${isPressed ? -10 : 0}px)`}
+			bgColor={isPressed ? "whiteAlpha.700" : "whiteAlpha.800"}
+			borderWidth={4}
+			borderColor="whiteAlpha.900"
+			rounded="xl"
+			boxShadow="var(--chakra-shadows-lg), 0 0 8px 0 inset rgba(0, 0, 0, 0.25)"
 		>
-			<Text textTransform="uppercase" fontWeight="bold" fontSize="2xl" ml={2}>
+			<Text textTransform="uppercase" fontWeight="bold" fontSize="4xl" userSelect="none" color="blue.700">
 				{symbol}
 			</Text>
-		</Box>
+		</Flex>
 	);
 }

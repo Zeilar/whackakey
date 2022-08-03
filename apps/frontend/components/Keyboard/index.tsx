@@ -20,7 +20,7 @@ export default function Keyboard() {
 					<Key symbol={key} key={key} />
 				))}
 			</Flex>
-			<Flex gap={2}>
+			<Flex pl={24} gap={2}>
 				{rows[2].map(key => (
 					<Key symbol={key} key={key} />
 				))}

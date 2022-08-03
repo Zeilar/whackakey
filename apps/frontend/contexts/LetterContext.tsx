@@ -14,7 +14,7 @@ interface LetterProps {
 export const LetterContext = createContext({} as LetterContext);
 
 export function LetterContextProvider({ children }: LetterProps) {
-	const [isLocked, setIsLocked] = useState(false);
+	const [isLocked, setIsLocked] = useState(true);
 	const [letter, setLetter] = useState<string | null>(null);
 
 	const values: LetterContext = {
