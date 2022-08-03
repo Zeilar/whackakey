@@ -21,7 +21,6 @@ export default function Key({ symbol }: Props) {
 			}
 			setIsPressed(true);
 			if (isLocked) {
-				console.log(isLocked, isPressed);
 				playAudio("click");
 				return;
 			}
@@ -44,7 +43,7 @@ export default function Key({ symbol }: Props) {
 			document.removeEventListener("keydown", onKeyDown);
 			document.removeEventListener("keyup", onKeyUp);
 		};
-	}, [symbol, letter, setIsLocked, isLocked, hit, miss]);
+	}, [symbol, letter, setIsLocked, isLocked, hit, miss, isPressed]);
 
 	return (
 		<Flex
@@ -52,11 +51,11 @@ export default function Key({ symbol }: Props) {
 			alignItems="center"
 			w={100}
 			h={100}
-			bgColor={isPressed ? "whiteAlpha.700" : "whiteAlpha.800"}
+			bgColor={isPressed ? "whiteAlpha.800" : "whiteAlpha.900"}
 			borderWidth={4}
-			borderColor="whiteAlpha.900"
+			borderColor="blackAlpha.300"
 			rounded="xl"
-			boxShadow="var(--chakra-shadows-lg), 0 0 8px 0 inset rgba(0, 0, 0, 0.25)"
+			boxShadow="var(--chakra-shadows-lg), 0 0 5px 0 inset rgba(0, 0, 0, 0.1)"
 		>
 			<Text textTransform="uppercase" fontWeight="bold" fontSize="4xl" userSelect="none" color="blue.700">
 				{symbol}
