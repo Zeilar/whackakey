@@ -6,11 +6,6 @@ const key: ButtonProps = {
 	borderColor: "blackAlpha.300",
 	boxShadow: "var(--chakra-shadows-lg), 0 0 5px 0 inset rgba(0, 0, 0, 0.1)",
 	bgColor: "whiteAlpha.900",
-	_focus: {
-		outlineOffset: 5,
-		outlineColor: "blue.300",
-		outlineWidth: 5,
-	},
 	_hover: {
 		bgColor: "whiteAlpha.800",
 	},
@@ -22,6 +17,14 @@ export const Button: StyleConfig = {
 		color: "gray.700",
 		rounded: "3xl",
 		fontWeight: 500,
+		_focusVisible: {
+			boxShadow: "none",
+		},
+		_focus: {
+			outlineOffset: 4,
+			outlineColor: "blue.300",
+			outlineWidth: 4,
+		},
 	},
 	sizes: {
 		xl: {
