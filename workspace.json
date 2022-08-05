@@ -4,6 +4,7 @@
 	"projects": {
 		"api": "apps/api",
 		"frontend": "apps/frontend",
-		"shared": "libs/shared"
+		"shared": "libs/shared",
+		"theme": "libs/theme"
 	}
 }

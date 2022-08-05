@@ -1,49 +1,42 @@
 {
-  "$schema": "./node_modules/nx/schemas/nx-schema.json",
-  "npmScope": "finance",
-  "affected": {
-    "defaultBase": "master"
-  },
-  "implicitDependencies": {
-    "package.json": {
-      "dependencies": "*",
-      "devDependencies": "*"
-    },
-    ".eslintrc.json": "*"
-  },
-  "tasksRunnerOptions": {
-    "default": {
-      "runner": "@nrwl/nx-cloud",
-      "options": {
-        "cacheableOperations": [
-          "build",
-          "lint",
-          "test",
-          "e2e"
-        ],
-        "accessToken": "NTQzZmFiNjItZjY5Yi00MmIyLTlhMjUtZWU3Y2VhZmE4NDQ3fHJlYWQtd3JpdGU="
-      }
-    }
-  },
-  "targetDefaults": {
-    "build": {
-      "dependsOn": [
-        "^build"
-      ]
-    }
-  },
-  "generators": {
-    "@nrwl/react": {
-      "application": {
-        "babel": true
-      }
-    },
-    "@nrwl/next": {
-      "application": {
-        "style": "css",
-        "linter": "eslint"
-      }
-    }
-  },
-  "defaultProject": "frontend"
+	"$schema": "./node_modules/nx/schemas/nx-schema.json",
+	"npmScope": "finance",
+	"affected": {
+		"defaultBase": "master"
+	},
+	"implicitDependencies": {
+		"package.json": {
+			"dependencies": "*",
+			"devDependencies": "*"
+		},
+		".eslintrc.json": "*"
+	},
+	"tasksRunnerOptions": {
+		"default": {
+			"runner": "@nrwl/nx-cloud",
+			"options": {
+				"cacheableOperations": ["build", "lint", "test", "e2e"],
+				"accessToken": "NTQzZmFiNjItZjY5Yi00MmIyLTlhMjUtZWU3Y2VhZmE4NDQ3fHJlYWQtd3JpdGU="
+			}
+		}
+	},
+	"targetDefaults": {
+		"build": {
+			"dependsOn": ["^build"]
+		}
+	},
+	"generators": {
+		"@nrwl/react": {
+			"application": {
+				"babel": true
+			}
+		},
+		"@nrwl/next": {
+			"application": {
+				"style": "css",
+				"linter": "eslint"
+			}
+		}
+	},
+	"defaultProject": "frontend"
 }

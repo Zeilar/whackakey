@@ -7,9 +7,11 @@ export default function SoundToggler() {
 	return (
 		<Portal>
 			<IconButton
+				color="gray.100"
 				pos="fixed"
 				top={10}
 				left={10}
+				stroke="blue.900"
 				variant="unstyled"
 				onClick={toggle}
 				aria-label="toggle sound"

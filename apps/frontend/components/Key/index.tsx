@@ -1,7 +1,6 @@
 import { Flex, Text } from "@chakra-ui/react";
-import { playAudio } from "apps/frontend/common/helpers";
-import useLetterContext from "apps/frontend/hooks/useLetterContext";
-import useScoreContext from "apps/frontend/hooks/useScoreContext";
+import useGameContext from "apps/frontend/hooks/useGameContext";
+import useSoundContext from "apps/frontend/hooks/useSoundContext";
 import { useEffect, useMemo, useState } from "react";
 
 interface Props {
@@ -9,8 +8,8 @@ interface Props {
 }
 
 export default function Key({ symbol }: Props) {
-	const { letter, isLocked, setIsLocked } = useLetterContext();
-	const { hit, miss } = useScoreContext();
+	const { hit, miss, letter, isLocked, setIsLocked } = useGameContext();
+	const { playAudio } = useSoundContext();
 	const [isPressed, setIsPressed] = useState(false);
 	const isActive = useMemo(() => letter === symbol, [letter, symbol]);
 
@@ -43,7 +42,7 @@ export default function Key({ symbol }: Props) {
 			document.removeEventListener("keydown", onKeyDown);
 			document.removeEventListener("keyup", onKeyUp);
 		};
-	}, [symbol, letter, setIsLocked, isLocked, hit, miss, isPressed]);
+	}, [symbol, letter, setIsLocked, isLocked, hit, miss, isPressed, playAudio]);
 
 	return (
 		<Flex

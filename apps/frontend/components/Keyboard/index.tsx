@@ -10,17 +10,17 @@ const rows = [
 export default function Keyboard() {
 	return (
 		<Flex display="inline-flex" flexDir="column" gap={4}>
-			<Flex pl={8} gap={2}>
+			<Flex pl={8} gap={4}>
 				{rows[0].map(key => (
 					<Key symbol={key} key={key} />
 				))}
 			</Flex>
-			<Flex pl={14} gap={2}>
+			<Flex pl={14} gap={4}>
 				{rows[1].map(key => (
 					<Key symbol={key} key={key} />
 				))}
 			</Flex>
-			<Flex pl={24} gap={2}>
+			<Flex pl={24} gap={4}>
 				{rows[2].map(key => (
 					<Key symbol={key} key={key} />
 				))}
