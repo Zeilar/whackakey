@@ -8,14 +8,14 @@ interface Props {
 }
 
 export default function Key({ symbol }: Props) {
-	const { hit, miss, letter, isLocked, setIsLocked } = useGameContext();
+	const { hit, miss, letter, isLocked, setIsLocked, isPlaying } = useGameContext();
 	const { playAudio } = useSoundContext();
 	const [isPressed, setIsPressed] = useState(false);
 	const isActive = useMemo(() => letter === symbol, [letter, symbol]);
 
 	useEffect(() => {
 		function onKeyDown(e: KeyboardEvent) {
-			if (e.key !== symbol || isPressed) {
+			if (e.key !== symbol || isPressed || !isPlaying) {
 				return;
 			}
 			setIsPressed(true);
@@ -42,7 +42,7 @@ export default function Key({ symbol }: Props) {
 			document.removeEventListener("keydown", onKeyDown);
 			document.removeEventListener("keyup", onKeyUp);
 		};
-	}, [symbol, letter, setIsLocked, isLocked, hit, miss, isPressed, playAudio]);
+	}, [symbol, letter, setIsLocked, isLocked, hit, miss, isPressed, playAudio, isPlaying]);
 
 	return (
 		<Flex

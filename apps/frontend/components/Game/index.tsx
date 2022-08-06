@@ -1,4 +1,4 @@
-import { Flex } from "@chakra-ui/react";
+import { Flex, Heading } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { alphabet } from "../../common/constants";
 import Keyboard from "../../components/Keyboard";
@@ -25,7 +25,7 @@ export default function Game() {
 
 	return (
 		<Flex flexDir="column" gap={10} justifyContent="center" alignItems="center">
-			<h1>{score}</h1>
+			<Heading>{score}</Heading>
 			<h1>{letter ?? "..."}</h1>
 			<Keyboard />
 		</Flex>
