@@ -1,4 +1,5 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useCallback, useEffect, useState } from "react";
+import { SoundFileName } from "../types/sound";
 
 interface SoundContext {
 	isMuted: boolean;
@@ -27,14 +28,17 @@ export function SoundContextProvider({ children }: SoundProps) {
 		setIsMuted(p => !p);
 	}
 
-	function playAudio(path: string) {
-		if (isMuted) {
-			return;
-		}
-		const audio = new Audio(`/assets/sound/${path}.wav`);
-		audio.volume = volume;
-		audio.play();
-	}
+	const playAudio = useCallback(
+		(path: SoundFileName) => {
+			if (isMuted) {
+				return;
+			}
+			const audio = new Audio(`/assets/sound/${path}.wav`);
+			audio.volume = volume;
+			audio.play();
+		},
+		[isMuted, volume]
+	);
 
 	const values: SoundContext = {
 		isMuted,

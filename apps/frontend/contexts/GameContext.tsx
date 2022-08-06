@@ -16,6 +16,7 @@ interface GameContext {
 	score: number;
 	hit(): void;
 	miss(): void;
+	play(): void;
 }
 
 interface GameProps {
@@ -32,6 +33,13 @@ export function GameContextProvider({ children }: GameProps) {
 	const [score, setScore] = useState(0);
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [difficultyTiming, setDifficultyTiming] = useState(DifficultyTiming.EASY);
+
+	function play() {
+		setIsLocked(true);
+		setLetter(null);
+		setScore(0);
+		setIsPlaying(true);
+	}
 
 	function hit() {
 		playAudio("hit");
@@ -55,6 +63,7 @@ export function GameContextProvider({ children }: GameProps) {
 		score,
 		hit,
 		miss,
+		play,
 	};
 
 	return <GameContext.Provider value={values}>{children}</GameContext.Provider>;

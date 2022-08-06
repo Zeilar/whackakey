@@ -6,6 +6,8 @@ const key: ButtonProps = {
 	borderColor: "blackAlpha.300",
 	boxShadow: "var(--chakra-shadows-lg), 0 0 5px 0 inset rgba(0, 0, 0, 0.1)",
 	bgColor: "whiteAlpha.900",
+	fontFamily: "Fredoka One, sans-serif",
+	textTransform: "uppercase",
 	_hover: {
 		bgColor: "whiteAlpha.800",
 	},
@@ -28,8 +30,6 @@ export const Button: StyleConfig = {
 	},
 	sizes: {
 		xl: {
-			fontFamily: "Fredoka One, sans-serif",
-			textTransform: "uppercase",
 			fontSize: "4xl",
 			py: 6,
 			px: 20,

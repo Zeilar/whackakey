@@ -1,10 +1,12 @@
-import { Button, Flex, IconButton, Text } from "@chakra-ui/react";
+import { Button, Flex, IconButton, Link, Text } from "@chakra-ui/react";
 import { Difficulty } from "@shared";
 import { ArrowLeft } from "@styled-icons/evaicons-solid/ArrowLeft";
 import { ArrowRight } from "@styled-icons/evaicons-solid/ArrowRight";
 import useGameContext from "apps/frontend/hooks/useGameContext";
+import useSoundContext from "apps/frontend/hooks/useSoundContext";
 import { DifficultyTiming } from "apps/frontend/types/game";
 import { useCallback, useEffect, useRef, useState } from "react";
+import NextLink from "next/link";
 
 interface DifficultyItemProps {
 	onChange(difficultyTiming: DifficultyTiming): void;
@@ -16,20 +18,22 @@ const difficultiesMap: Record<Difficulty, DifficultyTiming> = {
 	medium: DifficultyTiming.MEDIUM,
 	hard: DifficultyTiming.HARD,
 };
-
 const difficultyColors = ["green.500", "yellow.500", "red.500"];
 
 function DifficultyItem({ onChange }: DifficultyItemProps) {
+	const { playAudio } = useSoundContext();
 	const [selected, setSelected] = useState(0);
 	const ref = useRef<HTMLDivElement>(null);
 
 	const previous = useCallback(() => {
 		setSelected(p => (selected - 1 in difficulties ? p - 1 : difficulties.length - 1));
-	}, [selected]);
+		playAudio("click-2");
+	}, [selected, playAudio]);
 
 	const next = useCallback(() => {
 		setSelected(p => (selected + 1 in difficulties ? p + 1 : 0));
-	}, [selected]);
+		playAudio("click-2");
+	}, [selected, playAudio]);
 
 	useEffect(() => {
 		function onKeyDown(e: KeyboardEvent) {
@@ -91,11 +95,7 @@ function DifficultyItem({ onChange }: DifficultyItemProps) {
 }
 
 export default function Menu() {
-	const { setIsPlaying, setDifficultyTiming } = useGameContext();
-
-	function play() {
-		setIsPlaying(true);
-	}
+	const { play, setDifficultyTiming } = useGameContext();
 
 	return (
 		<Flex as="nav" gap={4} flexDir="column" width={500}>
@@ -103,9 +103,11 @@ export default function Menu() {
 				Play
 			</Button>
 			<DifficultyItem onChange={setDifficultyTiming} />
-			<Button variant="key" size="xl">
-				How to play
-			</Button>
+			<NextLink passHref href="/tutorial">
+				<Button variant="key" size="xl" as={Link} _hover={{ textDecor: "none" }}>
+					How to play
+				</Button>
+			</NextLink>
 		</Flex>
 	);
 }

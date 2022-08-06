@@ -3,6 +3,12 @@
 	"sourceRoot": "libs/theme/src",
 	"projectType": "library",
 	"targets": {
+		"types": {
+			"executor": "nx:run-commands",
+			"options": {
+				"command": "chakra-cli tokens libs/theme/src/lib/index.ts"
+			}
+		},
 		"lint": {
 			"executor": "@nrwl/linter:eslint",
 			"outputs": ["{options.outputFile}"],

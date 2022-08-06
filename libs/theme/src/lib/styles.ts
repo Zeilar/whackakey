@@ -1,25 +1,17 @@
 export const styles = {
 	global: {
 		body: {
-			color: "text",
+			color: "blue.900",
+			h: "100vh",
 		},
 		"#__next": {
-			h: "100vh",
+			h: "100%",
 			display: "flex",
 			flexDir: "column",
 		},
 		"::selection": {
-			bgColor: "blackAlpha.700",
-			color: "accent",
-		},
-		"*, *::before, *::after": {
-			borderColor: "border",
-		},
-		"ul:not([role=list]), ul:not([role=list])": {
-			listStyleType: "none",
-		},
-		"svg, img": {
-			userSelect: "none",
+			bgColor: "blackAlpha.900",
+			color: "blue.700",
 		},
 	},
 };

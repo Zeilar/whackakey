@@ -5,6 +5,7 @@ import { ChakraProvider, CSSReset, Flex } from "@chakra-ui/react";
 import { SoundContextProvider } from "../contexts/SoundContext";
 import theme from "@theme";
 import { GameContextProvider } from "../contexts/GameContext";
+import Header from "../components/Header";
 
 function CustomApp({ Component, pageProps }: AppProps) {
 	return (
@@ -13,9 +14,9 @@ function CustomApp({ Component, pageProps }: AppProps) {
 				<title>Whack a key</title>
 			</Head>
 			<ChakraProvider theme={theme}>
+				<CSSReset />
 				<SoundContextProvider>
 					<GameContextProvider>
-						<CSSReset />
 						<Flex
 							h="100%"
 							justifyContent="center"
@@ -24,6 +25,7 @@ function CustomApp({ Component, pageProps }: AppProps) {
 							bgColor="blue.700"
 							bgSize="1.5em 1.5em"
 						>
+							<Header />
 							<Component {...pageProps} />
 						</Flex>
 					</GameContextProvider>
