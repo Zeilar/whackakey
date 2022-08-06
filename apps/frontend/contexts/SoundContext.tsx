@@ -14,7 +14,7 @@ interface SoundProps {
 
 export const SoundContext = createContext({} as SoundContext);
 
-const DEFAULT_VOLUME = 0.35;
+const DEFAULT_VOLUME = 0.1;
 
 export function SoundContextProvider({ children }: SoundProps) {
 	const [isMuted, setIsMuted] = useState(false);

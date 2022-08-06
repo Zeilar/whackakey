@@ -7,6 +7,7 @@ export default function SoundToggler() {
 	return (
 		<Portal>
 			<IconButton
+				w={4}
 				color="gray.100"
 				pos="fixed"
 				top={10}

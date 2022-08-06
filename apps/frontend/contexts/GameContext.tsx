@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import useSoundContext from "../hooks/useSoundContext";
 import { DifficultyTiming, Point } from "../types/game";
 
@@ -17,6 +17,7 @@ interface GameContext {
 	hit(): void;
 	miss(): void;
 	play(): void;
+	reset(): void;
 }
 
 interface GameProps {
@@ -34,11 +35,27 @@ export function GameContextProvider({ children }: GameProps) {
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [difficultyTiming, setDifficultyTiming] = useState(DifficultyTiming.EASY);
 
+	useEffect(() => {
+		const difficultyTiming = localStorage.getItem("difficultyTiming");
+		setDifficultyTiming(difficultyTiming ? JSON.parse(difficultyTiming) : DifficultyTiming.EASY);
+	}, []);
+
+	useEffect(() => {
+		localStorage.setItem("difficultyTiming", JSON.stringify(difficultyTiming));
+	}, [difficultyTiming]);
+
 	function play() {
 		setIsLocked(true);
 		setLetter(null);
 		setScore(0);
 		setIsPlaying(true);
+	}
+
+	function reset() {
+		setIsLocked(true);
+		setLetter(null);
+		setScore(0);
+		setIsPlaying(false);
 	}
 
 	function hit() {
@@ -64,6 +81,7 @@ export function GameContextProvider({ children }: GameProps) {
 		hit,
 		miss,
 		play,
+		reset,
 	};
 
 	return <GameContext.Provider value={values}>{children}</GameContext.Provider>;

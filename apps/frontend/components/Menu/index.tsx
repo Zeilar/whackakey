@@ -24,13 +24,17 @@ function DifficultyItem({ onChange }: DifficultyItemProps) {
 	const { playAudio } = useSoundContext();
 	const [selected, setSelected] = useState(0);
 	const ref = useRef<HTMLDivElement>(null);
+	const previousButton = useRef<HTMLButtonElement>(null);
+	const nextButton = useRef<HTMLButtonElement>(null);
 
 	const previous = useCallback(() => {
+		previousButton.current?.focus();
 		setSelected(p => (selected - 1 in difficulties ? p - 1 : difficulties.length - 1));
 		playAudio("click-2");
 	}, [selected, playAudio]);
 
 	const next = useCallback(() => {
+		nextButton.current?.focus();
 		setSelected(p => (selected + 1 in difficulties ? p + 1 : 0));
 		playAudio("click-2");
 	}, [selected, playAudio]);
@@ -70,6 +74,8 @@ function DifficultyItem({ onChange }: DifficultyItemProps) {
 			_hover={{}}
 		>
 			<IconButton
+				ref={previousButton}
+				w={4}
 				variant="unstyled"
 				aria-label="previous difficulty"
 				icon={<ArrowLeft />}
@@ -82,6 +88,8 @@ function DifficultyItem({ onChange }: DifficultyItemProps) {
 				{difficulties[selected]}
 			</Text>
 			<IconButton
+				ref={nextButton}
+				w={4}
 				variant="unstyled"
 				aria-label="next difficulty"
 				icon={<ArrowRight />}
