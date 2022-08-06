@@ -1,17 +1,46 @@
 import { Flex, Text } from "@chakra-ui/react";
 import useGameContext from "apps/frontend/hooks/useGameContext";
 import useSoundContext from "apps/frontend/hooks/useSoundContext";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 interface Props {
 	symbol: string;
 }
 
 export default function Key({ symbol }: Props) {
-	const { hit, miss, letter, isLocked, setIsLocked, isPlaying } = useGameContext();
+	const { hit, miss, letter, isLocked, setIsLocked, isPlaying, difficultyTiming } = useGameContext();
 	const { playAudio } = useSoundContext();
 	const [isPressed, setIsPressed] = useState(false);
+	const [isError, setIsError] = useState(false);
+	const [isSuccess, setIsSuccess] = useState(false);
 	const isActive = useMemo(() => letter === symbol, [letter, symbol]);
+	const errorRef = useRef<number | null>(null);
+	const successRef = useRef<number | null>(null);
+
+	const error = useCallback(() => {
+		setIsError(true);
+		errorRef.current = window.setTimeout(() => {
+			setIsError(false);
+		}, difficultyTiming);
+	}, [difficultyTiming]);
+
+	const success = useCallback(() => {
+		setIsSuccess(true);
+		successRef.current = window.setTimeout(() => {
+			setIsSuccess(false);
+		}, difficultyTiming);
+	}, [difficultyTiming]);
+
+	useEffect(() => {
+		setIsError(false);
+		setIsSuccess(false);
+		if (errorRef.current) {
+			clearTimeout(errorRef.current);
+		}
+		if (successRef.current) {
+			clearTimeout(successRef.current);
+		}
+	}, [letter]);
 
 	useEffect(() => {
 		function onKeyDown(e: KeyboardEvent) {
@@ -25,30 +54,55 @@ export default function Key({ symbol }: Props) {
 			}
 			setIsLocked(true);
 			if (e.key === letter) {
+				success();
 				hit();
 			} else {
+				error();
 				miss();
 			}
 		}
+
 		function onKeyUp(e: KeyboardEvent) {
 			if (e.key !== symbol) {
 				return;
 			}
 			setIsPressed(false);
 		}
+
 		document.addEventListener("keydown", onKeyDown);
 		document.addEventListener("keyup", onKeyUp);
+
 		return () => {
 			document.removeEventListener("keydown", onKeyDown);
 			document.removeEventListener("keyup", onKeyUp);
 		};
-	}, [symbol, letter, setIsLocked, isLocked, hit, miss, isPressed, playAudio, isPlaying]);
+	}, [symbol, letter, setIsLocked, isLocked, hit, miss, isPressed, playAudio, isPlaying, success, error]);
+
+	function color() {
+		if (isError || isSuccess) {
+			return "gray.100";
+		}
+		return isActive ? "gray.100" : "blue.700";
+	}
 
 	function bgColor() {
+		if (isError) {
+			return "red.500";
+		}
+		if (isSuccess) {
+			return "green.500";
+		}
 		if (isActive) {
 			return "blue.300";
 		}
 		return isPressed ? "whiteAlpha.800" : "whiteAlpha.900";
+	}
+
+	function borderColor() {
+		if (isError || isSuccess || !isActive) {
+			return "blackAlpha.300";
+		}
+		return "blue.200";
 	}
 
 	return (
@@ -59,17 +113,11 @@ export default function Key({ symbol }: Props) {
 			h={100}
 			bgColor={bgColor()}
 			borderWidth={4}
-			borderColor={isActive ? "blue.200" : "blackAlpha.300"}
+			borderColor={borderColor()}
 			rounded="xl"
 			boxShadow="var(--chakra-shadows-lg), 0 0 5px 0 inset rgba(0, 0, 0, 0.1)"
 		>
-			<Text
-				textTransform="uppercase"
-				fontWeight="bold"
-				fontSize="4xl"
-				userSelect="none"
-				color={isActive ? "gray.100" : "blue.700"}
-			>
+			<Text textTransform="uppercase" fontWeight="bold" fontSize="4xl" userSelect="none" color={color()}>
 				{symbol}
 			</Text>
 		</Flex>
