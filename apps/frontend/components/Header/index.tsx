@@ -6,7 +6,7 @@ function Item(props: ButtonProps) {
 
 export default function Header() {
 	return (
-		<Flex as="header" pos="fixed" top={10} left="50%" transform="translateX(-50%)" gap={4}>
+		<Flex as="header" pos="fixed" top={10} left="50%" transform="translateX(-50%)" gap={4} letterSpacing={3}>
 			<Item>Whack</Item>
 			<Item>A</Item>
 			<Item>Key</Item>

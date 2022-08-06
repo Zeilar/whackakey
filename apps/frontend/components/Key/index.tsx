@@ -44,19 +44,32 @@ export default function Key({ symbol }: Props) {
 		};
 	}, [symbol, letter, setIsLocked, isLocked, hit, miss, isPressed, playAudio, isPlaying]);
 
+	function bgColor() {
+		if (isActive) {
+			return "blue.300";
+		}
+		return isPressed ? "whiteAlpha.800" : "whiteAlpha.900";
+	}
+
 	return (
 		<Flex
 			justifyContent="center"
 			alignItems="center"
 			w={100}
 			h={100}
-			bgColor={isPressed ? "whiteAlpha.800" : "whiteAlpha.900"}
+			bgColor={bgColor()}
 			borderWidth={4}
-			borderColor="blackAlpha.300"
+			borderColor={isActive ? "blue.200" : "blackAlpha.300"}
 			rounded="xl"
 			boxShadow="var(--chakra-shadows-lg), 0 0 5px 0 inset rgba(0, 0, 0, 0.1)"
 		>
-			<Text textTransform="uppercase" fontWeight="bold" fontSize="4xl" userSelect="none" color="blue.700">
+			<Text
+				textTransform="uppercase"
+				fontWeight="bold"
+				fontSize="4xl"
+				userSelect="none"
+				color={isActive ? "gray.100" : "blue.700"}
+			>
 				{symbol}
 			</Text>
 		</Flex>

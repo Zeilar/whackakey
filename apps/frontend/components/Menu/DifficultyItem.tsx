@@ -75,6 +75,7 @@ export default function DifficultyItem({ onChange }: DifficultyItemProps) {
 				ref={previousButton}
 				w={4}
 				variant="unstyled"
+				rounded="full"
 				aria-label="previous difficulty"
 				icon={<ArrowLeft />}
 				size="lg"
@@ -89,6 +90,7 @@ export default function DifficultyItem({ onChange }: DifficultyItemProps) {
 				ref={nextButton}
 				w={4}
 				variant="unstyled"
+				rounded="full"
 				aria-label="next difficulty"
 				icon={<ArrowRight />}
 				size="lg"

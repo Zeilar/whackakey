@@ -8,6 +8,7 @@ const key: ButtonProps = {
 	bgColor: "whiteAlpha.900",
 	fontFamily: "Fredoka One, sans-serif",
 	textTransform: "uppercase",
+	rounded: "xl",
 	_hover: {
 		bgColor: "whiteAlpha.800",
 	},
@@ -17,15 +18,14 @@ const key: ButtonProps = {
 export const Button: StyleConfig = {
 	baseStyle: {
 		color: "gray.700",
-		rounded: "3xl",
 		fontWeight: 500,
 		_focusVisible: {
 			boxShadow: "none",
 		},
 		_focus: {
 			outlineOffset: 4,
-			outlineColor: "blue.300",
 			outlineWidth: 4,
+			outlineColor: "blue.300",
 		},
 	},
 	sizes: {

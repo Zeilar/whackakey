@@ -5,7 +5,7 @@ import Keyboard from "../../components/Keyboard";
 import useGameContext from "../../hooks/useGameContext";
 
 export default function Game() {
-	const { score, letter, setIsLocked, setLetter, difficultyTiming } = useGameContext();
+	const { score, setIsLocked, setLetter, difficultyTiming } = useGameContext();
 
 	useEffect(() => {
 		let timeout: number;
@@ -25,8 +25,14 @@ export default function Game() {
 
 	return (
 		<Flex flexDir="column" gap={10} justifyContent="center" alignItems="center">
-			<Heading>{score}</Heading>
-			<h1>{letter ?? "..."}</h1>
+			<Heading
+				color="gray.100"
+				letterSpacing={4}
+				size="4xl"
+				sx={{ WebkitTextStrokeWidth: 1, WebkitTextStrokeColor: "var(--chakra-colors-blue-300)" }}
+			>
+				{score}
+			</Heading>
 			<Keyboard />
 		</Flex>
 	);

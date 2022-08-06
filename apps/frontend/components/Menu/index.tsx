@@ -25,17 +25,29 @@ export default function Menu() {
 		};
 	}, [countdown, play, isCountingDown]);
 
+	function countdownColor() {
+		if (countdown === 3) {
+			return "red.500";
+		}
+		if (countdown === 2) {
+			return "yellow.500";
+		}
+		if (countdown === 1) {
+			return "green.500";
+		}
+	}
+
 	if (isCountingDown) {
-		return (
+		return countdown > 0 ? (
 			<Heading
 				userSelect="none"
 				fontSize="10rem"
-				color="gray.100"
-				sx={{ WebkitTextStrokeWidth: 1, WebkitTextStrokeColor: "var(--chakra-colors-blue-300)" }}
+				sx={{ WebkitTextStrokeWidth: 1, WebkitTextStrokeColor: "var(--chakra-colors-blackAlpha-900)" }}
+				color={countdownColor()}
 			>
 				{countdown}
 			</Heading>
-		);
+		) : null;
 	}
 
 	return (
