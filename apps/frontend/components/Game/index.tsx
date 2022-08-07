@@ -1,10 +1,10 @@
-import { Flex, Heading } from "@chakra-ui/react";
+import { Button, Flex, Heading } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 import Keyboard from "../../components/Keyboard";
 import useGameContext from "../../hooks/useGameContext";
 
 export default function Game() {
-	const { score, letter, randomLetter, difficultyTiming, isGameOver, userInput, miss, hasPicked, lives } =
+	const { score, letter, randomLetter, difficultyTiming, isGameOver, userInput, miss, hasPicked, lives, reset } =
 		useGameContext();
 	const [nextDeadline, setNextDeadline] = useState<number>(new Date().getTime() + difficultyTiming);
 	const timeoutRef = useRef<number | null>(null);
@@ -55,7 +55,14 @@ export default function Game() {
 	}, []);
 
 	if (isGameOver) {
-		return <Heading>Game over</Heading>;
+		return (
+			<div>
+				<Heading>Game over</Heading>
+				<Button variant="key" onClick={reset}>
+					Play again
+				</Button>
+			</div>
+		);
 	}
 
 	return (

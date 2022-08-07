@@ -1,5 +1,5 @@
 import { createContext, useCallback, useEffect, useState } from "react";
-import { alphabet } from "../common/constants";
+import { alphabet, DEFAULT_LIVES } from "../common/constants";
 import useSoundContext from "../hooks/useSoundContext";
 import { DifficultyTiming, Point } from "../types/game";
 
@@ -32,7 +32,7 @@ export const GameContext = createContext({} as GameContext);
 
 export function GameContextProvider({ children }: GameProps) {
 	const { playAudio } = useSoundContext();
-	const [lives, setLives] = useState(3);
+	const [lives, setLives] = useState(DEFAULT_LIVES);
 	const [isGameOver, setIsGameOver] = useState(false);
 	const [userInput, setUserInput] = useState<Letter>(null);
 	const [letter, setLetter] = useState<Letter>(null);
@@ -40,27 +40,6 @@ export function GameContextProvider({ children }: GameProps) {
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [difficultyTiming, setDifficultyTiming] = useState(DifficultyTiming.EASY);
 	const [hasPicked, setHasPicked] = useState(false);
-
-	useEffect(() => {
-		const difficultyTiming = localStorage.getItem("difficultyTiming");
-		setDifficultyTiming(difficultyTiming ? JSON.parse(difficultyTiming) : DifficultyTiming.EASY);
-	}, []);
-
-	useEffect(() => {
-		localStorage.setItem("difficultyTiming", JSON.stringify(difficultyTiming));
-	}, [difficultyTiming]);
-
-	useEffect(() => {
-		if (lives > 0) {
-			return;
-		}
-		setIsGameOver(true);
-	}, [lives]);
-
-	useEffect(() => {
-		setHasPicked(false);
-		setUserInput(null);
-	}, [letter]);
 
 	const pick = useCallback((letter: string) => {
 		setUserInput(letter);
@@ -74,6 +53,7 @@ export function GameContextProvider({ children }: GameProps) {
 	const restart = useCallback(() => {
 		setUserInput(null);
 		setLetter(null);
+		setLives(DEFAULT_LIVES);
 		setScore(0);
 		setIsGameOver(false);
 	}, []);
@@ -100,6 +80,34 @@ export function GameContextProvider({ children }: GameProps) {
 			setLives(p => p - 1);
 		}
 	}, [playAudio, lives]);
+
+	useEffect(() => {
+		const difficultyTiming = localStorage.getItem("difficultyTiming");
+		setDifficultyTiming(difficultyTiming ? JSON.parse(difficultyTiming) : DifficultyTiming.EASY);
+	}, []);
+
+	useEffect(() => {
+		localStorage.setItem("difficultyTiming", JSON.stringify(difficultyTiming));
+	}, [difficultyTiming]);
+
+	useEffect(() => {
+		if (lives > 0) {
+			return;
+		}
+		setIsGameOver(true);
+	}, [lives]);
+
+	useEffect(() => {
+		setHasPicked(false);
+		setUserInput(null);
+	}, [letter]);
+
+	useEffect(() => {
+		if (isPlaying) {
+			return;
+		}
+		reset();
+	}, [isPlaying, reset]);
 
 	const values: GameContext = {
 		difficultyTiming,
