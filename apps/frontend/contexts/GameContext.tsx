@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useMemo, useState } from "react";
 import useSoundContext from "../hooks/useSoundContext";
 import { DifficultyTiming, Point } from "../types/game";
 
@@ -6,14 +6,15 @@ type Letter = string | null;
 
 interface GameContext {
 	lives: number;
-	isLocked: boolean;
-	setIsLocked: React.Dispatch<React.SetStateAction<boolean>>;
 	letter: Letter;
 	setLetter: React.Dispatch<React.SetStateAction<Letter>>;
+	userInput: Letter;
+	setUserInput: React.Dispatch<React.SetStateAction<Letter>>;
 	isPlaying: boolean;
 	setIsPlaying: React.Dispatch<React.SetStateAction<boolean>>;
 	difficultyTiming: DifficultyTiming;
 	setDifficultyTiming: React.Dispatch<React.SetStateAction<DifficultyTiming>>;
+	hasPicked: boolean;
 	score: number;
 	isGameOver: boolean;
 	hit(): void;
@@ -32,11 +33,12 @@ export function GameContextProvider({ children }: GameProps) {
 	const { playAudio } = useSoundContext();
 	const [lives, setLives] = useState(3);
 	const [isGameOver, setIsGameOver] = useState(false);
-	const [isLocked, setIsLocked] = useState(true);
-	const [letter, setLetter] = useState<string | null>(null);
+	const [userInput, setUserInput] = useState<Letter>(null);
+	const [letter, setLetter] = useState<Letter>(null);
 	const [score, setScore] = useState(0);
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [difficultyTiming, setDifficultyTiming] = useState(DifficultyTiming.EASY);
+	const hasPicked = useMemo(() => userInput !== null, [userInput]);
 
 	useEffect(() => {
 		const difficultyTiming = localStorage.getItem("difficultyTiming");
@@ -55,7 +57,7 @@ export function GameContextProvider({ children }: GameProps) {
 	}, [lives]);
 
 	function restart() {
-		setIsLocked(true);
+		setUserInput(null);
 		setLetter(null);
 		setScore(0);
 		setIsGameOver(false);
@@ -89,8 +91,6 @@ export function GameContextProvider({ children }: GameProps) {
 		setIsPlaying,
 		letter,
 		setLetter,
-		isLocked,
-		setIsLocked,
 		score,
 		hit,
 		miss,
@@ -98,6 +98,9 @@ export function GameContextProvider({ children }: GameProps) {
 		reset,
 		lives,
 		isGameOver,
+		userInput,
+		setUserInput,
+		hasPicked,
 	};
 
 	return <GameContext.Provider value={values}>{children}</GameContext.Provider>;

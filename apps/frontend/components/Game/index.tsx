@@ -5,7 +5,7 @@ import Keyboard from "../../components/Keyboard";
 import useGameContext from "../../hooks/useGameContext";
 
 export default function Game() {
-	const { score, setIsLocked, setLetter, difficultyTiming, isGameOver } = useGameContext();
+	const { score, setUserInput, setLetter, difficultyTiming, isGameOver, miss } = useGameContext();
 
 	useEffect(() => {
 		let timeout: number;
@@ -14,11 +14,12 @@ export default function Game() {
 				clearInterval(interval);
 			}
 			setLetter(alphabet[Math.floor(Math.random() * alphabet.length)]);
-			setIsLocked(false);
+			setUserInput(null);
 			const timeoutId = window.setTimeout(() => {
 				if (isGameOver) {
 					clearTimeout(timeoutId);
 				}
+				miss();
 				setLetter(null);
 			}, difficultyTiming);
 			timeout = timeoutId;
@@ -27,7 +28,7 @@ export default function Game() {
 			clearInterval(interval);
 			clearTimeout(timeout);
 		};
-	}, [difficultyTiming, setIsLocked, setLetter, isGameOver]);
+	}, [difficultyTiming, setLetter, isGameOver, setUserInput, miss]);
 
 	if (isGameOver) {
 		return <Heading>Game over</Heading>;
