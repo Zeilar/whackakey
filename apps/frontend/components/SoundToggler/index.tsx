@@ -12,6 +12,7 @@ export default function SoundToggler() {
 				pos="fixed"
 				top={10}
 				left={10}
+				rounded="full"
 				stroke="blue.900"
 				variant="unstyled"
 				onClick={toggle}

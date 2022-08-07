@@ -8,7 +8,7 @@ interface Props {
 }
 
 export default function Key({ symbol }: Props) {
-	const { hit, miss, letter, hasPicked, isPlaying, difficultyTiming, setUserInput } = useGameContext();
+	const { hit, letter, hasPicked, isPlaying, difficultyTiming, pick } = useGameContext();
 	const { playAudio } = useSoundContext();
 	const [isPressed, setIsPressed] = useState(false);
 	const [isError, setIsError] = useState(false);
@@ -32,6 +32,17 @@ export default function Key({ symbol }: Props) {
 	}, [difficultyTiming]);
 
 	useEffect(() => {
+		return () => {
+			if (errorRef.current) {
+				clearTimeout(errorRef.current);
+			}
+			if (successRef.current) {
+				clearTimeout(successRef.current);
+			}
+		};
+	}, []);
+
+	useEffect(() => {
 		setIsError(false);
 		setIsSuccess(false);
 		if (errorRef.current) {
@@ -53,13 +64,13 @@ export default function Key({ symbol }: Props) {
 				playAudio("click");
 				return;
 			}
-			setUserInput(key);
+			pick(key);
 			if (key === letter) {
 				success();
 				hit();
 			} else {
 				error();
-				miss();
+				// miss();
 			}
 		}
 
@@ -77,7 +88,7 @@ export default function Key({ symbol }: Props) {
 			document.removeEventListener("keydown", onKeyDown);
 			document.removeEventListener("keyup", onKeyUp);
 		};
-	}, [symbol, letter, hit, miss, isPressed, playAudio, isPlaying, success, error, setUserInput, hasPicked]);
+	}, [symbol, letter, hit, isPressed, playAudio, isPlaying, success, error, hasPicked, pick]);
 
 	function color() {
 		if (isError || isSuccess) {

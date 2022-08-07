@@ -1,4 +1,5 @@
-import { createContext, useEffect, useMemo, useState } from "react";
+import { createContext, useCallback, useEffect, useState } from "react";
+import { alphabet } from "../common/constants";
 import useSoundContext from "../hooks/useSoundContext";
 import { DifficultyTiming, Point } from "../types/game";
 
@@ -7,9 +8,7 @@ type Letter = string | null;
 interface GameContext {
 	lives: number;
 	letter: Letter;
-	setLetter: React.Dispatch<React.SetStateAction<Letter>>;
 	userInput: Letter;
-	setUserInput: React.Dispatch<React.SetStateAction<Letter>>;
 	isPlaying: boolean;
 	setIsPlaying: React.Dispatch<React.SetStateAction<boolean>>;
 	difficultyTiming: DifficultyTiming;
@@ -21,6 +20,8 @@ interface GameContext {
 	miss(): void;
 	play(): void;
 	reset(): void;
+	randomLetter(): void;
+	pick(letter: string): void;
 }
 
 interface GameProps {
@@ -38,7 +39,7 @@ export function GameContextProvider({ children }: GameProps) {
 	const [score, setScore] = useState(0);
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [difficultyTiming, setDifficultyTiming] = useState(DifficultyTiming.EASY);
-	const hasPicked = useMemo(() => userInput !== null, [userInput]);
+	const [hasPicked, setHasPicked] = useState(false);
 
 	useEffect(() => {
 		const difficultyTiming = localStorage.getItem("difficultyTiming");
@@ -49,6 +50,8 @@ export function GameContextProvider({ children }: GameProps) {
 		localStorage.setItem("difficultyTiming", JSON.stringify(difficultyTiming));
 	}, [difficultyTiming]);
 
+	console.log({ lives });
+
 	useEffect(() => {
 		if (lives > 0) {
 			return;
@@ -56,33 +59,49 @@ export function GameContextProvider({ children }: GameProps) {
 		setIsGameOver(true);
 	}, [lives]);
 
-	function restart() {
+	useEffect(() => {
+		setHasPicked(false);
+		setUserInput(null);
+	}, [letter]);
+
+	const pick = useCallback((letter: string) => {
+		setUserInput(letter);
+		setHasPicked(true);
+	}, []);
+
+	const randomLetter = useCallback(() => {
+		setLetter(alphabet[Math.floor(alphabet.length * Math.random())]);
+	}, []);
+
+	const restart = useCallback(() => {
 		setUserInput(null);
 		setLetter(null);
 		setScore(0);
 		setIsGameOver(false);
-	}
+	}, []);
 
-	function play() {
+	const play = useCallback(() => {
 		restart();
 		setIsPlaying(true);
-	}
+	}, [restart]);
 
-	function reset() {
+	const reset = useCallback(() => {
 		restart();
 		setIsPlaying(false);
-	}
+	}, [restart]);
 
-	function hit() {
+	const hit = useCallback(() => {
 		playAudio("hit");
 		setScore(p => p + Point.HIT);
-	}
+	}, [playAudio]);
 
-	function miss() {
+	const miss = useCallback(() => {
 		playAudio("hurt");
 		setScore(p => p + Point.MISS);
-		setLives(p => p - 1);
-	}
+		if (lives > 0) {
+			setLives(p => p - 1);
+		}
+	}, [playAudio, lives]);
 
 	const values: GameContext = {
 		difficultyTiming,
@@ -90,7 +109,6 @@ export function GameContextProvider({ children }: GameProps) {
 		isPlaying,
 		setIsPlaying,
 		letter,
-		setLetter,
 		score,
 		hit,
 		miss,
@@ -99,8 +117,9 @@ export function GameContextProvider({ children }: GameProps) {
 		lives,
 		isGameOver,
 		userInput,
-		setUserInput,
 		hasPicked,
+		randomLetter,
+		pick,
 	};
 
 	return <GameContext.Provider value={values}>{children}</GameContext.Provider>;

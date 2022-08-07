@@ -1,34 +1,57 @@
 import { Flex, Heading } from "@chakra-ui/react";
-import { useEffect } from "react";
-import { alphabet } from "../../common/constants";
+import { useEffect, useRef, useState } from "react";
 import Keyboard from "../../components/Keyboard";
 import useGameContext from "../../hooks/useGameContext";
 
 export default function Game() {
-	const { score, setUserInput, setLetter, difficultyTiming, isGameOver, miss } = useGameContext();
+	const { score, letter, randomLetter, difficultyTiming, isGameOver, userInput, miss, hasPicked } = useGameContext();
+	const [nextDeadline, setNextDeadline] = useState<number>(new Date().getTime() + difficultyTiming);
+	const timeoutRef = useRef<number | null>(null);
+	const animationFrameRef = useRef<number | null>(null);
 
 	useEffect(() => {
-		let timeout: number;
-		const interval = window.setInterval(() => {
-			if (isGameOver) {
-				clearInterval(interval);
+		function frameHandler() {
+			if (letter === null) {
+				randomLetter();
+				animationFrameRef.current = requestAnimationFrame(frameHandler);
+				return;
 			}
-			setLetter(alphabet[Math.floor(Math.random() * alphabet.length)]);
-			setUserInput(null);
-			const timeoutId = window.setTimeout(() => {
-				if (isGameOver) {
-					clearTimeout(timeoutId);
-				}
+			if (nextDeadline - new Date().getTime() >= 0) {
+				animationFrameRef.current = requestAnimationFrame(frameHandler);
+				return;
+			}
+			if (!hasPicked || userInput !== letter) {
 				miss();
-				setLetter(null);
-			}, difficultyTiming);
-			timeout = timeoutId;
-		}, difficultyTiming * 2);
+			}
+			randomLetter();
+			setNextDeadline(new Date().getTime() + difficultyTiming);
+		}
+		timeoutRef.current = window.setTimeout(() => {
+			if (isGameOver) {
+				return;
+			}
+			animationFrameRef.current = requestAnimationFrame(frameHandler);
+		}, difficultyTiming);
 		return () => {
-			clearInterval(interval);
-			clearTimeout(timeout);
+			if (timeoutRef.current) {
+				clearTimeout(timeoutRef.current);
+			}
+			if (animationFrameRef.current) {
+				cancelAnimationFrame(animationFrameRef.current);
+			}
 		};
-	}, [difficultyTiming, setLetter, isGameOver, setUserInput, miss]);
+	}, [nextDeadline, difficultyTiming, randomLetter, userInput, hasPicked, miss, letter, isGameOver]);
+
+	useEffect(() => {
+		return () => {
+			if (timeoutRef.current) {
+				clearTimeout(timeoutRef.current);
+			}
+			if (animationFrameRef.current) {
+				cancelAnimationFrame(animationFrameRef.current);
+			}
+		};
+	}, []);
 
 	if (isGameOver) {
 		return <Heading>Game over</Heading>;
