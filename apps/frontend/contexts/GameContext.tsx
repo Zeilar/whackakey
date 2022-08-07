@@ -47,8 +47,13 @@ export function GameContextProvider({ children }: GameProps) {
 	}, []);
 
 	const randomLetter = useCallback(() => {
-		setLetter(alphabet[Math.floor(alphabet.length * Math.random())]);
-	}, []);
+		const newLetter = alphabet[Math.floor(alphabet.length * Math.random())];
+		if (newLetter === letter) {
+			randomLetter();
+			return;
+		}
+		setLetter(newLetter);
+	}, [letter]);
 
 	const restart = useCallback(() => {
 		setUserInput(null);
