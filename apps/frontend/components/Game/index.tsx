@@ -4,7 +4,8 @@ import Keyboard from "../../components/Keyboard";
 import useGameContext from "../../hooks/useGameContext";
 
 export default function Game() {
-	const { score, letter, randomLetter, difficultyTiming, isGameOver, userInput, miss, hasPicked } = useGameContext();
+	const { score, letter, randomLetter, difficultyTiming, isGameOver, userInput, miss, hasPicked, lives } =
+		useGameContext();
 	const [nextDeadline, setNextDeadline] = useState<number>(new Date().getTime() + difficultyTiming);
 	const timeoutRef = useRef<number | null>(null);
 	const animationFrameRef = useRef<number | null>(null);
@@ -66,6 +67,14 @@ export default function Game() {
 				sx={{ WebkitTextStrokeWidth: 1, WebkitTextStrokeColor: "var(--chakra-colors-blue-300)" }}
 			>
 				{score}
+			</Heading>
+			<Heading
+				color="gray.100"
+				letterSpacing={4}
+				size="4xl"
+				sx={{ WebkitTextStrokeWidth: 1, WebkitTextStrokeColor: "var(--chakra-colors-blue-300)" }}
+			>
+				Lives: {lives}
 			</Heading>
 			<Keyboard />
 		</Flex>

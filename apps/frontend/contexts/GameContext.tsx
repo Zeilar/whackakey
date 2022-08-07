@@ -50,8 +50,6 @@ export function GameContextProvider({ children }: GameProps) {
 		localStorage.setItem("difficultyTiming", JSON.stringify(difficultyTiming));
 	}, [difficultyTiming]);
 
-	console.log({ lives });
-
 	useEffect(() => {
 		if (lives > 0) {
 			return;
