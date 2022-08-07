@@ -7,17 +7,19 @@ export default function Game() {
 	const { score, letter, randomLetter, difficultyTiming, isGameOver, userInput, miss, hasPicked, lives, reset } =
 		useGameContext();
 	const [nextDeadline, setNextDeadline] = useState<number>(new Date().getTime() + difficultyTiming);
-	const timeoutRef = useRef<number | null>(null);
-	const animationFrameRef = useRef<number | null>(null);
+	const [difference, setDifference] = useState(difficultyTiming);
+	const animationFrameRef = useRef<number | undefined>();
+	const [isFirstRound, setIsFirstRound] = useState(true);
 
 	useEffect(() => {
 		function frameHandler() {
-			if (letter === null) {
-				randomLetter();
-				animationFrameRef.current = requestAnimationFrame(frameHandler);
+			if (isGameOver) {
 				return;
 			}
-			if (nextDeadline - new Date().getTime() >= 0) {
+			const now = new Date().getTime();
+			const difference = nextDeadline - now;
+			setDifference(difference);
+			if (difference >= 0) {
 				animationFrameRef.current = requestAnimationFrame(frameHandler);
 				return;
 			}
@@ -27,30 +29,31 @@ export default function Game() {
 			randomLetter();
 			setNextDeadline(new Date().getTime() + difficultyTiming);
 		}
-		timeoutRef.current = window.setTimeout(() => {
-			if (isGameOver) {
+		let timeout: number | undefined;
+		if (isFirstRound) {
+			timeout = window.setTimeout(() => {
+				randomLetter();
+				animationFrameRef.current = requestAnimationFrame(frameHandler);
+			}, difficultyTiming);
+			setIsFirstRound(false);
+			return;
+		}
+		animationFrameRef.current = requestAnimationFrame(frameHandler);
+		return () => {
+			clearTimeout(timeout);
+			if (!animationFrameRef.current) {
 				return;
 			}
-			animationFrameRef.current = requestAnimationFrame(frameHandler);
-		}, difficultyTiming);
-		return () => {
-			if (timeoutRef.current) {
-				clearTimeout(timeoutRef.current);
-			}
-			if (animationFrameRef.current) {
-				cancelAnimationFrame(animationFrameRef.current);
-			}
+			cancelAnimationFrame(animationFrameRef.current);
 		};
-	}, [nextDeadline, difficultyTiming, randomLetter, userInput, hasPicked, miss, letter, isGameOver]);
+	}, [nextDeadline, difficultyTiming, randomLetter, userInput, hasPicked, miss, letter, isGameOver, isFirstRound]);
 
 	useEffect(() => {
 		return () => {
-			if (timeoutRef.current) {
-				clearTimeout(timeoutRef.current);
+			if (!animationFrameRef.current) {
+				return;
 			}
-			if (animationFrameRef.current) {
-				cancelAnimationFrame(animationFrameRef.current);
-			}
+			cancelAnimationFrame(animationFrameRef.current);
 		};
 	}, []);
 
@@ -83,6 +86,7 @@ export default function Game() {
 			>
 				Lives: {lives}
 			</Heading>
+			<Heading>{difference}</Heading>
 			<Keyboard />
 		</Flex>
 	);

@@ -14,8 +14,8 @@ export default function Key({ symbol }: Props) {
 	const [isError, setIsError] = useState(false);
 	const [isSuccess, setIsSuccess] = useState(false);
 	const isActive = useMemo(() => letter === symbol, [letter, symbol]);
-	const errorRef = useRef<number | null>(null);
-	const successRef = useRef<number | null>(null);
+	const errorRef = useRef<number | undefined>();
+	const successRef = useRef<number | undefined>();
 
 	const error = useCallback(() => {
 		setIsError(true);
@@ -33,24 +33,16 @@ export default function Key({ symbol }: Props) {
 
 	useEffect(() => {
 		return () => {
-			if (errorRef.current) {
-				clearTimeout(errorRef.current);
-			}
-			if (successRef.current) {
-				clearTimeout(successRef.current);
-			}
+			clearTimeout(errorRef.current);
+			clearTimeout(successRef.current);
 		};
 	}, []);
 
 	useEffect(() => {
 		setIsError(false);
 		setIsSuccess(false);
-		if (errorRef.current) {
-			clearTimeout(errorRef.current);
-		}
-		if (successRef.current) {
-			clearTimeout(successRef.current);
-		}
+		clearTimeout(errorRef.current);
+		clearTimeout(successRef.current);
 	}, [letter]);
 
 	useEffect(() => {
@@ -70,7 +62,6 @@ export default function Key({ symbol }: Props) {
 				hit();
 			} else {
 				error();
-				// miss();
 			}
 		}
 
