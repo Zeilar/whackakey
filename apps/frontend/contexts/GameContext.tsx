@@ -62,13 +62,13 @@ export function GameContextProvider({ children }: GameProps) {
 	}
 
 	function play() {
-		setIsPlaying(true);
 		restart();
+		setIsPlaying(true);
 	}
 
 	function reset() {
-		setIsPlaying(false);
 		restart();
+		setIsPlaying(false);
 	}
 
 	function hit() {
