@@ -5,6 +5,7 @@ import { DifficultyTiming, Point } from "../types/game";
 type Letter = string | null;
 
 interface GameContext {
+	lives: number;
 	isLocked: boolean;
 	setIsLocked: React.Dispatch<React.SetStateAction<boolean>>;
 	letter: Letter;
@@ -14,6 +15,7 @@ interface GameContext {
 	difficultyTiming: DifficultyTiming;
 	setDifficultyTiming: React.Dispatch<React.SetStateAction<DifficultyTiming>>;
 	score: number;
+	isGameOver: boolean;
 	hit(): void;
 	miss(): void;
 	play(): void;
@@ -28,7 +30,8 @@ export const GameContext = createContext({} as GameContext);
 
 export function GameContextProvider({ children }: GameProps) {
 	const { playAudio } = useSoundContext();
-
+	const [lives, setLives] = useState(3);
+	const [isGameOver, setIsGameOver] = useState(false);
 	const [isLocked, setIsLocked] = useState(true);
 	const [letter, setLetter] = useState<string | null>(null);
 	const [score, setScore] = useState(0);
@@ -44,18 +47,28 @@ export function GameContextProvider({ children }: GameProps) {
 		localStorage.setItem("difficultyTiming", JSON.stringify(difficultyTiming));
 	}, [difficultyTiming]);
 
-	function play() {
+	useEffect(() => {
+		if (lives > 0) {
+			return;
+		}
+		setIsGameOver(true);
+	}, [lives]);
+
+	function restart() {
 		setIsLocked(true);
 		setLetter(null);
 		setScore(0);
+		setIsGameOver(false);
+	}
+
+	function play() {
 		setIsPlaying(true);
+		restart();
 	}
 
 	function reset() {
-		setIsLocked(true);
-		setLetter(null);
-		setScore(0);
 		setIsPlaying(false);
+		restart();
 	}
 
 	function hit() {
@@ -66,6 +79,7 @@ export function GameContextProvider({ children }: GameProps) {
 	function miss() {
 		playAudio("hurt");
 		setScore(p => p + Point.MISS);
+		setLives(p => p - 1);
 	}
 
 	const values: GameContext = {
@@ -82,6 +96,8 @@ export function GameContextProvider({ children }: GameProps) {
 		miss,
 		play,
 		reset,
+		lives,
+		isGameOver,
 	};
 
 	return <GameContext.Provider value={values}>{children}</GameContext.Provider>;
