@@ -63,7 +63,6 @@ export default function DifficultyItem({ onChange }: DifficultyItemProps) {
 
 	return (
 		<SolidButton
-			// @ts-expect-error type bug
 			ref={ref}
 			size="xl"
 			as={motion.div}
