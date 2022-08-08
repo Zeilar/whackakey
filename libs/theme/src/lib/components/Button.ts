@@ -1,5 +1,17 @@
-import { ButtonProps } from "@chakra-ui/react";
+import { ButtonProps, keyframes } from "@chakra-ui/react";
 import { StyleConfig } from "@chakra-ui/theme-tools";
+
+const solidAnimation = keyframes`
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+`;
 
 const key: ButtonProps = {
 	borderWidth: 5,
@@ -37,5 +49,18 @@ export const Button: StyleConfig = {
 	},
 	variants: {
 		key,
+		solid: {
+			fontFamily: "Fredoka One, sans-serif",
+			textTransform: "uppercase",
+			borderRadius: "full",
+			borderWidth: 6,
+			borderColor: "blue.900",
+			boxShadow: "mg",
+			_hover: {
+				textDecor: "none",
+				animation: `${solidAnimation} infinite 1s ease-in-out`,
+			},
+			_active: {},
+		},
 	},
 };

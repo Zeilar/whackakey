@@ -60,8 +60,10 @@ export default function Game() {
 	if (isGameOver) {
 		return (
 			<div>
-				<Heading>Game over</Heading>
-				<Button variant="key" onClick={reset}>
+				<Heading size="3xl" textStyle="stroke" textAlign="center" mb={4}>
+					Game over
+				</Heading>
+				<Button size="xl" onClick={reset}>
 					Play again
 				</Button>
 			</div>

@@ -39,7 +39,7 @@ export default function DifficultyItem({ onChange }: DifficultyItemProps) {
 
 	useEffect(() => {
 		function onKeyDown(e: KeyboardEvent) {
-			if (!ref.current?.contains(document.activeElement) || !["ArrowLeft", "ArrowRight"].includes(e.key)) {
+			if (!ref.current?.contains(document.activeElement)) {
 				return;
 			}
 			if (e.key === "ArrowLeft") {
@@ -64,12 +64,12 @@ export default function DifficultyItem({ onChange }: DifficultyItemProps) {
 			// @ts-expect-error type bug
 			ref={ref}
 			as="div"
-			variant="key"
 			size="xl"
 			tabIndex={0}
 			justifyContent="space-between"
 			px={8}
 			_hover={{}}
+			_active={{}}
 		>
 			<IconButton
 				ref={previousButton}

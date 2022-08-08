@@ -39,12 +39,7 @@ export default function Menu() {
 
 	if (isCountingDown) {
 		return countdown > 0 ? (
-			<Heading
-				userSelect="none"
-				fontSize="10rem"
-				sx={{ WebkitTextStrokeWidth: 1, WebkitTextStrokeColor: "var(--chakra-colors-blackAlpha-900)" }}
-				color={countdownColor()}
-			>
+			<Heading userSelect="none" fontSize="10rem" textStyle="stroke" color={countdownColor()}>
 				{countdown}
 			</Heading>
 		) : null;
@@ -52,12 +47,12 @@ export default function Menu() {
 
 	return (
 		<Flex as="nav" gap={4} flexDir="column" width={500}>
-			<Button variant="key" size="xl" onClick={() => setIsCountingDown(true)}>
+			<Button size="xl" onClick={() => setIsCountingDown(true)}>
 				Play
 			</Button>
 			<DifficultyItem onChange={setDifficultyTiming} />
 			<NextLink passHref href="/tutorial">
-				<Button variant="key" size="xl" as={Link} _hover={{ textDecor: "none" }}>
+				<Button size="xl" as={Link}>
 					How to play
 				</Button>
 			</NextLink>

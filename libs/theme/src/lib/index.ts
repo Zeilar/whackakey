@@ -4,6 +4,7 @@ import * as components from "./components";
 import { config } from "./config";
 import { fonts } from "./fonts";
 import { styles } from "./styles";
+import { textStyles } from "./textStyles";
 
 const theme = extendTheme({
 	config,
@@ -13,6 +14,7 @@ const theme = extendTheme({
 		...components, // This needs to be spread into a new object, no idea why
 	},
 	styles,
+	textStyles,
 });
 
 export default theme;
