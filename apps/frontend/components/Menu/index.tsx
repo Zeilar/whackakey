@@ -1,8 +1,9 @@
-import { Button, Flex, Heading, Link } from "@chakra-ui/react";
+import { Flex, Heading, Link } from "@chakra-ui/react";
 import useGameContext from "apps/frontend/hooks/useGameContext";
 import NextLink from "next/link";
 import { useEffect, useState } from "react";
 import DifficultyItem from "./DifficultyItem";
+import SolidButton from "../FloatingText/SolidButton";
 
 export default function Menu() {
 	const { play, setDifficultyTiming } = useGameContext();
@@ -47,14 +48,12 @@ export default function Menu() {
 
 	return (
 		<Flex as="nav" gap={4} flexDir="column" width={500}>
-			<Button size="xl" onClick={() => setIsCountingDown(true)}>
-				Play
-			</Button>
+			<SolidButton onClick={() => setIsCountingDown(true)}>Play</SolidButton>
 			<DifficultyItem onChange={setDifficultyTiming} />
 			<NextLink passHref href="/tutorial">
-				<Button size="xl" as={Link}>
-					How to play
-				</Button>
+				<Link _hover={{}} tabIndex={-1}>
+					<SolidButton role="link">How to play</SolidButton>
+				</Link>
 			</NextLink>
 		</Flex>
 	);

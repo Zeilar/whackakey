@@ -1,10 +1,12 @@
-import { Button, IconButton, Text } from "@chakra-ui/react";
+import { IconButton, Text } from "@chakra-ui/react";
 import { Difficulty } from "@shared";
 import { ArrowLeft } from "@styled-icons/evaicons-solid/ArrowLeft";
 import { ArrowRight } from "@styled-icons/evaicons-solid/ArrowRight";
 import useSoundContext from "apps/frontend/hooks/useSoundContext";
 import { DifficultyTiming } from "apps/frontend/types/game";
+import { motion } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
+import SolidButton from "../FloatingText/SolidButton";
 
 interface DifficultyItemProps {
 	onChange(difficultyTiming: DifficultyTiming): void;
@@ -60,11 +62,11 @@ export default function DifficultyItem({ onChange }: DifficultyItemProps) {
 	}, [selected, onChange]);
 
 	return (
-		<Button
+		<SolidButton
 			// @ts-expect-error type bug
 			ref={ref}
-			as="div"
 			size="xl"
+			as={motion.div}
 			tabIndex={0}
 			justifyContent="space-between"
 			px={8}
@@ -98,6 +100,6 @@ export default function DifficultyItem({ onChange }: DifficultyItemProps) {
 				color="gray.100"
 				onClick={next}
 			/>
-		</Button>
+		</SolidButton>
 	);
 }
