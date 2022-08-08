@@ -10,7 +10,6 @@ export default function Game() {
 	const [nextDeadline, setNextDeadline] = useState<number>(new Date().getTime() + difficultyTiming);
 	const [difference, setDifference] = useState(difficultyTiming);
 	const animationFrameRef = useRef<number | undefined>();
-	const [isFirstRound, setIsFirstRound] = useState(true);
 
 	useEffect(() => {
 		function frameHandler() {
@@ -24,30 +23,20 @@ export default function Game() {
 				animationFrameRef.current = requestAnimationFrame(frameHandler);
 				return;
 			}
-			if (!hasPicked || userInput !== letter) {
+			if (letter !== null && (!hasPicked || userInput !== letter)) {
 				miss();
 			}
 			randomLetter();
 			setNextDeadline(new Date().getTime() + difficultyTiming);
 		}
-		let timeout: number | undefined;
-		if (isFirstRound) {
-			timeout = window.setTimeout(() => {
-				randomLetter();
-				animationFrameRef.current = requestAnimationFrame(frameHandler);
-			}, difficultyTiming);
-			setIsFirstRound(false);
-			return;
-		}
 		animationFrameRef.current = requestAnimationFrame(frameHandler);
 		return () => {
-			clearTimeout(timeout);
 			if (!animationFrameRef.current) {
 				return;
 			}
 			cancelAnimationFrame(animationFrameRef.current);
 		};
-	}, [nextDeadline, difficultyTiming, randomLetter, userInput, hasPicked, miss, letter, isGameOver, isFirstRound]);
+	}, [nextDeadline, difficultyTiming, randomLetter, userInput, hasPicked, miss, letter, isGameOver]);
 
 	useEffect(() => {
 		return () => {
