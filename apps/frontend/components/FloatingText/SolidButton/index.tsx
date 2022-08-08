@@ -1,9 +1,11 @@
-import { Button, ButtonProps } from "@chakra-ui/react";
+import { As, Button, ButtonProps, forwardRef } from "@chakra-ui/react";
 import { motion } from "framer-motion";
+// import { forwardRef } from "react";
 
-export default function SolidButton(props: ButtonProps) {
+export default forwardRef<ButtonProps, As<ButtonProps>>(function SolidButton(props, ref) {
 	return (
 		<Button
+			ref={ref}
 			size="xl"
 			as={motion.button}
 			whileHover={{ scale: 1.05 }}
@@ -13,4 +15,4 @@ export default function SolidButton(props: ButtonProps) {
 			{...props}
 		/>
 	);
-}
+});

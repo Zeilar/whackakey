@@ -48,7 +48,9 @@ export default function Menu() {
 
 	return (
 		<Flex as="nav" gap={4} flexDir="column" width={500}>
-			<SolidButton onClick={() => setIsCountingDown(true)}>Play</SolidButton>
+			<SolidButton onClick={() => setIsCountingDown(true)} autoFocus>
+				Play
+			</SolidButton>
 			<DifficultyItem onChange={setDifficultyTiming} />
 			<NextLink passHref href="/tutorial">
 				<Link _hover={{}} tabIndex={-1}>

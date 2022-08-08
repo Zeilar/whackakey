@@ -1,7 +1,8 @@
-import { Button, Flex, Heading } from "@chakra-ui/react";
+import { Flex, Heading } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 import Keyboard from "../../components/Keyboard";
 import useGameContext from "../../hooks/useGameContext";
+import SolidButton from "../FloatingText/SolidButton";
 
 export default function Game() {
 	const { score, letter, randomLetter, difficultyTiming, isGameOver, userInput, miss, hasPicked, lives, reset } =
@@ -63,9 +64,9 @@ export default function Game() {
 				<Heading size="3xl" textStyle="stroke" textAlign="center" mb={4}>
 					Game over
 				</Heading>
-				<Button size="xl" onClick={reset}>
+				<SolidButton onClick={reset} autoFocus>
 					Play again
-				</Button>
+				</SolidButton>
 			</div>
 		);
 	}
