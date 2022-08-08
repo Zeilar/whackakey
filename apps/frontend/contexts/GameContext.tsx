@@ -50,7 +50,6 @@ export function GameContextProvider({ children }: GameProps) {
 		const newLetter = alphabet[Math.floor(alphabet.length * Math.random())];
 		if (newLetter === letter) {
 			randomLetter();
-			return;
 		}
 		setLetter(newLetter);
 	}, [letter]);
