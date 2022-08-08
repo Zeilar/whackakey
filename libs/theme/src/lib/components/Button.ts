@@ -46,8 +46,11 @@ export const Button: StyleConfig = {
 			boxShadow: "mg",
 			_hover: {
 				textDecor: "none",
+				bgColor: "gray.100",
 			},
-			_active: {},
+			_active: {
+				bgColor: "gray.100",
+			},
 		},
 	},
 };
