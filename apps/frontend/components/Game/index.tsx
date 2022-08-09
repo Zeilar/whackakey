@@ -1,14 +1,11 @@
 import { Flex, Heading } from "@chakra-ui/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import Keyboard from "../../components/Keyboard";
 import useGameContext from "../../hooks/useGameContext";
 import SolidButton from "../FloatingText/SolidButton";
 
 export default function Game() {
-	const { score, letter, randomLetter, difficultyTiming, isGameOver, userInput, miss, hasPicked, lives, reset } =
-		useGameContext();
-	const [nextDeadline, setNextDeadline] = useState<number>(new Date().getTime() + difficultyTiming);
-	const [difference, setDifference] = useState(difficultyTiming);
+	const { score, letter, isGameOver, userInput, miss, lives, reset, nextDeadline, hit, nextRound } = useGameContext();
 	const animationFrameRef = useRef<number | undefined>();
 
 	useEffect(() => {
@@ -16,31 +13,32 @@ export default function Game() {
 			if (isGameOver) {
 				return;
 			}
-			const now = new Date().getTime();
-			const difference = nextDeadline - now;
-			setDifference(difference);
-			if (difference >= 0) {
+			if (letter === null) {
+				nextRound();
+				return;
+			}
+			if (userInput) {
+				userInput === letter ? hit() : miss();
+				return;
+			}
+			if (nextDeadline - new Date().getTime() >= 0) {
 				animationFrameRef.current = requestAnimationFrame(frameHandler);
 				return;
 			}
-			if (letter !== null && (!hasPicked || userInput !== letter)) {
-				miss();
-			}
-			randomLetter();
-			setNextDeadline(new Date().getTime() + difficultyTiming);
+			miss();
 		}
 		animationFrameRef.current = requestAnimationFrame(frameHandler);
 		return () => {
-			if (!animationFrameRef.current) {
+			if (animationFrameRef.current === undefined) {
 				return;
 			}
 			cancelAnimationFrame(animationFrameRef.current);
 		};
-	}, [nextDeadline, difficultyTiming, randomLetter, userInput, hasPicked, miss, letter, isGameOver]);
+	}, [userInput, miss, isGameOver, nextDeadline, letter, hit, nextRound]);
 
 	useEffect(() => {
 		return () => {
-			if (!animationFrameRef.current) {
+			if (animationFrameRef.current === undefined) {
 				return;
 			}
 			cancelAnimationFrame(animationFrameRef.current);
@@ -78,7 +76,6 @@ export default function Game() {
 			>
 				Lives: {lives}
 			</Heading>
-			<Heading>{difference}</Heading>
 			<Keyboard />
 		</Flex>
 	);

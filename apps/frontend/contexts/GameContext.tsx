@@ -7,6 +7,7 @@ import { DifficultyTiming, Point } from "../types/game";
 type Letter = string | null;
 
 interface GameContext {
+	nextDeadline: number;
 	lives: number;
 	letter: Letter;
 	userInput: Letter;
@@ -21,8 +22,9 @@ interface GameContext {
 	miss(): void;
 	play(): void;
 	reset(): void;
-	randomLetter(): void;
 	pick(letter: string): void;
+	nextRound(): void;
+	randomLetter(): void;
 }
 
 interface GameProps {
@@ -40,16 +42,36 @@ export function GameContextProvider({ children }: GameProps) {
 	const [score, setScore] = useState(0);
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [difficultyTiming, setDifficultyTiming] = useState(DifficultyTiming.EASY);
-	const [hasPicked, setHasPicked] = useState(false);
-
-	const pick = useCallback((letter: string) => {
-		setUserInput(letter);
-		setHasPicked(true);
-	}, []);
+	const [nextDeadline, setNextDeadline] = useState<number>(new Date().getTime() + difficultyTiming);
 
 	const randomLetter = useCallback(() => {
 		setLetter(randomUniqueLetter(letter));
 	}, [letter]);
+
+	const nextRound = useCallback(() => {
+		setUserInput(null);
+		randomLetter();
+		setNextDeadline(new Date().getTime() + difficultyTiming);
+	}, [difficultyTiming, randomLetter]);
+
+	const hit = useCallback(() => {
+		playAudio("hit");
+		setScore(p => p + Point.HIT);
+		nextRound();
+	}, [playAudio, nextRound]);
+
+	const miss = useCallback(() => {
+		playAudio("hurt");
+		setScore(p => p + Point.MISS);
+		if (lives > 0) {
+			setLives(p => p - 1);
+		}
+		nextRound();
+	}, [playAudio, lives, nextRound]);
+
+	const pick = useCallback((letter: string) => {
+		setUserInput(letter);
+	}, []);
 
 	const restart = useCallback(() => {
 		setUserInput(null);
@@ -69,18 +91,14 @@ export function GameContextProvider({ children }: GameProps) {
 		setIsPlaying(false);
 	}, [restart]);
 
-	const hit = useCallback(() => {
-		playAudio("hit");
-		setScore(p => p + Point.HIT);
-	}, [playAudio]);
-
-	const miss = useCallback(() => {
-		playAudio("hurt");
-		setScore(p => p + Point.MISS);
-		if (lives > 0) {
-			setLives(p => p - 1);
-		}
-	}, [playAudio, lives]);
+	// useEffect(() => {
+	// 	const timeout = setTimeout(() => {
+	// 		randomLetter();
+	// 	}, difficultyTiming);
+	// 	return () => {
+	// 		clearTimeout(timeout);
+	// 	};
+	// }, [nextDeadline, difficultyTiming, randomLetter]);
 
 	useEffect(() => {
 		const difficultyTiming = localStorage.getItem("difficultyTiming");
@@ -97,11 +115,6 @@ export function GameContextProvider({ children }: GameProps) {
 		}
 		setIsGameOver(true);
 	}, [lives]);
-
-	useEffect(() => {
-		setHasPicked(false);
-		setUserInput(null);
-	}, [letter]);
 
 	useEffect(() => {
 		if (isPlaying) {
@@ -124,9 +137,11 @@ export function GameContextProvider({ children }: GameProps) {
 		lives,
 		isGameOver,
 		userInput,
-		hasPicked,
-		randomLetter,
+		hasPicked: userInput !== null,
 		pick,
+		nextDeadline,
+		nextRound,
+		randomLetter,
 	};
 
 	return <GameContext.Provider value={values}>{children}</GameContext.Provider>;
