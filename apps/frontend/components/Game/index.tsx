@@ -5,7 +5,8 @@ import useGameContext from "../../hooks/useGameContext";
 import SolidButton from "../FloatingText/SolidButton";
 
 export default function Game() {
-	const { score, letter, isGameOver, userInput, miss, lives, reset, nextDeadline, hit, nextRound } = useGameContext();
+	const { score, letter, isGameOver, userInput, miss, lives, reset, nextDeadline, hit, nextRound, setTimeLeft } =
+		useGameContext();
 	const animationFrameRef = useRef<number | undefined>();
 
 	useEffect(() => {
@@ -21,8 +22,10 @@ export default function Game() {
 				userInput === letter ? hit() : miss();
 				return;
 			}
-			if (nextDeadline - new Date().getTime() >= 0) {
+			const timeLeft = nextDeadline - new Date().getTime();
+			if (timeLeft >= 0) {
 				animationFrameRef.current = requestAnimationFrame(frameHandler);
+				setTimeLeft(timeLeft);
 				return;
 			}
 			miss();
@@ -34,7 +37,7 @@ export default function Game() {
 			}
 			cancelAnimationFrame(animationFrameRef.current);
 		};
-	}, [userInput, miss, isGameOver, nextDeadline, letter, hit, nextRound]);
+	}, [userInput, miss, isGameOver, nextDeadline, letter, hit, nextRound, setTimeLeft]);
 
 	useEffect(() => {
 		return () => {

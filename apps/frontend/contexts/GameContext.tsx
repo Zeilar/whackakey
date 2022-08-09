@@ -15,6 +15,8 @@ interface GameContext {
 	setIsPlaying: React.Dispatch<React.SetStateAction<boolean>>;
 	difficultyTiming: DifficultyTiming;
 	setDifficultyTiming: React.Dispatch<React.SetStateAction<DifficultyTiming>>;
+	timeLeft: DifficultyTiming;
+	setTimeLeft: React.Dispatch<React.SetStateAction<DifficultyTiming>>;
 	hasPicked: boolean;
 	score: number;
 	isGameOver: boolean;
@@ -42,10 +44,15 @@ export function GameContextProvider({ children }: GameProps) {
 	const [score, setScore] = useState(0);
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [difficultyTiming, setDifficultyTiming] = useState(DifficultyTiming.EASY);
-	const [nextDeadline, setNextDeadline] = useState<number>(new Date().getTime() + difficultyTiming);
+	const [nextDeadline, setNextDeadline] = useState(new Date().getTime() + difficultyTiming);
+	const [timeLeft, setTimeLeft] = useState(difficultyTiming);
 
 	const randomLetter = useCallback(() => {
 		setLetter(randomUniqueLetter(letter));
+	}, [letter]);
+
+	useEffect(() => {
+		console.log({ letter });
 	}, [letter]);
 
 	const nextRound = useCallback(() => {
@@ -78,8 +85,9 @@ export function GameContextProvider({ children }: GameProps) {
 		setLetter(null);
 		setLives(DEFAULT_LIVES);
 		setScore(0);
+		setTimeLeft(difficultyTiming);
 		setIsGameOver(false);
-	}, []);
+	}, [difficultyTiming]);
 
 	const play = useCallback(() => {
 		restart();
@@ -90,15 +98,6 @@ export function GameContextProvider({ children }: GameProps) {
 		restart();
 		setIsPlaying(false);
 	}, [restart]);
-
-	// useEffect(() => {
-	// 	const timeout = setTimeout(() => {
-	// 		randomLetter();
-	// 	}, difficultyTiming);
-	// 	return () => {
-	// 		clearTimeout(timeout);
-	// 	};
-	// }, [nextDeadline, difficultyTiming, randomLetter]);
 
 	useEffect(() => {
 		const difficultyTiming = localStorage.getItem("difficultyTiming");
@@ -142,6 +141,8 @@ export function GameContextProvider({ children }: GameProps) {
 		nextDeadline,
 		nextRound,
 		randomLetter,
+		setTimeLeft,
+		timeLeft,
 	};
 
 	return <GameContext.Provider value={values}>{children}</GameContext.Provider>;

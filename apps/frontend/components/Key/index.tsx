@@ -1,4 +1,4 @@
-import { Flex, Text } from "@chakra-ui/react";
+import { Box, Flex, Text } from "@chakra-ui/react";
 import useGameContext from "apps/frontend/hooks/useGameContext";
 import useSoundContext from "apps/frontend/hooks/useSoundContext";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -8,7 +8,7 @@ interface Props {
 }
 
 export default function Key({ symbol }: Props) {
-	const { letter, hasPicked, isPlaying, difficultyTiming, pick } = useGameContext();
+	const { letter, hasPicked, isPlaying, difficultyTiming, pick, timeLeft } = useGameContext();
 	const { playAudio } = useSoundContext();
 	const [isPressed, setIsPressed] = useState(false);
 	const [isError, setIsError] = useState(false);
@@ -16,6 +16,10 @@ export default function Key({ symbol }: Props) {
 	const isActive = useMemo(() => letter === symbol, [letter, symbol]);
 	const errorRef = useRef<number | undefined>();
 	const successRef = useRef<number | undefined>();
+	const percentLeft = useMemo(
+		() => (isActive ? timeLeft / difficultyTiming : 1),
+		[isActive, difficultyTiming, timeLeft]
+	);
 
 	const error = useCallback(() => {
 		setIsError(true);
@@ -117,9 +121,30 @@ export default function Key({ symbol }: Props) {
 			borderWidth={4}
 			borderColor={borderColor()}
 			rounded="xl"
+			pos="relative"
 			boxShadow="var(--chakra-shadows-lg), 0 0 5px 0 inset rgba(0, 0, 0, 0.1)"
 		>
-			<Text textTransform="uppercase" fontWeight="bold" fontSize="4xl" userSelect="none" color={color()}>
+			{isActive && (
+				<Box
+					rounded="inherit"
+					pos="absolute"
+					top={0}
+					left={0}
+					zIndex={5}
+					transform={`scale(${1 - percentLeft})`}
+					bgColor="red.500"
+					h="full"
+					w="full"
+				/>
+			)}
+			<Text
+				textTransform="uppercase"
+				fontWeight="bold"
+				fontSize="4xl"
+				userSelect="none"
+				color={color()}
+				zIndex={10}
+			>
 				{symbol}
 			</Text>
 		</Flex>
