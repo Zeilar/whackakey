@@ -1,5 +1,6 @@
 import { createContext, useCallback, useEffect, useState } from "react";
-import { alphabet, DEFAULT_LIVES } from "../common/constants";
+import { DEFAULT_LIVES } from "../common/constants";
+import { randomUniqueLetter } from "../common/utils";
 import useSoundContext from "../hooks/useSoundContext";
 import { DifficultyTiming, Point } from "../types/game";
 
@@ -47,11 +48,7 @@ export function GameContextProvider({ children }: GameProps) {
 	}, []);
 
 	const randomLetter = useCallback(() => {
-		const newLetter = alphabet[Math.floor(alphabet.length * Math.random())];
-		if (newLetter === letter) {
-			randomLetter();
-		}
-		setLetter(newLetter);
+		setLetter(randomUniqueLetter(letter));
 	}, [letter]);
 
 	const restart = useCallback(() => {
