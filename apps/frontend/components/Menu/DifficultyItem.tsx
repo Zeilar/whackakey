@@ -1,4 +1,4 @@
-import { IconButton, Text } from "@chakra-ui/react";
+import { Button, IconButton, Text } from "@chakra-ui/react";
 import { Difficulty } from "@shared";
 import { ArrowLeft } from "@styled-icons/evaicons-solid/ArrowLeft";
 import { ArrowRight } from "@styled-icons/evaicons-solid/ArrowRight";
@@ -6,7 +6,6 @@ import useSoundContext from "apps/frontend/hooks/useSoundContext";
 import { DifficultyTiming } from "apps/frontend/types/game";
 import { motion } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
-import SolidButton from "../FloatingText/SolidButton";
 
 interface DifficultyItemProps {
 	onChange(difficultyTiming: DifficultyTiming): void;
@@ -23,7 +22,7 @@ const difficultyColors = ["green.500", "yellow.500", "red.500"];
 export default function DifficultyItem({ onChange }: DifficultyItemProps) {
 	const { playAudio } = useSoundContext();
 	const [selected, setSelected] = useState(0);
-	const ref = useRef<HTMLDivElement>(null);
+	const ref = useRef<HTMLButtonElement & HTMLDivElement>(null);
 	const previousButton = useRef<HTMLButtonElement>(null);
 	const nextButton = useRef<HTMLButtonElement>(null);
 
@@ -62,16 +61,7 @@ export default function DifficultyItem({ onChange }: DifficultyItemProps) {
 	}, [selected, onChange]);
 
 	return (
-		<SolidButton
-			ref={ref}
-			size="xl"
-			as={motion.div}
-			tabIndex={0}
-			justifyContent="space-between"
-			px={8}
-			_hover={{}}
-			_active={{}}
-		>
+		<Button ref={ref} size="xl" as={motion.div} tabIndex={0} justifyContent="space-between" px={8}>
 			<IconButton
 				ref={previousButton}
 				w={4}
@@ -99,6 +89,6 @@ export default function DifficultyItem({ onChange }: DifficultyItemProps) {
 				color="gray.100"
 				onClick={next}
 			/>
-		</SolidButton>
+		</Button>
 	);
 }
