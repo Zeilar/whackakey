@@ -51,10 +51,6 @@ export function GameContextProvider({ children }: GameProps) {
 		setLetter(randomUniqueLetter(letter));
 	}, [letter]);
 
-	useEffect(() => {
-		console.log({ letter });
-	}, [letter]);
-
 	const nextRound = useCallback(() => {
 		setUserInput(null);
 		randomLetter();
