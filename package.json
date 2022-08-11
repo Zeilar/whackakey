@@ -19,7 +19,9 @@
 		"@nestjs/core": "^8.0.0",
 		"@nestjs/passport": "9.0.0",
 		"@nestjs/platform-express": "^8.0.0",
+		"@nestjs/platform-socket.io": "9.0.8",
 		"@nestjs/typeorm": "9.0.0",
+		"@nestjs/websockets": "9.0.8",
 		"@nrwl/next": "14.4.3",
 		"@styled-icons/evaicons-solid": "10.34.0",
 		"class-transformer": "0.5.1",
@@ -40,9 +42,13 @@
 		"reflect-metadata": "^0.1.13",
 		"regenerator-runtime": "0.13.7",
 		"rxjs": "^7.0.0",
+		"socket.io": "4.5.1",
+		"socket.io-client": "4.5.1",
+		"styled-components": "5.3.5",
 		"tslib": "^2.3.0",
 		"typeorm": "0.3.7",
-		"use-ful-hooks-ts": "1.2.1"
+		"use-ful-hooks-ts": "1.2.1",
+		"uuid": "8.3.2"
 	},
 	"devDependencies": {
 		"@chakra-ui/cli": "2.1.4",
@@ -70,6 +76,7 @@
 		"@types/passport-local": "1.0.34",
 		"@types/react": "18.0.14",
 		"@types/react-dom": "18.0.5",
+		"@types/uuid": "8.3.4",
 		"@typescript-eslint/eslint-plugin": "^5.29.0",
 		"@typescript-eslint/parser": "^5.29.0",
 		"babel-jest": "27.5.1",

@@ -12,6 +12,7 @@ declare global {
 			CORS_ORIGIN: string;
 			SESSION_SECRET: string;
 			SECURE: BooleanString;
+			WS_PORT: string;
 			DB_TYPE: DatabaseType;
 			DB_HOST: string;
 			DB_PORT: string;

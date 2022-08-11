@@ -2,7 +2,7 @@ import { createContext, useCallback, useEffect, useState } from "react";
 import { DEFAULT_LIVES } from "../common/constants";
 import { randomUniqueLetter } from "../common/utils";
 import useSoundContext from "../hooks/useSoundContext";
-import { DifficultyTiming, Point } from "../types/game";
+import { DifficultyTiming, Mode, Point } from "../types/game";
 
 type Letter = string | null;
 
@@ -20,6 +20,8 @@ interface GameContext {
 	hasPicked: boolean;
 	score: number;
 	isGameOver: boolean;
+	mode: Mode;
+	setMode: React.Dispatch<React.SetStateAction<Mode>>;
 	hit(): void;
 	miss(): void;
 	play(): void;
@@ -46,6 +48,7 @@ export function GameContextProvider({ children }: GameProps) {
 	const [difficultyTiming, setDifficultyTiming] = useState(DifficultyTiming.EASY);
 	const [nextDeadline, setNextDeadline] = useState(new Date().getTime() + difficultyTiming);
 	const [timeLeft, setTimeLeft] = useState(difficultyTiming);
+	const [mode, setMode] = useState<Mode>("solo");
 
 	const randomLetter = useCallback(() => {
 		setLetter(randomUniqueLetter(letter));
@@ -139,6 +142,8 @@ export function GameContextProvider({ children }: GameProps) {
 		randomLetter,
 		setTimeLeft,
 		timeLeft,
+		mode,
+		setMode,
 	};
 
 	return <GameContext.Provider value={values}>{children}</GameContext.Provider>;

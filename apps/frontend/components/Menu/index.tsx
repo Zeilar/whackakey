@@ -4,9 +4,10 @@ import NextLink from "next/link";
 import { useEffect, useState } from "react";
 import DifficultyItem from "./DifficultyItem";
 import SolidButton from "../FloatingText/SolidButton";
+import ModeItem from "./ModeItem";
 
 export default function Menu() {
-	const { play, setDifficultyTiming } = useGameContext();
+	const { play, setDifficultyTiming, setMode } = useGameContext();
 	const [isCountingDown, setIsCountingDown] = useState(false);
 	const [countdown, setCountdown] = useState(3);
 
@@ -47,11 +48,12 @@ export default function Menu() {
 	}
 
 	return (
-		<Flex as="nav" gap={4} flexDir="column" width={500}>
+		<Flex as="nav" gap={4} flexDir="column" width={550}>
 			<SolidButton onClick={() => setIsCountingDown(true)} autoFocus>
 				Play
 			</SolidButton>
 			<DifficultyItem onChange={setDifficultyTiming} />
+			<ModeItem onChange={setMode} />
 			<NextLink passHref href="/tutorial">
 				<Link _hover={{}} tabIndex={-1}>
 					<SolidButton role="link">How to play</SolidButton>
