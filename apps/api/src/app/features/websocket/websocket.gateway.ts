@@ -23,9 +23,6 @@ export class WebsocketGateway implements OnGatewayDisconnect, OnGatewayConnectio
 
 	public afterInit(server: Server) {
 		this.server = server;
-		setInterval(() => {
-			console.log(this.rooms.length);
-		}, 5000);
 	}
 
 	public addClient(client: Client) {
