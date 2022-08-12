@@ -23,13 +23,20 @@ export const Button: StyleConfig = {
 			boxShadow: "none",
 		},
 		_focus: {
-			outlineOffset: 4,
+			outlineOffset: 2,
 			outlineWidth: 4,
 			outlineColor: "blue.300",
 		},
 	},
 	sizes: {
+		md: {
+			borderWidth: 3,
+		},
+		lg: {
+			borderWidth: 3,
+		},
 		xl: {
+			borderWidth: 5,
 			fontSize: "4xl",
 			py: 6,
 			px: 20,
@@ -41,9 +48,8 @@ export const Button: StyleConfig = {
 			fontFamily: "Fredoka One, sans-serif",
 			textTransform: "uppercase",
 			borderRadius: "full",
-			borderWidth: 6,
 			borderColor: "blue.900",
-			boxShadow: "mg",
+			boxShadow: "md",
 			_hover: {
 				textDecor: "none",
 				bgColor: "gray.100",

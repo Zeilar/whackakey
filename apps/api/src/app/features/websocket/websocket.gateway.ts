@@ -134,7 +134,7 @@ export class WebsocketGateway implements OnGatewayDisconnect, OnGatewayConnectio
 	}
 
 	@SubscribeMessage("game-start")
-	public startGame(@ConnectedSocket() socket: Socket, @MessageBody("roomId") roomId: string) {
+	public startGame(@ConnectedSocket() socket: Socket, @MessageBody() roomId: string) {
 		const room = this.getRoomById(roomId);
 		if (!room) {
 			socket.emit("error", "That room does not exist.");
@@ -144,6 +144,7 @@ export class WebsocketGateway implements OnGatewayDisconnect, OnGatewayConnectio
 			socket.emit("error", "Only the room owner can start the game.");
 			return;
 		}
+		console.log("start");
 		room.start();
 	}
 

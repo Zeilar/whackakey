@@ -104,6 +104,11 @@ export default function Room() {
 						</Flex>
 					))}
 			</Grid>
+			<Flex justifyContent="center" gap={2} bgColor="gray.300" p={4}>
+				<Button size="lg" onClick={() => socket?.emit("game-start", query.roomId)}>
+					Start
+				</Button>
+			</Flex>
 		</Flex>
 	);
 }

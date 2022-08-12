@@ -70,6 +70,7 @@ export function WebsocketContextProvider({ children }: WebsocketProps) {
 			return;
 		}
 		socket
+			.on("error", console.error)
 			.on("name", setName)
 			.on("connect", () => {
 				setIsConnecting(false);
@@ -100,6 +101,7 @@ export function WebsocketContextProvider({ children }: WebsocketProps) {
 			socket
 				.off("connect")
 				.off("disconnect")
+				.off("error")
 				.off("name")
 				.off("rooms-get")
 				.off("room-new")
