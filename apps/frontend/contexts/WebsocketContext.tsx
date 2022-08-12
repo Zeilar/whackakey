@@ -72,7 +72,6 @@ export function WebsocketContextProvider({ children }: WebsocketProps) {
 				setIsConnecting(false);
 			})
 			.on("rooms-get", (rooms: RoomDto[]) => {
-				console.log(rooms);
 				dispatchRooms({ type: RoomAction.GET_ALL, rooms });
 			})
 			.on("room-new", (room: RoomDto) => {
