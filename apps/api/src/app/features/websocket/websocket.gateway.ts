@@ -152,6 +152,10 @@ export class WebsocketGateway implements OnGatewayDisconnect, OnGatewayConnectio
 		// console.log(client.id);
 		// console.log("connected", socket.id);
 		this.createClient(socket.id);
+		socket.emit(
+			"rooms-get",
+			this.rooms.map(room => room.dto())
+		);
 	}
 
 	public handleDisconnect(socket: Socket) {

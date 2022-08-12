@@ -7,6 +7,7 @@ export enum RoomAction {
 	PLAYER_JOIN = "player-join",
 	SNAPSHOT = "snapshot",
 	EMPTY = "empty",
+	GET_ALL = "get-all",
 }
 
 interface AddAction {
@@ -41,9 +42,21 @@ interface EmptyAction {
 	type: RoomAction.EMPTY;
 }
 
+interface GetAllAction {
+	type: RoomAction.GET_ALL;
+	rooms: RoomDto[];
+}
+
 export function roomReducer(
 	state: RoomDto[],
-	action: AddAction | RemoveAction | PlayerJoinAction | PlayerLeaveAction | SnapshotAction | EmptyAction
+	action:
+		| AddAction
+		| RemoveAction
+		| PlayerJoinAction
+		| PlayerLeaveAction
+		| SnapshotAction
+		| EmptyAction
+		| GetAllAction
 ) {
 	switch (action.type) {
 		case RoomAction.ADD:
@@ -72,6 +85,8 @@ export function roomReducer(
 			return state.map(room => (action.roomId === room.id ? { ...action.snapshot } : room));
 		case RoomAction.EMPTY:
 			return [];
+		case RoomAction.GET_ALL:
+			return [...action.rooms];
 		default:
 			return state;
 	}

@@ -66,34 +66,40 @@ export function WebsocketContextProvider({ children }: WebsocketProps) {
 		if (!socket) {
 			return;
 		}
-		socket.on("name", setName);
-		socket.on("connect", () => {
-			setIsConnecting(false);
-		});
-		socket.on("room-new", (room: RoomDto) => {
-			dispatchRooms({ type: RoomAction.ADD, room });
-		});
-		socket.on("room-remove", (roomId: string) => {
-			dispatchRooms({ type: RoomAction.REMOVE, roomId });
-		});
-		socket.on("room-player-join", (dto: PlayerJoinDto) => {
-			dispatchRooms({ type: RoomAction.PLAYER_JOIN, ...dto });
-		});
-		socket.on("room-player-leave", (dto: PlayerLeaveDto) => {
-			dispatchRooms({ type: RoomAction.PLAYER_LEAVE, ...dto });
-		});
-		socket.on("disconnect", () => {
-			setisOnline(false);
-			setIsConnecting(true);
-			dispatchRooms({ type: RoomAction.EMPTY });
-			setName(undefined);
-			setSocket(io("ws://localhost:3086", { transports: ["websocket"] }));
-		});
+		socket
+			.on("name", setName)
+			.on("connect", () => {
+				setIsConnecting(false);
+			})
+			.on("rooms-get", (rooms: RoomDto[]) => {
+				console.log(rooms);
+				dispatchRooms({ type: RoomAction.GET_ALL, rooms });
+			})
+			.on("room-new", (room: RoomDto) => {
+				dispatchRooms({ type: RoomAction.ADD, room });
+			})
+			.on("room-remove", (roomId: string) => {
+				dispatchRooms({ type: RoomAction.REMOVE, roomId });
+			})
+			.on("room-player-join", (dto: PlayerJoinDto) => {
+				dispatchRooms({ type: RoomAction.PLAYER_JOIN, ...dto });
+			})
+			.on("room-player-leave", (dto: PlayerLeaveDto) => {
+				dispatchRooms({ type: RoomAction.PLAYER_LEAVE, ...dto });
+			})
+			.on("disconnect", () => {
+				setisOnline(false);
+				setIsConnecting(true);
+				dispatchRooms({ type: RoomAction.EMPTY });
+				setName(undefined);
+				setSocket(io("ws://localhost:3086", { transports: ["websocket"] }));
+			});
 		return () => {
 			socket
 				.off("connect")
 				.off("disconnect")
 				.off("name")
+				.off("rooms-get")
 				.off("room-new")
 				.off("room-remove")
 				.off("room-player-join")
