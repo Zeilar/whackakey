@@ -3,6 +3,9 @@ import { createContext, useEffect, useReducer, useState } from "react";
 import { Socket, io } from "socket.io-client";
 import { PlayerJoinDto, PlayerLeaveDto, RoomDto } from "@shared";
 import { RoomAction, roomReducer } from "../reducers/roomReducer";
+import env from "../common/config";
+
+const WS_ENDPOINT = env.get<string>("WS_ENDPOINT");
 
 interface WebsocketContext {
 	socket: Socket | undefined;
@@ -29,7 +32,7 @@ export function WebsocketContextProvider({ children }: WebsocketProps) {
 	const [rooms, dispatchRooms] = useReducer(roomReducer, []);
 
 	useEffect(() => {
-		setSocket(io("ws://localhost:3086", { transports: ["websocket"] }));
+		setSocket(io(WS_ENDPOINT, { transports: ["websocket"] }));
 	}, []);
 
 	useEffect(() => {
@@ -91,7 +94,7 @@ export function WebsocketContextProvider({ children }: WebsocketProps) {
 				setIsConnecting(true);
 				dispatchRooms({ type: RoomAction.EMPTY });
 				setName(undefined);
-				setSocket(io("ws://localhost:3086", { transports: ["websocket"] }));
+				setSocket(io(WS_ENDPOINT, { transports: ["websocket"] }));
 			});
 		return () => {
 			socket

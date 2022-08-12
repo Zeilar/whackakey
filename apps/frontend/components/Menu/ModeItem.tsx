@@ -10,7 +10,7 @@ interface ModeItemProps {
 	onChange(mode: Mode): void;
 }
 
-const modes = ["solo", "multiplayer"];
+const modes: Mode[] = ["solo", "multiplayer"];
 
 export default function ModeItem({ onChange }: ModeItemProps) {
 	const { playAudio } = useSoundContext();
