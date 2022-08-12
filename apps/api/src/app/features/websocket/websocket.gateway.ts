@@ -35,7 +35,7 @@ export class WebsocketGateway implements OnGatewayDisconnect, OnGatewayConnectio
 
 	public addRoom(room: Room) {
 		this.rooms.push(room);
-		this.server.emit("room-new", { id: room.id, players: room.players });
+		this.server.emit("room-new", room.dto());
 	}
 
 	public removeRoom(roomId: string) {
@@ -131,7 +131,6 @@ export class WebsocketGateway implements OnGatewayDisconnect, OnGatewayConnectio
 		this.addRoom(room);
 		socket.join(room.id);
 		socket.emit("room-join", room.id);
-		return room.id;
 	}
 
 	@SubscribeMessage("game-start")
@@ -149,8 +148,6 @@ export class WebsocketGateway implements OnGatewayDisconnect, OnGatewayConnectio
 	}
 
 	public handleConnection(socket: Socket) {
-		// console.log(client.id);
-		// console.log("connected", socket.id);
 		this.createClient(socket.id);
 		socket.emit(
 			"rooms-get",
@@ -159,8 +156,6 @@ export class WebsocketGateway implements OnGatewayDisconnect, OnGatewayConnectio
 	}
 
 	public handleDisconnect(socket: Socket) {
-		// console.log(client.id, client.rooms);
-		// console.log("disconnect");
 		this.removeClientFromAllRooms(socket);
 		this.removeClient(socket.id);
 	}

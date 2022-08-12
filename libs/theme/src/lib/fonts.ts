@@ -1,4 +1,4 @@
 export const fonts = {
 	heading: "Fredoka One, sans-serif",
-	body: "Inter, sans-serif",
+	body: "Fredoka One, sans-serif",
 };
