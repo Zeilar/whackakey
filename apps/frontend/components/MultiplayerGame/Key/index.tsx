@@ -1,5 +1,7 @@
 import { Box, Flex, Text } from "@chakra-ui/react";
-import { useSoundContext, useGameContext } from "apps/frontend/hooks";
+import { DifficultyTiming } from "@shared";
+import { useSoundContext, useWebsocketContext } from "apps/frontend/hooks";
+import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 interface Props {
@@ -7,27 +9,30 @@ interface Props {
 }
 
 export default function Key({ symbol }: Props) {
-	const { letter, hasPicked, isPlaying, difficultyTiming, pick, timeLeft } = useGameContext<"solo">("solo");
+	const { query } = useRouter();
+	const { socket, rooms } = useWebsocketContext();
 	const { playAudio } = useSoundContext();
+	const room = useMemo(() => rooms.find(room => room.id === query.roomId), [rooms, query.roomId]);
 	const [isPressed, setIsPressed] = useState(false);
-	const isActive = useMemo(() => letter === symbol, [letter, symbol]);
-	const percentLeft = useMemo(
-		() => (isActive ? timeLeft / difficultyTiming : 1),
-		[isActive, difficultyTiming, timeLeft]
-	);
+	const isActive = useMemo(() => room?.letter === symbol, [room, symbol]);
+	const player = useMemo(() => room?.players.find(player => player.id === socket?.id), [room, socket]);
+	const percentLeft = DifficultyTiming.EASY;
 
 	useEffect(() => {
 		function onKeyDown(e: KeyboardEvent) {
+			if (!room || !socket || !player) {
+				return;
+			}
 			const { key } = e;
-			if (key !== symbol || isPressed || !isPlaying) {
+			if (key !== symbol || isPressed) {
 				return;
 			}
 			setIsPressed(true);
-			if (hasPicked) {
+			if (typeof player.pick === "string") {
 				playAudio("click");
 				return;
 			}
-			pick(key);
+			socket.emit("player-pick", { roomId: query.roomId, letter: key });
 		}
 
 		function onKeyUp(e: KeyboardEvent) {
@@ -44,7 +49,7 @@ export default function Key({ symbol }: Props) {
 			document.removeEventListener("keydown", onKeyDown);
 			document.removeEventListener("keyup", onKeyUp);
 		};
-	}, [symbol, letter, isPressed, playAudio, isPlaying, hasPicked, pick]);
+	}, [room, socket, player, symbol, isPressed, playAudio]);
 
 	const bgColor = useCallback(() => {
 		if (isActive) {
@@ -68,12 +73,13 @@ export default function Key({ symbol }: Props) {
 		>
 			{isActive && (
 				<Box
+					overflow="hidden"
 					rounded="inherit"
 					pos="absolute"
 					top={0}
 					left={0}
 					zIndex={5}
-					transform={`scale(${1 - percentLeft})`}
+					// transform={`scale(${1 - percentLeft})`}
 					bgColor="blue.900"
 					h="full"
 					w="full"

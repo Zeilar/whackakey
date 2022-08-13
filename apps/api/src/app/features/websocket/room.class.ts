@@ -60,6 +60,10 @@ export class Room {
 		return this.players.some(player => player.id === clientId);
 	}
 
+	public getPlayer(clientId: string) {
+		return this.players.find(player => player.id === clientId);
+	}
+
 	public makePlayer(client: Client) {
 		if (this.isGameActive || this.players.length >= MAX_PLAYERS) {
 			return;
@@ -108,15 +112,18 @@ export class Room {
 			return;
 		}
 		this.players.forEach(player => {
-			if ((player.pick != null && player.pick === this.letter) || player.isEliminated) {
+			if (player.isEliminated) {
 				return;
 			}
-			if (player.lives <= 1) {
-				player.isEliminated = true;
+			if (player.pick !== this.letter) {
+				if (player.lives <= 1) {
+					player.isEliminated = true;
+				}
+				if (player.lives > 0) {
+					player.lives--;
+				}
 			}
-			if (player.lives > 0) {
-				player.lives--;
-			}
+			player.pick = null;
 		});
 		this.letter = this.randomLetter();
 		this.server.to(this.id).emit("room-update", this.snapshot());
@@ -130,6 +137,7 @@ export class Room {
 		this.players.forEach(player => {
 			player.lives = 3;
 			player.isEliminated = false;
+			player.pick = null;
 		});
 		this.isGameActive = false;
 		this.server.to(this.id).emit("room-update", this.snapshot());
@@ -144,19 +152,26 @@ export class Room {
 		return difficultiesMap[this.difficulty];
 	}
 
+	public playerPick(clientId: string, letter: string) {
+		const player = this.getPlayer(clientId);
+		if (!player) {
+			return;
+		}
+		player.pick = letter;
+	}
+
 	public start() {
+		if (this.players.length < 2 || this.isGameActive) {
+			return;
+		}
+		this.reset();
+		this.isGameActive = true;
+		this.server.emit("game-active", this.id);
+		this.server.to(this.id).emit("game-starting", Date.now() + 3000);
 		setTimeout(() => {
-			if (this.players.length < 2 || this.isGameActive) {
-				return;
-			}
-			this.reset();
-			this.isGameActive = true;
-			this.server.emit("room-game-active", this.id);
-			setTimeout(() => {
-				this.interval = setInterval(() => {
-					this.attemptWinner();
-					this.update();
-				}, this.difficultyInMs);
+			this.interval = setInterval(() => {
+				this.attemptWinner();
+				this.update();
 			}, this.difficultyInMs);
 		}, 3000);
 	}

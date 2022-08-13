@@ -72,6 +72,7 @@ export function WebsocketContextProvider({ children }: WebsocketProps) {
 			.on("error", toast.error)
 			.on("name", setName)
 			.on("connect", () => {
+				setisOnline(true);
 				setIsConnecting(false);
 			})
 			.on("rooms-get", (rooms: RoomDto[]) => {

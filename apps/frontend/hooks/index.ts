@@ -1,4 +1,4 @@
-export * from "./useGameContext";
+export * from "./useSoloGameContext";
 export * from "./useMultiplayerGame";
 export * from "./useSoloGame";
 export * from "./useSoundContext";

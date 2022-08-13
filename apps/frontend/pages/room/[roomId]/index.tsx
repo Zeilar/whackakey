@@ -3,35 +3,55 @@ import { Undo } from "@styled-icons/evaicons-solid";
 import { useWebsocketContext } from "apps/frontend/hooks";
 import { useRouter } from "next/router";
 import NextLink from "next/link";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { MAX_PLAYERS } from "@shared";
 import { TrophyFill } from "@styled-icons/bootstrap";
 import { Crown } from "@styled-icons/fa-solid";
+import MultiplayerGame from "apps/frontend/components/MultiplayerGame";
 
 export default function Room() {
 	const { query } = useRouter();
 	const { socket, rooms } = useWebsocketContext();
 	const room = useMemo(() => rooms.find(room => room.id === query.roomId), [rooms, query.roomId]);
 	const isOwner = useMemo(() => {
-		if (!room || !socket) {
+		if (!room?.ownerId || !socket) {
 			return false;
 		}
 		return socket.id === room.ownerId;
-	}, [room, socket]);
+	}, [room?.ownerId, socket]);
 	const slotsAvailable = useMemo(() => (room ? Math.max(0, MAX_PLAYERS - room.players.length) : 0), [room]);
+	const hasPlayer = useMemo(
+		() => room?.players.some(player => player.id === socket?.id),
+		[room?.players, socket?.id]
+	);
+	const [timestamp, setTimestamp] = useState<number>();
 
 	useEffect(() => {
-		if (!socket || !query.roomId || room) {
+		if (!socket || !query.roomId || hasPlayer) {
 			return;
 		}
 		socket.emit("room-join", query.roomId);
 		return () => {
-			if (!socket || !query.roomId || !room) {
+			if (!socket || !query.roomId || !room || !hasPlayer) {
 				return;
 			}
 			socket.emit("room-leave", query.roomId);
 		};
-	}, [socket, query.roomId, room]);
+	}, [socket, query.roomId, room, hasPlayer]);
+
+	useEffect(() => {
+		setTimestamp(undefined);
+	}, [query.roomId]);
+
+	useEffect(() => {
+		if (!socket) {
+			return;
+		}
+		socket.on("game-starting", setTimestamp);
+		return () => {
+			socket.off("game-starting");
+		};
+	}, [socket]);
 
 	if (!room) {
 		return (
@@ -47,6 +67,10 @@ export default function Room() {
 				</NextLink>
 			</Flex>
 		);
+	}
+
+	if (typeof timestamp === "number") {
+		return <MultiplayerGame timestamp={timestamp} />;
 	}
 
 	return (
@@ -121,10 +145,6 @@ export default function Room() {
 				>
 					Start
 				</Button>
-			</Flex>
-			<Flex flexDir="column">
-				<Heading mb={5}>{room.letter}</Heading>
-				<pre>{JSON.stringify(room.players, null, 4)}</pre>
 			</Flex>
 		</Flex>
 	);

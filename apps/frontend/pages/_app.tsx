@@ -5,7 +5,7 @@ import Head from "next/head";
 import { ChakraProvider, CSSReset, Flex } from "@chakra-ui/react";
 import { SoundContextProvider } from "../contexts/SoundContext";
 import theme from "@theme";
-import { GameContextProvider } from "../contexts/GameContext";
+import { SoloGameContextProvider } from "../contexts/SoloGameContext";
 import Header from "../components/Header";
 import { WebsocketContextProvider } from "../contexts/WebsocketContext";
 import Test from "../components/Latency/Test";
@@ -23,7 +23,7 @@ function CustomApp({ Component, pageProps }: AppProps) {
 			<ToastContainer position="top-right" draggable={false} pauseOnHover={false} pauseOnFocusLoss={false} />
 			<SoundContextProvider>
 				<WebsocketContextProvider>
-					<GameContextProvider>
+					<SoloGameContextProvider>
 						<ChakraProvider theme={theme}>
 							<Flex
 								h="100%"
@@ -40,7 +40,7 @@ function CustomApp({ Component, pageProps }: AppProps) {
 								<Component {...pageProps} />
 							</Flex>
 						</ChakraProvider>
-					</GameContextProvider>
+					</SoloGameContextProvider>
 				</WebsocketContextProvider>
 			</SoundContextProvider>
 		</>

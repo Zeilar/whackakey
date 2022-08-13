@@ -1,12 +1,12 @@
 import { Flex, Heading } from "@chakra-ui/react";
 import { useEffect, useRef } from "react";
-import Keyboard from "../Keyboard";
-import { useGameContext } from "../../hooks";
+import Keyboard from "./Keyboard";
+import { useSoloGameContext } from "../../hooks";
 import SolidButton from "../FloatingText/SolidButton";
 
 export default function SoloGame() {
 	const { score, letter, isGameOver, userInput, miss, lives, reset, nextDeadline, hit, nextRound, setTimeLeft } =
-		useGameContext<"solo">("solo");
+		useSoloGameContext();
 	const animationFrameRef = useRef<number | undefined>();
 
 	useEffect(() => {
