@@ -116,11 +116,15 @@ export default function Room() {
 				<Button
 					size="lg"
 					onClick={() => socket?.emit("game-start", query.roomId)}
-					disabled={!isOwner}
+					disabled={room.players.length < 2 || !isOwner}
 					title={!isOwner ? "Only the owner can start the game" : undefined}
 				>
 					Start
 				</Button>
+			</Flex>
+			<Flex flexDir="column">
+				<Heading mb={5}>{room.letter}</Heading>
+				<pre>{JSON.stringify(room.players, null, 4)}</pre>
 			</Flex>
 		</Flex>
 	);

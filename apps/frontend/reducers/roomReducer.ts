@@ -34,8 +34,7 @@ interface PlayerLeaveAction {
 
 interface SnapshotAction {
 	type: RoomAction.SNAPSHOT;
-	roomId: string;
-	snapshot: RoomDto;
+	room: RoomDto;
 }
 
 interface EmptyAction {
@@ -82,7 +81,7 @@ export function roomReducer(
 					: room
 			);
 		case RoomAction.SNAPSHOT:
-			return state.map(room => (action.roomId === room.id ? { ...action.snapshot } : room));
+			return state.map(room => (action.room.id === room.id ? { ...action.room } : room));
 		case RoomAction.EMPTY:
 			return [];
 		case RoomAction.GET_ALL:

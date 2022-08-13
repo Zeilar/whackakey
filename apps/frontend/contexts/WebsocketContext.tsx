@@ -77,6 +77,9 @@ export function WebsocketContextProvider({ children }: WebsocketProps) {
 			.on("rooms-get", (rooms: RoomDto[]) => {
 				dispatchRooms({ type: RoomAction.GET_ALL, rooms });
 			})
+			.on("room-update", (room: RoomDto) => {
+				dispatchRooms({ type: RoomAction.SNAPSHOT, room });
+			})
 			.on("room-new", (room: RoomDto) => {
 				dispatchRooms({ type: RoomAction.ADD, room });
 			})
@@ -102,6 +105,7 @@ export function WebsocketContextProvider({ children }: WebsocketProps) {
 				.off("error")
 				.off("name")
 				.off("rooms-get")
+				.off("room-update")
 				.off("room-new")
 				.off("room-remove")
 				.off("room-player-join")
@@ -111,6 +115,7 @@ export function WebsocketContextProvider({ children }: WebsocketProps) {
 
 	useEffect(() => {
 		setisOnline(socket?.connected ?? false);
+		setIsConnecting(false);
 	}, [socket?.connected]);
 
 	const values: WebsocketContext = {

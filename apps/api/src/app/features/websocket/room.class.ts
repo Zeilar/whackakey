@@ -48,7 +48,7 @@ export class Room {
 	}
 
 	private snapshot() {
-		return this.players;
+		return this.dto();
 	}
 
 	private randomLetter(): string {
@@ -88,18 +88,18 @@ export class Room {
 	}
 
 	private attemptWinner() {
-		if (this.playersLeft() <= 1) {
-			const winner = this.players.find(player => player.isEliminated === false);
-			if (!winner) {
-				this.server.to(this.id).emit("error", "Could not find winner.");
-				return false;
-			}
-			winner.wins++;
-			this.server.to(this.id).emit("winner", winner.id);
-			this.reset();
-			return true;
+		if (this.playersLeft() > 1) {
+			return;
 		}
-		return false;
+		clearInterval(this.interval);
+		const winner = this.players.find(player => player.isEliminated === false);
+		if (!winner) {
+			this.server.to(this.id).emit("error", "Could not find winner.");
+			return;
+		}
+		winner.wins++;
+		this.server.to(this.id).emit("winner", winner.id);
+		this.reset();
 	}
 
 	private update() {
@@ -108,17 +108,18 @@ export class Room {
 			return;
 		}
 		this.players.forEach(player => {
-			if (player.pick != null && player.pick === this.letter) {
+			if ((player.pick != null && player.pick === this.letter) || player.isEliminated) {
 				return;
 			}
 			if (player.lives <= 1) {
 				player.isEliminated = true;
 			}
-			player.lives--;
+			if (player.lives > 0) {
+				player.lives--;
+			}
 		});
 		this.letter = this.randomLetter();
-		console.log(this.letter);
-		this.server.to(this.id).emit("update", this.snapshot());
+		this.server.to(this.id).emit("room-update", this.snapshot());
 	}
 
 	public isEmpty() {
@@ -130,7 +131,8 @@ export class Room {
 			player.lives = 3;
 			player.isEliminated = false;
 		});
-		this.server.to(this.id).emit("update", this.snapshot());
+		this.isGameActive = false;
+		this.server.to(this.id).emit("room-update", this.snapshot());
 		this.server.emit("room-game-inactive", this.id);
 	}
 
@@ -152,10 +154,7 @@ export class Room {
 			this.server.emit("room-game-active", this.id);
 			setTimeout(() => {
 				this.interval = setInterval(() => {
-					if (this.attemptWinner()) {
-						clearInterval(this.interval);
-						return;
-					}
+					this.attemptWinner();
 					this.update();
 				}, this.difficultyInMs);
 			}, this.difficultyInMs);
