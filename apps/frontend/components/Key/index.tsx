@@ -1,6 +1,5 @@
 import { Box, Flex, Text } from "@chakra-ui/react";
-import useGameContext from "apps/frontend/hooks/useGameContext";
-import useSoundContext from "apps/frontend/hooks/useSoundContext";
+import { useSoundContext, useGameContext } from "apps/frontend/hooks";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 interface Props {
@@ -8,7 +7,7 @@ interface Props {
 }
 
 export default function Key({ symbol }: Props) {
-	const { letter, hasPicked, isPlaying, difficultyTiming, pick, timeLeft } = useGameContext();
+	const { letter, hasPicked, isPlaying, difficultyTiming, pick, timeLeft } = useGameContext<"solo">("solo");
 	const { playAudio } = useSoundContext();
 	const [isPressed, setIsPressed] = useState(false);
 	const isActive = useMemo(() => letter === symbol, [letter, symbol]);
@@ -83,6 +82,7 @@ export default function Key({ symbol }: Props) {
 			<Text
 				textTransform="uppercase"
 				fontWeight="bold"
+				fontFamily="Inter"
 				fontSize="4xl"
 				userSelect="none"
 				color={isActive ? "gray.100" : "blue.700"}

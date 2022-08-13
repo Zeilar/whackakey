@@ -1,6 +1,6 @@
 import { Button, Flex, Grid, Heading, Icon, Link, Text, Tooltip } from "@chakra-ui/react";
 import { Undo } from "@styled-icons/evaicons-solid";
-import useWebsocketContext from "apps/frontend/hooks/useWebsocketContext";
+import { useWebsocketContext } from "apps/frontend/hooks";
 import { useRouter } from "next/router";
 import NextLink from "next/link";
 import { useEffect, useMemo } from "react";

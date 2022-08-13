@@ -1,5 +1,5 @@
 import { Flex, Heading, Link } from "@chakra-ui/react";
-import useGameContext from "apps/frontend/hooks/useGameContext";
+import { useGameContext } from "apps/frontend/hooks/";
 import NextLink from "next/link";
 import { useEffect, useState } from "react";
 import DifficultyItem from "./DifficultyItem";
@@ -7,7 +7,7 @@ import SolidButton from "../FloatingText/SolidButton";
 import ModeItem from "./ModeItem";
 
 export default function Menu() {
-	const { play, setDifficultyTiming, setMode } = useGameContext();
+	const { play, setDifficultyTiming, setMode } = useGameContext<"solo">("solo");
 	const [isCountingDown, setIsCountingDown] = useState(false);
 	const [countdown, setCountdown] = useState(3);
 

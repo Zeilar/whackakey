@@ -1,5 +1,5 @@
 import { Button, Flex, Portal } from "@chakra-ui/react";
-import useWebsocketContext from "../../hooks/useWebsocketContext";
+import { useWebsocketContext } from "../../hooks/";
 
 export default function Test() {
 	const { socket, rooms } = useWebsocketContext();

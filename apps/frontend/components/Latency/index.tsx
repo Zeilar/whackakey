@@ -1,5 +1,5 @@
 import { Box, Flex, Heading, Portal, Spinner } from "@chakra-ui/react";
-import useWebsocketContext from "../../hooks/useWebsocketContext";
+import { useWebsocketContext } from "../../hooks/";
 
 export default function Latency() {
 	const { latency, isConnecting, isOnline } = useWebsocketContext();

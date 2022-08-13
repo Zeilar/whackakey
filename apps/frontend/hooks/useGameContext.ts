@@ -1,6 +1,8 @@
 import { useContext } from "react";
-import { GameContext } from "../contexts/GameContext";
+import { IGameContext, GameContext } from "../contexts/GameContext";
+import { Mode } from "../types/game";
 
-export default function useGameContext() {
-	return useContext(GameContext);
+export function useGameContext<T extends Mode>(mode: Mode): IGameContext[T] {
+	const context = useContext(GameContext);
+	return context[mode];
 }

@@ -1,12 +1,13 @@
 import { IconButton, Portal } from "@chakra-ui/react";
 import { VolumeOff, VolumeUp } from "@styled-icons/evaicons-solid";
-import useSoundContext from "apps/frontend/hooks/useSoundContext";
+import { useSoundContext } from "apps/frontend/hooks/";
 
 export default function SoundToggler() {
 	const { isMuted, toggle } = useSoundContext();
 	return (
 		<Portal>
 			<IconButton
+				border={0}
 				w={4}
 				color="gray.100"
 				pos="fixed"

@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { WebsocketContext } from "../contexts/WebsocketContext";
 
-export default function useWebsocketContext() {
+export function useWebsocketContext() {
 	return useContext(WebsocketContext);
 }
