@@ -77,6 +77,12 @@ export class Room {
 
 	public removePlayer(clientId: string) {
 		this.players = this.players.filter(player => player.id !== clientId);
+		if (this.players.length === 0) {
+			return;
+		}
+		if (clientId === this.ownerId) {
+			this.setOwner(this.players[0].id);
+		}
 		this.server.emit("room-player-leave", { playerId: clientId, roomId: this.id } as PlayerLeaveDto);
 		this.update();
 	}

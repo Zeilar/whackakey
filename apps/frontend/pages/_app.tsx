@@ -1,4 +1,5 @@
 import "../common/fonts";
+import "../common/styles";
 import { AppProps } from "next/app";
 import Head from "next/head";
 import { ChakraProvider, CSSReset, Flex } from "@chakra-ui/react";
@@ -8,6 +9,9 @@ import { GameContextProvider } from "../contexts/GameContext";
 import Header from "../components/Header";
 import { WebsocketContextProvider } from "../contexts/WebsocketContext";
 import Test from "../components/Latency/Test";
+import SoundToggler from "../components/SoundToggler";
+import Latency from "../components/Latency";
+import { ToastContainer } from "react-toastify";
 
 function CustomApp({ Component, pageProps }: AppProps) {
 	return (
@@ -16,6 +20,7 @@ function CustomApp({ Component, pageProps }: AppProps) {
 				<title>Whack a key</title>
 			</Head>
 			<CSSReset />
+			<ToastContainer position="top-right" draggable={false} pauseOnHover={false} pauseOnFocusLoss={false} />
 			<SoundContextProvider>
 				<WebsocketContextProvider>
 					<GameContextProvider>
@@ -28,6 +33,8 @@ function CustomApp({ Component, pageProps }: AppProps) {
 								bgColor="blue.700"
 								bgSize="1.5em 1.5em"
 							>
+								<SoundToggler />
+								<Latency />
 								<Test />
 								<Header />
 								<Component {...pageProps} />
