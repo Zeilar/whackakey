@@ -12,8 +12,18 @@ import config from "../../config";
 import { Room } from "./room.class";
 import { v4 as uuidv4 } from "uuid";
 import { Client } from "../../../types/ws";
+import { uniqueNamesGenerator, adjectives, animals } from "unique-names-generator";
 
 const { port } = config.ws;
+
+function randomName() {
+	return uniqueNamesGenerator({
+		dictionaries: [adjectives, animals],
+		separator: " ",
+		style: "capital",
+		length: 2,
+	});
+}
 
 @WebSocketGateway(port, { transports: ["websocket"], cors: config.app.corsOrigin })
 export class WebsocketGateway implements OnGatewayDisconnect, OnGatewayConnection, OnGatewayInit {
@@ -58,7 +68,7 @@ export class WebsocketGateway implements OnGatewayDisconnect, OnGatewayConnectio
 	public createClient(id: string): Client {
 		const client = {
 			id,
-			name: "some name",
+			name: randomName(),
 		};
 		const socket = this.server.sockets.sockets.get(id);
 		if (!socket) {
