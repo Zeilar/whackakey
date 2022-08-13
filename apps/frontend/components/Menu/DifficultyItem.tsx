@@ -1,9 +1,8 @@
 import { Button, IconButton, Text } from "@chakra-ui/react";
-import { Difficulty } from "@shared";
+import { Difficulty, DifficultyTiming } from "@shared";
 import { ArrowLeft } from "@styled-icons/evaicons-solid/ArrowLeft";
 import { ArrowRight } from "@styled-icons/evaicons-solid/ArrowRight";
 import { useSoundContext } from "apps/frontend/hooks/";
-import { DifficultyTiming } from "apps/frontend/types/game";
 import { motion } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
 

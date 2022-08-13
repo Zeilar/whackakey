@@ -1,10 +1,12 @@
-import { Player } from "./game";
+import { Difficulty, Player } from "./game";
 
 export interface RoomDto {
 	id: string;
 	isGameActive: boolean;
 	ownerId: string;
 	players: Player[];
+	letter: string;
+	difficulty: Difficulty;
 }
 
 export interface PlayerJoinDto {

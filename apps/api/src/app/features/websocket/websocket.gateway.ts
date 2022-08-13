@@ -144,7 +144,6 @@ export class WebsocketGateway implements OnGatewayDisconnect, OnGatewayConnectio
 			socket.emit("error", "Only the room owner can start the game.");
 			return;
 		}
-		console.log("start");
 		room.start();
 	}
 

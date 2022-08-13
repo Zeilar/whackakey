@@ -12,15 +12,23 @@ export default function Room() {
 	const { query } = useRouter();
 	const { socket, rooms } = useWebsocketContext();
 	const room = useMemo(() => rooms.find(room => room.id === query.roomId), [rooms, query.roomId]);
-	const isOwner = useMemo(() => (room && socket ? room.ownerId === socket.id : false), [room, socket]);
+	const isOwner = useMemo(() => {
+		if (!room || !socket) {
+			return false;
+		}
+		return socket.id === room.ownerId;
+	}, [room, socket]);
 	const slotsAvailable = useMemo(() => (room ? Math.max(0, MAX_PLAYERS - room.players.length) : 0), [room]);
 
 	useEffect(() => {
-		if (!socket || !query.roomId || !room) {
+		if (!socket || !query.roomId || room) {
 			return;
 		}
 		socket.emit("room-join", query.roomId);
 		return () => {
+			if (!socket || !query.roomId || !room) {
+				return;
+			}
 			socket.emit("room-leave", query.roomId);
 		};
 	}, [socket, query.roomId, room]);
@@ -72,7 +80,7 @@ export default function Room() {
 						justifyContent="space-between"
 						pos="relative"
 					>
-						{isOwner && (
+						{player.id === room.ownerId && (
 							<Icon pos="absolute" left={1} top="calc((var(--chakra-space-4) + 1px) * -1)" as={Crown} />
 						)}
 						<Text size="lg">{player.name}</Text>
@@ -105,7 +113,12 @@ export default function Room() {
 					))}
 			</Grid>
 			<Flex justifyContent="center" gap={2} bgColor="gray.300" p={4}>
-				<Button size="lg" onClick={() => socket?.emit("game-start", query.roomId)}>
+				<Button
+					size="lg"
+					onClick={() => socket?.emit("game-start", query.roomId)}
+					disabled={!isOwner}
+					title={!isOwner ? "Only the owner can start the game" : undefined}
+				>
 					Start
 				</Button>
 			</Flex>
