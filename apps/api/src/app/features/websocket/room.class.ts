@@ -48,6 +48,7 @@ export class Room {
 	}
 
 	private snapshot() {
+		console.log(this.players.map(player => player.pick));
 		return this.dto();
 	}
 
@@ -89,6 +90,10 @@ export class Room {
 		}
 		this.server.emit("room-player-leave", { playerId: clientId, roomId: this.id } as PlayerLeaveDto);
 		this.update();
+	}
+
+	public isFull() {
+		return this.players.length >= MAX_PLAYERS;
 	}
 
 	private attemptWinner() {

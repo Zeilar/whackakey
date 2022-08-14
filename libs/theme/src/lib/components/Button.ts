@@ -8,7 +8,7 @@ const key: ButtonProps = {
 	bgColor: "whiteAlpha.900",
 	fontFamily: "Fredoka One, sans-serif",
 	textTransform: "uppercase",
-	rounded: "xl",
+	rounded: 4,
 	_hover: {
 		bgColor: "whiteAlpha.800",
 	},

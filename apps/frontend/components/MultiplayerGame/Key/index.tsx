@@ -10,12 +10,10 @@ interface Props {
 
 export default function Key({ symbol }: Props) {
 	const { query } = useRouter();
-	const { socket, rooms } = useWebsocketContext();
+	const { socket, room, player } = useWebsocketContext();
 	const { playAudio } = useSoundContext();
-	const room = useMemo(() => rooms.find(room => room.id === query.roomId), [rooms, query.roomId]);
 	const [isPressed, setIsPressed] = useState(false);
 	const isActive = useMemo(() => room?.letter === symbol, [room, symbol]);
-	const player = useMemo(() => room?.players.find(player => player.id === socket?.id), [room, socket]);
 	const percentLeft = DifficultyTiming.EASY;
 
 	useEffect(() => {
@@ -49,7 +47,7 @@ export default function Key({ symbol }: Props) {
 			document.removeEventListener("keydown", onKeyDown);
 			document.removeEventListener("keyup", onKeyUp);
 		};
-	}, [room, socket, player, symbol, isPressed, playAudio]);
+	}, [room, socket, player, symbol, isPressed, playAudio, query.roomId]);
 
 	const bgColor = useCallback(() => {
 		if (isActive) {

@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
-import { createContext, useEffect, useReducer, useState } from "react";
+import { createContext, useEffect, useMemo, useReducer, useState } from "react";
 import { Socket, io } from "socket.io-client";
-import { PlayerJoinDto, PlayerLeaveDto, RoomDto } from "@shared";
+import { Player, PlayerJoinDto, PlayerLeaveDto, RoomDto } from "@shared";
 import { RoomAction, roomReducer } from "../reducers/roomReducer";
 import env from "../common/config";
 import { toast } from "react-toastify";
@@ -11,8 +11,9 @@ interface WebsocketContext {
 	latency: number | undefined;
 	isConnecting: boolean;
 	isOnline: boolean;
-	name: string | undefined;
 	rooms: RoomDto[];
+	room: RoomDto | undefined;
+	player: Player | undefined;
 }
 
 interface WebsocketProps {
@@ -22,13 +23,14 @@ interface WebsocketProps {
 export const WebsocketContext = createContext({} as WebsocketContext);
 
 export function WebsocketContextProvider({ children }: WebsocketProps) {
-	const { push } = useRouter();
+	const { push, query } = useRouter();
 	const [socket, setSocket] = useState<Socket>();
 	const [latency, setLatency] = useState<number>();
 	const [isConnecting, setIsConnecting] = useState(true);
 	const [isOnline, setisOnline] = useState(false);
-	const [name, setName] = useState<string>();
 	const [rooms, dispatchRooms] = useReducer(roomReducer, []);
+	const room = useMemo(() => rooms.find(room => room.id === query.roomId), [rooms, query.roomId]);
+	const player = useMemo(() => room?.players.find(player => player.id === socket?.id), [room, socket]);
 
 	useEffect(() => {
 		setSocket(io(env.get<string>("WS_ENDPOINT"), { transports: ["websocket"] }));
@@ -70,7 +72,6 @@ export function WebsocketContextProvider({ children }: WebsocketProps) {
 		}
 		socket
 			.on("error", toast.error)
-			.on("name", setName)
 			.on("connect", () => {
 				setisOnline(true);
 				setIsConnecting(false);
@@ -104,7 +105,6 @@ export function WebsocketContextProvider({ children }: WebsocketProps) {
 				.off("connect")
 				.off("disconnect")
 				.off("error")
-				.off("name")
 				.off("rooms-get")
 				.off("room-update")
 				.off("room-new")
@@ -124,8 +124,9 @@ export function WebsocketContextProvider({ children }: WebsocketProps) {
 		latency,
 		isConnecting,
 		isOnline,
-		name,
 		rooms,
+		room,
+		player,
 	};
 
 	return <WebsocketContext.Provider value={values}>{children}</WebsocketContext.Provider>;

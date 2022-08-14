@@ -134,17 +134,20 @@ export class WebsocketGateway implements OnGatewayDisconnect, OnGatewayConnectio
 
 	@SubscribeMessage("room-join")
 	public joinRoom(@ConnectedSocket() socket: Socket, @MessageBody() roomId: string) {
-		const client = this.getOrCreateClient(socket.id);
 		const room = this.getRoomById(roomId);
 		if (!room) {
 			socket.emit("error", "Could not find room.");
 			return;
 		}
+		if (room.isFull()) {
+			socket.emit("error", "The room is full.");
+			return;
+		}
 		if (room.hasPlayer(socket.id)) {
 			return;
 		}
+		room.makePlayer(this.getOrCreateClient(socket.id));
 		socket.join(room.id);
-		room.makePlayer(client);
 		socket.emit("room-join", room.id);
 	}
 
