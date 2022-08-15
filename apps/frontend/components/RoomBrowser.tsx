@@ -60,9 +60,11 @@ export default function RoomBrowser() {
 							!room.isGameActive && (
 								<Button
 									key={room.id}
+									fontSize="2xl"
 									display="flex"
 									justifyContent="space-between"
 									paddingInline={4}
+									py={8}
 									variant="unstyled"
 									color={isSelected(room.id) ? "gray.100" : "blue.900"}
 									bgColor={isSelected(room.id) ? "blue.900" : "gray.100"}
@@ -95,17 +97,7 @@ export default function RoomBrowser() {
 				<Button px={12} size="lg" onClick={() => push({ query: { menu: "multiplayer" as Menu } })}>
 					Back
 				</Button>
-				<Button
-					size="lg"
-					px={12}
-					bgColor="green.500"
-					color="gray.100"
-					borderColor="green.600"
-					onClick={join}
-					disabled={selectedRoomId === undefined}
-					_hover={{ bgColor: "green.400" }}
-					_active={{}}
-				>
+				<Button size="lg" variant="success" onClick={join} disabled={selectedRoomId === undefined}>
 					Join
 				</Button>
 			</Flex>

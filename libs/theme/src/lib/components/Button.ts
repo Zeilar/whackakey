@@ -15,6 +15,20 @@ const key: ButtonProps = {
 	_active: {},
 };
 
+const solid: ButtonProps = {
+	fontFamily: "Fredoka One, sans-serif",
+	textTransform: "uppercase",
+	borderRadius: "full",
+	borderColor: "blue.900",
+	boxShadow: "md",
+	bgColor: "gray.100",
+	_hover: {
+		textDecor: "none",
+		bgColor: "gray.50",
+	},
+	_active: { bgColor: "gray.50" },
+};
+
 export const Button: StyleConfig = {
 	baseStyle: {
 		color: "gray.700",
@@ -47,20 +61,16 @@ export const Button: StyleConfig = {
 	},
 	variants: {
 		key,
-		solid: {
-			fontFamily: "Fredoka One, sans-serif",
-			textTransform: "uppercase",
-			borderRadius: "full",
-			borderColor: "blue.900",
-			boxShadow: "md",
-			bgColor: "gray.100",
-			_hover: {
-				textDecor: "none",
-				bgColor: "gray.50",
-			},
-			_active: {
-				bgColor: "gray.200",
-			},
+		solid,
+		success: {
+			...solid,
+			px: 12,
+			bgColor: "green.500",
+			color: "gray.100",
+			borderColor: "green.600",
+			_hover: { bgColor: "green.400" },
+			_focus: { outlineColor: "green.300" },
+			_active: {},
 		},
 	},
 };

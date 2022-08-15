@@ -133,7 +133,7 @@ export default function Room() {
 							alignItems="center"
 							justifyContent="space-between"
 						>
-							<Text size="lg" fontStyle="italic" color="gray.500">
+							<Text size="lg" fontStyle="italic" color="gray.500" userSelect="none">
 								Slot available
 							</Text>
 						</Flex>
@@ -141,14 +141,14 @@ export default function Room() {
 			</Grid>
 			<Flex justifyContent="space-between" bgColor="gray.300" p={4}>
 				<Button
-					paddingInline={12}
+					px={12}
 					size="lg"
 					onClick={() => push({ pathname: "/", query: { menu: "multiplayer" as Menu } })}
 				>
 					Back
 				</Button>
 				<Button
-					paddingInline={12}
+					variant="success"
 					size="lg"
 					onClick={() => socket?.emit("game-start", query.roomId)}
 					disabled={room.players.length < 2 || !isOwner}
