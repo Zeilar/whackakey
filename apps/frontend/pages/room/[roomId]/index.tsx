@@ -87,8 +87,8 @@ export default function Room() {
 			boxShadow="lg"
 		>
 			<Flex p={4} justifyContent="space-between" borderBottomWidth="inherit" borderBottomColor="inherit">
-				<Heading>{room.name}</Heading>
-				<Heading>
+				<Heading size="lg">{room.name}</Heading>
+				<Heading size="lg">
 					{room.players.length} / {MAX_PLAYERS}
 				</Heading>
 			</Flex>
@@ -111,7 +111,7 @@ export default function Room() {
 						)}
 						<Text size="lg">{player.name}</Text>
 						<Tooltip label="Wins" placement="top" closeOnClick={false}>
-							<Flex alignItems="center" gap={2} userSelect="none">
+							<Flex alignItems="center" gap={1} userSelect="none">
 								<Text>{player.wins}</Text>
 								<Icon as={TrophyFill} />
 							</Flex>

@@ -10,14 +10,8 @@ interface Props {
 }
 
 export default function MultiplayerGame({ timestamp }: Props) {
-	const { socket, room, player } = useWebsocketContext();
+	const { room, player } = useWebsocketContext();
 	const [countdown, setCountdown] = useState<number>();
-
-	useEffect(() => {
-		if (!socket) {
-			return;
-		}
-	}, [socket]);
 
 	useEffect(() => {
 		if (typeof timestamp !== "number") {
@@ -44,8 +38,6 @@ export default function MultiplayerGame({ timestamp }: Props) {
 	if (!room || !player) {
 		return null;
 	}
-
-	console.log(room.isGameActive, room.letter);
 
 	return (
 		<Flex flexDir="column" gap={2}>

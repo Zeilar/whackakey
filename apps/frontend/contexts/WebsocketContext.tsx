@@ -82,9 +82,9 @@ export function WebsocketContextProvider({ children }: WebsocketProps) {
 				dispatchRooms({ type: RoomActions.PLAYER_LEAVE, ...dto });
 			})
 			.on("disconnect", () => {
-				setisOnline(false);
 				setIsConnecting(true);
 				dispatchRooms({ type: RoomActions.EMPTY });
+				setisOnline(false);
 				socket.connect();
 			});
 		return () => {
@@ -104,9 +104,12 @@ export function WebsocketContextProvider({ children }: WebsocketProps) {
 	}, [socket]);
 
 	useEffect(() => {
-		setisOnline(socket?.connected ?? false);
+		if (!socket) {
+			return;
+		}
 		setIsConnecting(false);
-	}, [socket?.connected]);
+		setisOnline(socket.connected);
+	}, [socket, socket?.connected]);
 
 	const values: IWebsocketContext = {
 		socket,
