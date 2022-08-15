@@ -19,3 +19,8 @@ export interface PlayerLeaveDto {
 	roomId: string;
 	playerId: string;
 }
+
+export interface NewOwnerDto {
+	roomId: string;
+	ownerId: string;
+}

@@ -9,6 +9,7 @@ import {
 	DifficultyTiming,
 	Difficulty,
 	Player,
+	NewOwnerDto,
 } from "@shared";
 import { randomName } from "../../common/util/nameGenerator";
 
@@ -213,6 +214,6 @@ export class Room {
 			return;
 		}
 		this.ownerId = ownerId;
-		this.server.to(this.id).emit("room-new-owner", this.ownerId);
+		this.server.to(this.id).emit("room-new-owner", { roomId: this.id, ownerId: this.ownerId } as NewOwnerDto);
 	}
 }

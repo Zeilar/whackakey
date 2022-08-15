@@ -10,6 +10,7 @@ export enum RoomActions {
 	GET_ALL = "get-all",
 	START = "start",
 	END = "end",
+	NEW_OWNER = "new-owner",
 }
 
 export type RoomAction =
@@ -21,7 +22,14 @@ export type RoomAction =
 	| EmptyAction
 	| GetAllAction
 	| StartAction
-	| EndAction;
+	| EndAction
+	| NewOwnerAction;
+
+interface NewOwnerAction {
+	type: RoomActions.NEW_OWNER;
+	roomId: string;
+	ownerId: string;
+}
 
 interface StartAction {
 	type: RoomActions.START;
@@ -103,6 +111,8 @@ export function roomReducer(state: RoomDto[], action: RoomAction) {
 			return state.map(room => (action.roomId === room.id ? { ...room, isGameActive: true } : room));
 		case RoomActions.END:
 			return state.map(room => (action.roomId === room.id ? { ...room, isGameActive: false } : room));
+		case RoomActions.NEW_OWNER:
+			return state.map(room => (action.roomId === room.id ? { ...room, ownerId: action.ownerId } : room));
 		default:
 			return state;
 	}

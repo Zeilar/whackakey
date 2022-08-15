@@ -87,7 +87,7 @@ export default function MultiplayerGame({ timestamp }: Props) {
 									.fill(null)
 									.map((_, i) => (
 										<Icon
-											color={i < element.lives ? "red.400" : "whiteAlpha.300"}
+											color={i < element.lives ? "red.500" : "whiteAlpha.300"}
 											w={6}
 											h={6}
 											as={Heart}
