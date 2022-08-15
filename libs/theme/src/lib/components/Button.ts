@@ -27,6 +27,9 @@ export const Button: StyleConfig = {
 			outlineWidth: 2,
 			outlineColor: "blue.300",
 		},
+		_disabled: {
+			pointerEvents: "none",
+		},
 	},
 	sizes: {
 		md: {

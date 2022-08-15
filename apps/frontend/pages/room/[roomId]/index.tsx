@@ -85,7 +85,7 @@ export default function Room() {
 			boxShadow="lg"
 		>
 			<Flex p={4} justifyContent="space-between" borderBottomWidth="inherit" borderBottomColor="inherit">
-				<Heading>Room name placeholder</Heading>
+				<Heading>{room.name}</Heading>
 				<Heading>
 					{room.players.length} / {MAX_PLAYERS}
 				</Heading>

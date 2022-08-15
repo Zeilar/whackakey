@@ -33,7 +33,7 @@ export default function RoomBrowser({ onBack }: Props) {
 							justifyContent="space-between"
 							paddingInline={4}
 							variant="unstyled"
-							bgColor="gray.100"
+							bgColor={selectedRoomId === room.id ? "gray.50" : "gray.100"}
 							borderWidth={2}
 							borderColor="blue.900"
 							disabled={room.isGameActive}
@@ -45,7 +45,7 @@ export default function RoomBrowser({ onBack }: Props) {
 							_hover={{ bgColor: "gray.50" }}
 							_focus={{ outline: 0 }}
 						>
-							<Text>Name placeholder</Text>
+							<Text>{room.name}</Text>
 							<Text>
 								{room.players.length} / {MAX_PLAYERS}
 							</Text>
@@ -58,12 +58,16 @@ export default function RoomBrowser({ onBack }: Props) {
 				)}
 			</Flex>
 			<Flex p={4} borderTopWidth={4} borderColor="inherit" justifyContent="space-between">
-				<Button onClick={onBack}>Back</Button>
+				<Button px={12} size="lg" onClick={onBack}>
+					Back
+				</Button>
 				<Button
+					size="lg"
+					px={12}
 					bgColor="green.500"
 					color="gray.100"
 					borderColor="green.600"
-					onClick={onBack}
+					onClick={() => push(`/room/${selectedRoomId}`)}
 					disabled={selectedRoomId === undefined}
 					_hover={{ bgColor: "green.400" }}
 					_active={{}}

@@ -2,6 +2,7 @@ import { Difficulty, Player } from "./game";
 
 export interface RoomDto {
 	id: string;
+	name: string;
 	isGameActive: boolean;
 	ownerId: string;
 	players: Player[];

@@ -10,6 +10,7 @@ import {
 	Difficulty,
 	Player,
 } from "@shared";
+import { randomName } from "../../common/util/nameGenerator";
 
 const alphabet = alphabets.english;
 
@@ -21,6 +22,7 @@ const difficultiesMap: Record<Difficulty, DifficultyTiming> = {
 
 export class Room {
 	private ownerId: string;
+	private name: string;
 	public players: Player[] = [];
 	public isGameActive = false;
 	private difficulty: Difficulty = "easy";
@@ -31,11 +33,13 @@ export class Room {
 	public constructor(private readonly server: Server, owner: Client, public readonly id: string) {
 		this.ownerId = owner.id;
 		this.makePlayer(owner);
+		this.name = randomName();
 	}
 
 	public dto(): RoomDto {
 		return {
 			id: this.id,
+			name: this.name,
 			players: this.players,
 			isGameActive: this.isGameActive,
 			ownerId: this.ownerId,
