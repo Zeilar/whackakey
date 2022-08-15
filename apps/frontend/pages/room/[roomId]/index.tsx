@@ -34,12 +34,12 @@ export default function Room() {
 
 	useEffect(() => {
 		return () => {
-			if (!socket || !query.roomId || !room || !hasPlayer) {
+			if (!socket || !query.roomId) {
 				return;
 			}
 			socket.emit("room-leave", query.roomId);
 		};
-	}, [socket, query.roomId, room, hasPlayer]);
+	}, [socket, query.roomId]);
 
 	useEffect(() => {
 		setTimestamp(undefined);
