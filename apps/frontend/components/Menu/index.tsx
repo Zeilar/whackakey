@@ -1,13 +1,15 @@
 import { Flex, Heading, Link } from "@chakra-ui/react";
-import { useSoloGameContext } from "apps/frontend/hooks/";
+import { useSoloGameContext, useWebsocketContext } from "apps/frontend/hooks/";
 import NextLink from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import DifficultyItem from "./DifficultyItem";
 import SolidButton from "../FloatingText/SolidButton";
+import RoomBrowser from "../RoomBrowser";
 
-type Menu = "solo" | "multiplayer" | "tutorial";
+type Menu = "solo" | "multiplayer" | "tutorial" | "rooms";
 
 export default function Menu() {
+	const { socket } = useWebsocketContext();
 	const { play, setDifficultyTiming } = useSoloGameContext();
 	const [isCountingDown, setIsCountingDown] = useState(false);
 	const [countdown, setCountdown] = useState(3);
@@ -20,6 +22,8 @@ export default function Menu() {
 				return "Solo";
 			case "tutorial":
 				return "Tutorial";
+			case "rooms":
+				return "Rooms";
 			case null:
 				return "Main menu";
 		}
@@ -103,8 +107,8 @@ export default function Menu() {
 			)}
 			{activeMenu === "multiplayer" && (
 				<>
-					<SolidButton>Join room</SolidButton>
-					<SolidButton>Create room</SolidButton>
+					<SolidButton onClick={() => setActiveMenu("rooms")}>Browse rooms</SolidButton>
+					<SolidButton onClick={() => socket?.emit("room-create")}>Create room</SolidButton>
 					<NextLink passHref href="/tutorial/multiplayer">
 						<Link _hover={{}} tabIndex={-1}>
 							<SolidButton role="link">How to play</SolidButton>
@@ -120,6 +124,7 @@ export default function Menu() {
 					<BackButton />
 				</>
 			)}
+			{activeMenu === "rooms" && <RoomBrowser onBack={() => setActiveMenu("multiplayer")} />}
 		</Flex>
 	);
 }

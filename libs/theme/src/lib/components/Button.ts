@@ -50,12 +50,13 @@ export const Button: StyleConfig = {
 			borderRadius: "full",
 			borderColor: "blue.900",
 			boxShadow: "md",
+			bgColor: "gray.200",
 			_hover: {
 				textDecor: "none",
-				bgColor: "gray.100",
+				bgColor: "gray.50",
 			},
 			_active: {
-				bgColor: "gray.100",
+				bgColor: "gray.200",
 			},
 		},
 	},

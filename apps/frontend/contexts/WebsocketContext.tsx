@@ -6,9 +6,8 @@ import { RoomAction, roomReducer } from "../reducers/roomReducer";
 import env from "../common/config";
 import { toast } from "react-toastify";
 
-interface WebsocketContext {
+interface IWebsocketContext {
 	socket: Socket | undefined;
-	latency: number | undefined;
 	isConnecting: boolean;
 	isOnline: boolean;
 	rooms: RoomDto[];
@@ -20,12 +19,11 @@ interface WebsocketProps {
 	children: React.ReactNode;
 }
 
-export const WebsocketContext = createContext({} as WebsocketContext);
+export const WebsocketContext = createContext({} as IWebsocketContext);
 
 export function WebsocketContextProvider({ children }: WebsocketProps) {
 	const { push, query } = useRouter();
 	const [socket, setSocket] = useState<Socket>();
-	const [latency, setLatency] = useState<number>();
 	const [isConnecting, setIsConnecting] = useState(true);
 	const [isOnline, setisOnline] = useState(false);
 	const [rooms, dispatchRooms] = useReducer(roomReducer, []);
@@ -35,24 +33,6 @@ export function WebsocketContextProvider({ children }: WebsocketProps) {
 	useEffect(() => {
 		setSocket(io(env.get<string>("WS_ENDPOINT"), { transports: ["websocket"] }));
 	}, []);
-
-	useEffect(() => {
-		if (!socket) {
-			return;
-		}
-		const interval = setInterval(() => {
-			if (!socket.connected) {
-				return;
-			}
-			const start = Date.now();
-			socket.emit("ping", () => {
-				setLatency(Date.now() - start);
-			});
-		}, 1000);
-		return () => {
-			clearInterval(interval);
-		};
-	}, [socket]);
 
 	useEffect(() => {
 		if (!socket) {
@@ -127,9 +107,8 @@ export function WebsocketContextProvider({ children }: WebsocketProps) {
 		setIsConnecting(false);
 	}, [socket?.connected]);
 
-	const values: WebsocketContext = {
+	const values: IWebsocketContext = {
 		socket,
-		latency,
 		isConnecting,
 		isOnline,
 		rooms,

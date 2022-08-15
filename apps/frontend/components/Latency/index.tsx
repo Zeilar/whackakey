@@ -1,8 +1,30 @@
 import { Box, Flex, Heading, Portal, Spinner } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 import { useWebsocketContext } from "../../hooks/";
 
 export default function Latency() {
-	const { latency, isConnecting, isOnline } = useWebsocketContext();
+	const { socket, isConnecting, isOnline } = useWebsocketContext();
+	const [latency, setLatency] = useState<number>();
+
+	useEffect(() => {
+		if (!socket) {
+			return;
+		}
+		const interval = setInterval(() => {
+			if (!socket.connected) {
+				setLatency(undefined);
+				return;
+			}
+			const start = Date.now();
+			socket.emit("ping", () => {
+				setLatency(Date.now() - start);
+			});
+		}, 1000);
+		return () => {
+			clearInterval(interval);
+		};
+	}, [socket]);
+
 	return (
 		<Portal>
 			<Flex h={8} pos="fixed" top={4} right={4} alignItems="center" gap={2}>
