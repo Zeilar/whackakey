@@ -1,15 +1,29 @@
 import { Flex, Heading, Link } from "@chakra-ui/react";
 import { useSoloGameContext } from "apps/frontend/hooks/";
 import NextLink from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import DifficultyItem from "./DifficultyItem";
 import SolidButton from "../FloatingText/SolidButton";
-import ModeItem from "./ModeItem";
+
+type Menu = "solo" | "multiplayer" | "tutorial";
 
 export default function Menu() {
-	const { play, setDifficultyTiming, setMode } = useSoloGameContext();
+	const { play, setDifficultyTiming } = useSoloGameContext();
 	const [isCountingDown, setIsCountingDown] = useState(false);
 	const [countdown, setCountdown] = useState(3);
+	const [activeMenu, setActiveMenu] = useState<Menu | null>(null);
+	const heading = useMemo(() => {
+		switch (activeMenu) {
+			case "multiplayer":
+				return "Multiplayer";
+			case "solo":
+				return "Solo";
+			case "tutorial":
+				return "Tutorial";
+			case null:
+				return "Main menu";
+		}
+	}, [activeMenu]);
 
 	useEffect(() => {
 		if (!isCountingDown) {
@@ -47,18 +61,65 @@ export default function Menu() {
 		) : null;
 	}
 
-	return (
-		<Flex as="nav" gap={4} flexDir="column" width={550}>
-			<SolidButton onClick={() => setIsCountingDown(true)} autoFocus>
-				Play
-			</SolidButton>
-			<DifficultyItem onChange={setDifficultyTiming} />
-			<ModeItem onChange={setMode} />
-			<NextLink passHref href="/tutorial">
+	function BackButton() {
+		return <SolidButton onClick={() => setActiveMenu(null)}>Back</SolidButton>;
+	}
+
+	function TutorialLink({ href, children }: { href: string; children: React.ReactNode }) {
+		return (
+			<NextLink passHref href={href}>
 				<Link _hover={{}} tabIndex={-1}>
-					<SolidButton role="link">How to play</SolidButton>
+					<SolidButton role="link">{children}</SolidButton>
 				</Link>
 			</NextLink>
+		);
+	}
+
+	return (
+		<Flex as="nav" gap={4} flexDir="column" width={550}>
+			<Heading size="4xl" textStyle="stroke" textAlign="center" mb={4}>
+				{heading}
+			</Heading>
+			{activeMenu === null && (
+				<>
+					<SolidButton onClick={() => setActiveMenu("solo")}>Solo</SolidButton>
+					<SolidButton onClick={() => setActiveMenu("multiplayer")}>Multiplayer</SolidButton>
+					<SolidButton onClick={() => setActiveMenu("tutorial")}>How to play</SolidButton>
+				</>
+			)}
+			{activeMenu === "solo" && (
+				<>
+					<SolidButton onClick={() => setIsCountingDown(true)} autoFocus>
+						Play
+					</SolidButton>
+					<DifficultyItem onChange={setDifficultyTiming} />
+					<NextLink passHref href="/tutorial/solo">
+						<Link _hover={{}} tabIndex={-1}>
+							<SolidButton role="link">How to play</SolidButton>
+						</Link>
+					</NextLink>
+					<BackButton />
+				</>
+			)}
+			{activeMenu === "multiplayer" && (
+				<>
+					<SolidButton>Join room</SolidButton>
+					<SolidButton>Create room</SolidButton>
+					<NextLink passHref href="/tutorial/multiplayer">
+						<Link _hover={{}} tabIndex={-1}>
+							<SolidButton role="link">How to play</SolidButton>
+						</Link>
+					</NextLink>
+					<BackButton />
+				</>
+			)}
+			{activeMenu === "tutorial" && (
+				<>
+					<TutorialLink href="/tutorial/solo">Solo</TutorialLink>
+					<TutorialLink href="/tutorial/multiplayer">Multiplayer</TutorialLink>
+					<BackButton />
+				</>
+			)}
 		</Flex>
 	);
 }

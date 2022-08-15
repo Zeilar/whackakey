@@ -1,7 +1,7 @@
 import { useCallback, useState, useEffect } from "react";
 import { DEFAULT_LIVES } from "../common/constants";
 import { randomUniqueLetter } from "../common/utils";
-import { Mode, Point } from "../types/game";
+import { Point } from "../types/game";
 import { useSoundContext } from ".";
 import { DifficultyTiming } from "@shared";
 
@@ -19,8 +19,6 @@ export interface SoloGame {
 	hasPicked: boolean;
 	score: number;
 	isGameOver: boolean;
-	mode: Mode;
-	setMode: React.Dispatch<React.SetStateAction<Mode>>;
 	hit(): void;
 	miss(): void;
 	play(): void;
@@ -43,7 +41,6 @@ export function useSoloGame() {
 	const [difficultyTiming, setDifficultyTiming] = useState(DifficultyTiming.EASY);
 	const [nextDeadline, setNextDeadline] = useState(new Date().getTime() + difficultyTiming);
 	const [timeLeft, setTimeLeft] = useState(difficultyTiming);
-	const [mode, setMode] = useState<Mode>("solo");
 
 	const randomLetter = useCallback(() => {
 		setLetter(randomUniqueLetter(letter));
@@ -137,7 +134,5 @@ export function useSoloGame() {
 		randomLetter,
 		setTimeLeft,
 		timeLeft,
-		mode,
-		setMode,
 	} as SoloGame;
 }
