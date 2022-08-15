@@ -10,15 +10,14 @@ import { useRouter } from "next/router";
 export type Menu = "solo" | "multiplayer" | "tutorial" | "rooms";
 
 export default function Menu() {
-	const { query } = useRouter();
+	const { query, push } = useRouter();
 	const menu = query?.menu as Menu | undefined;
 	const { socket } = useWebsocketContext();
 	const { play, setDifficultyTiming } = useSoloGameContext();
 	const [isCountingDown, setIsCountingDown] = useState(false);
 	const [countdown, setCountdown] = useState(3);
-	const [activeMenu, setActiveMenu] = useState<Menu | null>(null);
 	const heading = useMemo(() => {
-		switch (activeMenu) {
+		switch (menu) {
 			case "multiplayer":
 				return "Multiplayer";
 			case "solo":
@@ -27,13 +26,9 @@ export default function Menu() {
 				return "Tutorial";
 			case "rooms":
 				return "Rooms";
-			case null:
+			case undefined:
 				return "Main menu";
 		}
-	}, [activeMenu]);
-
-	useEffect(() => {
-		setActiveMenu(menu ?? null);
 	}, [menu]);
 
 	useEffect(() => {
@@ -73,7 +68,7 @@ export default function Menu() {
 	}
 
 	function BackButton() {
-		return <SolidButton onClick={() => setActiveMenu(null)}>Back</SolidButton>;
+		return <SolidButton onClick={() => push("/")}>Back</SolidButton>;
 	}
 
 	function TutorialLink({ href, children }: { href: string; children: React.ReactNode }) {
@@ -91,14 +86,16 @@ export default function Menu() {
 			<Heading size="4xl" textStyle="stroke" textAlign="center" mb={4}>
 				{heading}
 			</Heading>
-			{activeMenu === null && (
+			{menu === undefined && (
 				<>
-					<SolidButton onClick={() => setActiveMenu("solo")}>Solo</SolidButton>
-					<SolidButton onClick={() => setActiveMenu("multiplayer")}>Multiplayer</SolidButton>
-					<SolidButton onClick={() => setActiveMenu("tutorial")}>How to play</SolidButton>
+					<SolidButton onClick={() => push({ query: { menu: "solo" as Menu } })}>Solo</SolidButton>
+					<SolidButton onClick={() => push({ query: { menu: "multiplayer" as Menu } })}>
+						Multiplayer
+					</SolidButton>
+					<SolidButton onClick={() => push({ query: { menu: "tutorial" as Menu } })}>How to play</SolidButton>
 				</>
 			)}
-			{activeMenu === "solo" && (
+			{menu === "solo" && (
 				<>
 					<SolidButton onClick={() => setIsCountingDown(true)} autoFocus>
 						Play
@@ -112,9 +109,9 @@ export default function Menu() {
 					<BackButton />
 				</>
 			)}
-			{activeMenu === "multiplayer" && (
+			{menu === "multiplayer" && (
 				<>
-					<SolidButton onClick={() => setActiveMenu("rooms")}>Browse rooms</SolidButton>
+					<SolidButton onClick={() => push({ query: { menu: "rooms" as Menu } })}>Browse rooms</SolidButton>
 					<SolidButton onClick={() => socket?.emit("room-create")}>Create room</SolidButton>
 					<NextLink passHref href="/tutorial/multiplayer">
 						<Link _hover={{}} tabIndex={-1}>
@@ -124,14 +121,14 @@ export default function Menu() {
 					<BackButton />
 				</>
 			)}
-			{activeMenu === "tutorial" && (
+			{menu === "tutorial" && (
 				<>
 					<TutorialLink href="/tutorial/solo">Solo</TutorialLink>
 					<TutorialLink href="/tutorial/multiplayer">Multiplayer</TutorialLink>
 					<BackButton />
 				</>
 			)}
-			{activeMenu === "rooms" && <RoomBrowser onBack={() => setActiveMenu("multiplayer")} />}
+			{menu === "rooms" && <RoomBrowser onBack={() => push({ query: { menu: "multiplayer" as Menu } })} />}
 		</Flex>
 	);
 }
