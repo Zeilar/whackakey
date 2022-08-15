@@ -128,7 +128,7 @@ export default function Menu() {
 					<BackButton />
 				</>
 			)}
-			{menu === "rooms" && <RoomBrowser onBack={() => push({ query: { menu: "multiplayer" as Menu } })} />}
+			{menu === "rooms" && <RoomBrowser />}
 		</Flex>
 	);
 }

@@ -4,12 +4,9 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useWebsocketContext } from "../hooks";
 import { RoomActions } from "../reducers/roomReducer";
+import { Menu } from "./Menu";
 
-interface Props {
-	onBack(): void;
-}
-
-export default function RoomBrowser({ onBack }: Props) {
+export default function RoomBrowser() {
 	const { push } = useRouter();
 	const { rooms, socket, dispatchRooms } = useWebsocketContext();
 	const [selectedRoomId, setSelectedRoomId] = useState<string>();
@@ -95,7 +92,7 @@ export default function RoomBrowser({ onBack }: Props) {
 				)}
 			</Flex>
 			<Flex p={4} borderTopWidth={4} borderColor="inherit" justifyContent="space-between">
-				<Button px={12} size="lg" onClick={onBack}>
+				<Button px={12} size="lg" onClick={() => push({ query: { menu: "multiplayer" as Menu } })}>
 					Back
 				</Button>
 				<Button
