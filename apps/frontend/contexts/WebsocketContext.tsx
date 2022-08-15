@@ -76,6 +76,12 @@ export function WebsocketContextProvider({ children }: WebsocketProps) {
 				setisOnline(true);
 				setIsConnecting(false);
 			})
+			.on("room-active", (roomId: string) => {
+				dispatchRooms({ type: RoomAction.START, roomId });
+			})
+			.on("room-inactive", (roomId: string) => {
+				dispatchRooms({ type: RoomAction.END, roomId });
+			})
 			.on("rooms-get", (rooms: RoomDto[]) => {
 				dispatchRooms({ type: RoomAction.GET_ALL, rooms });
 			})
@@ -110,7 +116,9 @@ export function WebsocketContextProvider({ children }: WebsocketProps) {
 				.off("room-new")
 				.off("room-remove")
 				.off("room-player-join")
-				.off("room-player-leave");
+				.off("room-player-leave")
+				.off("room-active")
+				.off("room-inactive");
 		};
 	}, [socket]);
 

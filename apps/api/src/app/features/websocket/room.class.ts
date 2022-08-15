@@ -25,7 +25,8 @@ export class Room {
 	public isGameActive = false;
 	private difficulty: Difficulty = "easy";
 	private interval: NodeJS.Timer;
-	private letter = this.randomLetter();
+	private timeout: NodeJS.Timer;
+	private letter: string | null = null;
 
 	public constructor(private readonly server: Server, owner: Client, public readonly id: string) {
 		this.ownerId = owner.id;
@@ -48,8 +49,17 @@ export class Room {
 	}
 
 	private snapshot() {
-		console.log(this.players.map(player => player.pick));
 		return this.dto();
+	}
+
+	private endGame() {
+		this.isGameActive = false;
+		this.server.emit("room-inactive", this.id);
+	}
+
+	private startGame() {
+		this.isGameActive = true;
+		this.server.emit("room-active", this.id);
 	}
 
 	private randomLetter(): string {
@@ -100,10 +110,13 @@ export class Room {
 		if (this.playersLeft() > 1) {
 			return;
 		}
+		this.endGame();
 		clearInterval(this.interval);
+		clearTimeout(this.timeout);
 		const winner = this.players.find(player => player.isEliminated === false);
 		if (!winner) {
-			this.server.to(this.id).emit("error", "Could not find winner.");
+			this.server.to(this.id).emit("error", "Tie.");
+			// this.server.to(this.id).emit("tie", this.snapshot());
 			return;
 		}
 		winner.wins++;
@@ -120,17 +133,23 @@ export class Room {
 			if (player.isEliminated) {
 				return;
 			}
-			if (player.pick !== this.letter) {
-				if (player.lives <= 1) {
-					player.isEliminated = true;
-				}
+			if (player.pick === null || player.pick !== this.letter) {
 				if (player.lives > 0) {
 					player.lives--;
+				}
+				if (player.lives <= 0) {
+					player.isEliminated = true;
 				}
 			}
 			player.pick = null;
 		});
-		this.letter = this.randomLetter();
+		this.newRound();
+	}
+
+	private newRound() {
+		if (this.playersLeft() > 0) {
+			this.letter = this.randomLetter();
+		}
 		this.server.to(this.id).emit("room-update", this.snapshot());
 	}
 
@@ -144,9 +163,9 @@ export class Room {
 			player.isEliminated = false;
 			player.pick = null;
 		});
-		this.isGameActive = false;
+		this.endGame();
+		this.letter = null;
 		this.server.to(this.id).emit("room-update", this.snapshot());
-		this.server.emit("room-game-inactive", this.id);
 	}
 
 	private playersLeft() {
@@ -170,10 +189,11 @@ export class Room {
 			return;
 		}
 		this.reset();
-		this.isGameActive = true;
-		this.server.emit("game-active", this.id);
 		this.server.to(this.id).emit("game-starting", Date.now() + 3000);
-		setTimeout(() => {
+		this.timeout = setTimeout(() => {
+			this.startGame();
+			this.attemptWinner();
+			this.newRound();
 			this.interval = setInterval(() => {
 				this.attemptWinner();
 				this.update();

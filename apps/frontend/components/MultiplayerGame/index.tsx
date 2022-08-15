@@ -1,9 +1,8 @@
 import { Button, Flex, Heading, Icon, Text } from "@chakra-ui/react";
 import { Heart } from "@styled-icons/evaicons-solid";
 import { DEFAULT_LIVES } from "apps/frontend/common/constants";
-import { useSoundContext, useWebsocketContext } from "apps/frontend/hooks";
-import { useRouter } from "next/router";
-import { useEffect, useMemo, useState } from "react";
+import { useWebsocketContext } from "apps/frontend/hooks";
+import { useEffect, useState } from "react";
 import Keyboard from "./Keyboard";
 
 interface Props {
@@ -11,9 +10,7 @@ interface Props {
 }
 
 export default function MultiplayerGame({ timestamp }: Props) {
-	const { query } = useRouter();
-	const { socket, rooms, room, player } = useWebsocketContext();
-	const { playAudio } = useSoundContext();
+	const { socket, room, player } = useWebsocketContext();
 	const [countdown, setCountdown] = useState<number>();
 
 	useEffect(() => {
@@ -44,59 +41,67 @@ export default function MultiplayerGame({ timestamp }: Props) {
 		};
 	}, [timestamp]);
 
+	if (!room || !player) {
+		return null;
+	}
+
+	console.log(room.isGameActive, room.letter);
+
 	return (
-		<Flex flexDir="column">
-			<Flex>
-				{room?.players.map(element =>
-					element.id !== player?.id ? (
-						<Flex key={element.id} flexDir="column" alignItems="flex-start">
-							<Flex
-								gap={0}
-								ml={2}
-								px={2}
-								py={1}
-								mb="-2px"
-								bgColor="blue.900"
-								color="gray.100"
-								roundedTop="lg"
-								borderWidth={2}
-								borderColor="gray.100"
-							>
-								{Array(DEFAULT_LIVES)
+		<Flex flexDir="column" gap={2}>
+			<Flex justifyContent="center" gap={2}>
+				{room.players.map(element => (
+					<Flex key={element.id}>
+						<Flex
+							roundedLeft="lg"
+							roundedRight={0}
+							borderWidth={2}
+							borderColor="gray.100"
+							px={4}
+							py={2}
+							justifyContent="space-between"
+							alignItems="center"
+							bgColor="blue.900"
+							color="gray.100"
+							boxShadow="lg"
+						>
+							<Text textStyle="stroke" fontSize="lg" mr={4}>
+								{element.name}
+							</Text>
+							<Button variant="key" as="div" w={4}>
+								{element.pick ?? "?"}
+							</Button>
+						</Flex>
+						<Flex
+							px={4}
+							ml="-2px"
+							alignItems="center"
+							bgColor="blue.900"
+							color="gray.100"
+							roundedRight="lg"
+							borderWidth={2}
+							borderColor="gray.100"
+						>
+							{element.lives > 0 ? (
+								Array(DEFAULT_LIVES)
 									.fill(null)
 									.map((_, i) => (
 										<Icon
-											opacity={i < element.lives ? 1 : 0}
-											color="red.400"
-											w={8}
-											h={8}
+											color={i < element.lives ? "red.400" : "whiteAlpha.300"}
+											w={6}
+											h={6}
 											as={Heart}
 											key={i}
 										/>
-									))}
-							</Flex>
-							<Flex
-								px={4}
-								py={2}
-								justifyContent="space-between"
-								alignItems="center"
-								bgColor="blue.900"
-								color="gray.100"
-								rounded="lg"
-								borderWidth={2}
-								borderColor="gray.100"
-								boxShadow="lg"
-							>
-								<Text mr={4}>{element.name}</Text>
-								<Flex alignItems="center">
-									<Button variant="key" as="div">
-										{element.pick ?? "?"}
-									</Button>
-								</Flex>
-							</Flex>
+									))
+							) : (
+								<Heading color="red.500" size="lg" fontWeight={500} textStyle="stroke">
+									K.O
+								</Heading>
+							)}
 						</Flex>
-					) : null
-				)}
+					</Flex>
+				))}
 			</Flex>
 			<Heading>{countdown}</Heading>
 			<Keyboard />

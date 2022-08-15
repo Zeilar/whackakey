@@ -8,6 +8,18 @@ export enum RoomAction {
 	SNAPSHOT = "snapshot",
 	EMPTY = "empty",
 	GET_ALL = "get-all",
+	START = "start",
+	END = "end",
+}
+
+interface StartAction {
+	type: RoomAction.START;
+	roomId: string;
+}
+
+interface EndAction {
+	type: RoomAction.END;
+	roomId: string;
 }
 
 interface AddAction {
@@ -56,6 +68,8 @@ export function roomReducer(
 		| SnapshotAction
 		| EmptyAction
 		| GetAllAction
+		| StartAction
+		| EndAction
 ) {
 	switch (action.type) {
 		case RoomAction.ADD:
@@ -86,6 +100,10 @@ export function roomReducer(
 			return [];
 		case RoomAction.GET_ALL:
 			return [...action.rooms];
+		case RoomAction.START:
+			return state.map(room => (action.roomId === room.id ? { ...room, isGameActive: true } : room));
+		case RoomAction.END:
+			return state.map(room => (action.roomId === room.id ? { ...room, isGameActive: false } : room));
 		default:
 			return state;
 	}

@@ -5,7 +5,7 @@ export interface RoomDto {
 	isGameActive: boolean;
 	ownerId: string;
 	players: Player[];
-	letter: string;
+	letter: string | null;
 	difficulty: Difficulty;
 }
 

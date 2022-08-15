@@ -1,4 +1,4 @@
-import { Box, Flex, Text } from "@chakra-ui/react";
+import { Box, Flex, keyframes, Text } from "@chakra-ui/react";
 import { DifficultyTiming } from "@shared";
 import { useSoundContext, useWebsocketContext } from "apps/frontend/hooks";
 import { useRouter } from "next/router";
@@ -8,17 +8,25 @@ interface Props {
 	symbol: string;
 }
 
+const animation = keyframes`
+    from {
+        transform: scale(0);
+    }
+    to {
+        transform: scale(1);
+    }
+`;
+
 export default function Key({ symbol }: Props) {
 	const { query } = useRouter();
 	const { socket, room, player } = useWebsocketContext();
 	const { playAudio } = useSoundContext();
 	const [isPressed, setIsPressed] = useState(false);
 	const isActive = useMemo(() => room?.letter === symbol, [room, symbol]);
-	const percentLeft = DifficultyTiming.EASY;
 
 	useEffect(() => {
 		function onKeyDown(e: KeyboardEvent) {
-			if (!room || !socket || !player) {
+			if (!room || !socket || !player || player.isEliminated) {
 				return;
 			}
 			const { key } = e;
@@ -71,13 +79,13 @@ export default function Key({ symbol }: Props) {
 		>
 			{isActive && (
 				<Box
+					animation={`${animation} ${DifficultyTiming.EASY}ms`}
 					overflow="hidden"
 					rounded="inherit"
 					pos="absolute"
 					top={0}
 					left={0}
 					zIndex={5}
-					// transform={`scale(${1 - percentLeft})`}
 					bgColor="blue.900"
 					h="full"
 					w="full"
