@@ -24,7 +24,7 @@ export const Button: StyleConfig = {
 		},
 		_focus: {
 			outlineOffset: 2,
-			outlineWidth: 4,
+			outlineWidth: 2,
 			outlineColor: "blue.300",
 		},
 	},
@@ -50,7 +50,7 @@ export const Button: StyleConfig = {
 			borderRadius: "full",
 			borderColor: "blue.900",
 			boxShadow: "md",
-			bgColor: "gray.200",
+			bgColor: "gray.100",
 			_hover: {
 				textDecor: "none",
 				bgColor: "gray.50",

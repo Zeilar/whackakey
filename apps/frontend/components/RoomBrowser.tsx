@@ -1,4 +1,5 @@
-import { Button, Flex, Heading } from "@chakra-ui/react";
+import { Button, Flex, Heading, Text } from "@chakra-ui/react";
+import { MAX_PLAYERS } from "@shared";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { useWebsocketContext } from "../hooks";
@@ -15,8 +16,9 @@ export default function RoomBrowser({ onBack }: Props) {
 	return (
 		<Flex
 			flexDir="column"
-			minHeight={300}
+			h={500}
 			bgColor="gray.300"
+			overflowY="auto"
 			rounded="xl"
 			borderWidth={4}
 			borderColor="blue.900"
@@ -25,8 +27,28 @@ export default function RoomBrowser({ onBack }: Props) {
 			<Flex flexDir="column" p={4} gap={2}>
 				{rooms.length > 0 ? (
 					rooms.map(room => (
-						<Button key={room.id} disabled={room.isGameActive} onClick={() => setSelectedRoomId(room.id)}>
-							Name placeholder
+						<Button
+							key={room.id}
+							display="flex"
+							justifyContent="space-between"
+							paddingInline={4}
+							variant="unstyled"
+							bgColor="gray.100"
+							borderWidth={2}
+							borderColor="blue.900"
+							disabled={room.isGameActive}
+							onClick={() => setSelectedRoomId(room.id)}
+							rounded="md"
+							boxShadow={
+								selectedRoomId === room.id ? "0 0 0 2px var(--chakra-colors-blue-900)" : undefined
+							}
+							_hover={{ bgColor: "gray.50" }}
+							_focus={{ outline: 0 }}
+						>
+							<Text>Name placeholder</Text>
+							<Text>
+								{room.players.length} / {MAX_PLAYERS}
+							</Text>
 						</Button>
 					))
 				) : (
@@ -42,6 +64,7 @@ export default function RoomBrowser({ onBack }: Props) {
 					color="gray.100"
 					borderColor="green.600"
 					onClick={onBack}
+					disabled={selectedRoomId === undefined}
 					_hover={{ bgColor: "green.400" }}
 					_active={{}}
 				>
