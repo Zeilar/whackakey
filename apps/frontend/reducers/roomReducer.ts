@@ -1,6 +1,6 @@
 import { Player, RoomDto } from "@shared";
 
-export enum RoomAction {
+export enum RoomActions {
 	ADD = "add",
 	REMOVE = "remove",
 	PLAYER_LEAVE = "player-leave",
@@ -12,71 +12,70 @@ export enum RoomAction {
 	END = "end",
 }
 
+export type RoomAction =
+	| AddAction
+	| RemoveAction
+	| PlayerJoinAction
+	| PlayerLeaveAction
+	| SnapshotAction
+	| EmptyAction
+	| GetAllAction
+	| StartAction
+	| EndAction;
+
 interface StartAction {
-	type: RoomAction.START;
+	type: RoomActions.START;
 	roomId: string;
 }
 
 interface EndAction {
-	type: RoomAction.END;
+	type: RoomActions.END;
 	roomId: string;
 }
 
 interface AddAction {
-	type: RoomAction.ADD;
+	type: RoomActions.ADD;
 	room: RoomDto;
 }
 
 interface RemoveAction {
-	type: RoomAction.REMOVE;
+	type: RoomActions.REMOVE;
 	roomId: string;
 }
 
 interface PlayerJoinAction {
-	type: RoomAction.PLAYER_JOIN;
+	type: RoomActions.PLAYER_JOIN;
 	roomId: string;
 	player: Player;
 }
 
 interface PlayerLeaveAction {
-	type: RoomAction.PLAYER_LEAVE;
+	type: RoomActions.PLAYER_LEAVE;
 	roomId: string;
 	playerId: string;
 }
 
 interface SnapshotAction {
-	type: RoomAction.SNAPSHOT;
+	type: RoomActions.SNAPSHOT;
 	room: RoomDto;
 }
 
 interface EmptyAction {
-	type: RoomAction.EMPTY;
+	type: RoomActions.EMPTY;
 }
 
 interface GetAllAction {
-	type: RoomAction.GET_ALL;
+	type: RoomActions.GET_ALL;
 	rooms: RoomDto[];
 }
 
-export function roomReducer(
-	state: RoomDto[],
-	action:
-		| AddAction
-		| RemoveAction
-		| PlayerJoinAction
-		| PlayerLeaveAction
-		| SnapshotAction
-		| EmptyAction
-		| GetAllAction
-		| StartAction
-		| EndAction
-) {
+export function roomReducer(state: RoomDto[], action: RoomAction) {
 	switch (action.type) {
-		case RoomAction.ADD:
+		case RoomActions.ADD:
 			return [...state, action.room];
-		case RoomAction.REMOVE:
+		case RoomActions.REMOVE:
 			return state.filter(room => room.id !== action.roomId);
-		case RoomAction.PLAYER_JOIN:
+		case RoomActions.PLAYER_JOIN:
 			return state.map(room =>
 				action.roomId === room.id
 					? {
@@ -85,7 +84,7 @@ export function roomReducer(
 					  }
 					: room
 			);
-		case RoomAction.PLAYER_LEAVE:
+		case RoomActions.PLAYER_LEAVE:
 			return state.map(room =>
 				action.roomId === room.id
 					? {
@@ -94,15 +93,15 @@ export function roomReducer(
 					  }
 					: room
 			);
-		case RoomAction.SNAPSHOT:
+		case RoomActions.SNAPSHOT:
 			return state.map(room => (action.room.id === room.id ? { ...action.room } : room));
-		case RoomAction.EMPTY:
+		case RoomActions.EMPTY:
 			return [];
-		case RoomAction.GET_ALL:
+		case RoomActions.GET_ALL:
 			return [...action.rooms];
-		case RoomAction.START:
+		case RoomActions.START:
 			return state.map(room => (action.roomId === room.id ? { ...room, isGameActive: true } : room));
-		case RoomAction.END:
+		case RoomActions.END:
 			return state.map(room => (action.roomId === room.id ? { ...room, isGameActive: false } : room));
 		default:
 			return state;

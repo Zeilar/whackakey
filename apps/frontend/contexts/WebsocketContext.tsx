@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { createContext, useEffect, useMemo, useReducer, useState } from "react";
 import { Socket, io } from "socket.io-client";
 import { Player, PlayerJoinDto, PlayerLeaveDto, RoomDto } from "@shared";
-import { RoomAction, roomReducer } from "../reducers/roomReducer";
+import { RoomAction, RoomActions, roomReducer } from "../reducers/roomReducer";
 import env from "../common/config";
 import { toast } from "react-toastify";
 
@@ -13,6 +13,7 @@ interface IWebsocketContext {
 	rooms: RoomDto[];
 	room: RoomDto | undefined;
 	player: Player | undefined;
+	dispatchRooms(value: RoomAction): void;
 }
 
 interface WebsocketProps {
@@ -56,34 +57,31 @@ export function WebsocketContextProvider({ children }: WebsocketProps) {
 				setisOnline(true);
 				setIsConnecting(false);
 			})
-			.on("room-active", (roomId: string) => {
-				dispatchRooms({ type: RoomAction.START, roomId });
-			})
 			.on("room-inactive", (roomId: string) => {
-				dispatchRooms({ type: RoomAction.END, roomId });
+				dispatchRooms({ type: RoomActions.END, roomId });
 			})
 			.on("rooms-get", (rooms: RoomDto[]) => {
-				dispatchRooms({ type: RoomAction.GET_ALL, rooms });
+				dispatchRooms({ type: RoomActions.GET_ALL, rooms });
 			})
 			.on("room-update", (room: RoomDto) => {
-				dispatchRooms({ type: RoomAction.SNAPSHOT, room });
+				dispatchRooms({ type: RoomActions.SNAPSHOT, room });
 			})
 			.on("room-new", (room: RoomDto) => {
-				dispatchRooms({ type: RoomAction.ADD, room });
+				dispatchRooms({ type: RoomActions.ADD, room });
 			})
 			.on("room-remove", (roomId: string) => {
-				dispatchRooms({ type: RoomAction.REMOVE, roomId });
+				dispatchRooms({ type: RoomActions.REMOVE, roomId });
 			})
 			.on("room-player-join", (dto: PlayerJoinDto) => {
-				dispatchRooms({ type: RoomAction.PLAYER_JOIN, ...dto });
+				dispatchRooms({ type: RoomActions.PLAYER_JOIN, ...dto });
 			})
 			.on("room-player-leave", (dto: PlayerLeaveDto) => {
-				dispatchRooms({ type: RoomAction.PLAYER_LEAVE, ...dto });
+				dispatchRooms({ type: RoomActions.PLAYER_LEAVE, ...dto });
 			})
 			.on("disconnect", () => {
 				setisOnline(false);
 				setIsConnecting(true);
-				dispatchRooms({ type: RoomAction.EMPTY });
+				dispatchRooms({ type: RoomActions.EMPTY });
 				socket.connect();
 			});
 		return () => {
@@ -97,7 +95,6 @@ export function WebsocketContextProvider({ children }: WebsocketProps) {
 				.off("room-remove")
 				.off("room-player-join")
 				.off("room-player-leave")
-				.off("room-active")
 				.off("room-inactive");
 		};
 	}, [socket]);
@@ -114,6 +111,7 @@ export function WebsocketContextProvider({ children }: WebsocketProps) {
 		rooms,
 		room,
 		player,
+		dispatchRooms,
 	};
 
 	return <WebsocketContext.Provider value={values}>{children}</WebsocketContext.Provider>;

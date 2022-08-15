@@ -1,8 +1,9 @@
 import { Button, Flex, Heading, Text } from "@chakra-ui/react";
 import { MAX_PLAYERS } from "@shared";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useWebsocketContext } from "../hooks";
+import { RoomActions } from "../reducers/roomReducer";
 
 interface Props {
 	onBack(): void;
@@ -10,8 +11,39 @@ interface Props {
 
 export default function RoomBrowser({ onBack }: Props) {
 	const { push } = useRouter();
-	const { rooms } = useWebsocketContext();
+	const { rooms, socket, dispatchRooms } = useWebsocketContext();
 	const [selectedRoomId, setSelectedRoomId] = useState<string>();
+
+	useEffect(() => {
+		if (!socket) {
+			return;
+		}
+		socket.on("room-active", (roomId: string) => {
+			dispatchRooms({ type: RoomActions.START, roomId });
+			if (roomId !== selectedRoomId) {
+				return;
+			}
+			setSelectedRoomId(undefined);
+		});
+		return () => {
+			socket.off("room-active");
+		};
+	}, [socket, rooms, selectedRoomId, dispatchRooms]);
+
+	useEffect(() => {
+		if (rooms.length > 0) {
+			return;
+		}
+		setSelectedRoomId(undefined);
+	}, [rooms]);
+
+	function isSelected(roomId: string) {
+		return selectedRoomId === roomId;
+	}
+
+	function join() {
+		push(`/room/${selectedRoomId}`);
+	}
 
 	return (
 		<Flex
@@ -26,31 +58,36 @@ export default function RoomBrowser({ onBack }: Props) {
 		>
 			<Flex flexDir="column" p={4} gap={2}>
 				{rooms.length > 0 ? (
-					rooms.map(room => (
-						<Button
-							key={room.id}
-							display="flex"
-							justifyContent="space-between"
-							paddingInline={4}
-							variant="unstyled"
-							bgColor={selectedRoomId === room.id ? "gray.50" : "gray.100"}
-							borderWidth={2}
-							borderColor="blue.900"
-							disabled={room.isGameActive}
-							onClick={() => setSelectedRoomId(room.id)}
-							rounded="md"
-							boxShadow={
-								selectedRoomId === room.id ? "0 0 0 2px var(--chakra-colors-blue-900)" : undefined
-							}
-							_hover={{ bgColor: "gray.50" }}
-							_focus={{ outline: 0 }}
-						>
-							<Text>{room.name}</Text>
-							<Text>
-								{room.players.length} / {MAX_PLAYERS}
-							</Text>
-						</Button>
-					))
+					rooms.map(
+						room =>
+							!room.isGameActive && (
+								<Button
+									key={room.id}
+									display="flex"
+									justifyContent="space-between"
+									paddingInline={4}
+									variant="unstyled"
+									color={isSelected(room.id) ? "gray.100" : "blue.900"}
+									bgColor={isSelected(room.id) ? "blue.900" : "gray.100"}
+									borderColor={isSelected(room.id) ? "blue.900" : "gray.400"}
+									borderWidth={2}
+									disabled={room.isGameActive}
+									onClick={() => setSelectedRoomId(room.id)}
+									onDoubleClick={join}
+									rounded="md"
+									boxShadow={
+										isSelected(room.id) ? "0 0 0 2px var(--chakra-colors-blue-900)" : undefined
+									}
+									_hover={{ bgColor: !isSelected(room.id) ? "gray.50" : undefined }}
+									_focus={{ outline: 0 }}
+								>
+									<Text>{room.name}</Text>
+									<Text>
+										{room.players.length} / {MAX_PLAYERS}
+									</Text>
+								</Button>
+							)
+					)
 				) : (
 					<Heading textStyle="stroke" textAlign="center">
 						No rooms were found
@@ -67,7 +104,7 @@ export default function RoomBrowser({ onBack }: Props) {
 					bgColor="green.500"
 					color="gray.100"
 					borderColor="green.600"
-					onClick={() => push(`/room/${selectedRoomId}`)}
+					onClick={join}
 					disabled={selectedRoomId === undefined}
 					_hover={{ bgColor: "green.400" }}
 					_active={{}}
