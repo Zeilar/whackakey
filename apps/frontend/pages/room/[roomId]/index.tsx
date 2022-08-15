@@ -8,9 +8,10 @@ import { MAX_PLAYERS } from "@shared";
 import { TrophyFill } from "@styled-icons/bootstrap";
 import { Crown } from "@styled-icons/fa-solid";
 import MultiplayerGame from "apps/frontend/components/MultiplayerGame";
+import { Menu } from "apps/frontend/components/Menu";
 
 export default function Room() {
-	const { query } = useRouter();
+	const { query, push } = useRouter();
 	const { socket, room } = useWebsocketContext();
 	const isOwner = useMemo(() => {
 		if (!room?.ownerId || !socket) {
@@ -123,9 +124,9 @@ export default function Room() {
 					.map((_, i) => (
 						<Flex
 							key={i}
-							borderColor="gray.400"
+							borderColor="gray.300"
 							borderWidth={3}
-							bgColor="gray.100"
+							bgColor="gray.200"
 							rounded="md"
 							py={2}
 							px={4}
@@ -138,12 +139,19 @@ export default function Room() {
 						</Flex>
 					))}
 			</Grid>
-			<Flex justifyContent="center" gap={2} bgColor="gray.300" p={4}>
+			<Flex justifyContent="space-between" bgColor="gray.300" p={4}>
 				<Button
+					paddingInline={12}
+					size="lg"
+					onClick={() => push({ pathname: "/", query: { menu: "multiplayer" as Menu } })}
+				>
+					Back
+				</Button>
+				<Button
+					paddingInline={12}
 					size="lg"
 					onClick={() => socket?.emit("game-start", query.roomId)}
 					disabled={room.players.length < 2 || !isOwner}
-					title={!isOwner ? "Only the owner can start the game" : undefined}
 				>
 					Start
 				</Button>

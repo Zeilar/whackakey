@@ -5,10 +5,13 @@ import { useEffect, useMemo, useState } from "react";
 import DifficultyItem from "./DifficultyItem";
 import SolidButton from "../SolidButton";
 import RoomBrowser from "../RoomBrowser";
+import { useRouter } from "next/router";
 
-type Menu = "solo" | "multiplayer" | "tutorial" | "rooms";
+export type Menu = "solo" | "multiplayer" | "tutorial" | "rooms";
 
 export default function Menu() {
+	const { query } = useRouter();
+	const menu = query?.menu as Menu | undefined;
 	const { socket } = useWebsocketContext();
 	const { play, setDifficultyTiming } = useSoloGameContext();
 	const [isCountingDown, setIsCountingDown] = useState(false);
@@ -28,6 +31,10 @@ export default function Menu() {
 				return "Main menu";
 		}
 	}, [activeMenu]);
+
+	useEffect(() => {
+		setActiveMenu(menu ?? null);
+	}, [menu]);
 
 	useEffect(() => {
 		if (!isCountingDown) {
