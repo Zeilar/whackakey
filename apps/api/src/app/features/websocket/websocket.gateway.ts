@@ -70,6 +70,7 @@ export class WebsocketGateway implements OnGatewayDisconnect, OnGatewayConnectio
 	}
 
 	public removeClientFromRoom(socket: Socket, roomId: string) {
+		console.log("leave", socket.id, roomId);
 		if (socket.id === roomId) {
 			return;
 		}

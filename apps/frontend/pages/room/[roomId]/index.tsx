@@ -11,8 +11,7 @@ import MultiplayerGame from "apps/frontend/components/MultiplayerGame";
 
 export default function Room() {
 	const { query } = useRouter();
-	const { socket, rooms } = useWebsocketContext();
-	const room = useMemo(() => rooms.find(room => room.id === query.roomId), [rooms, query.roomId]);
+	const { socket, room } = useWebsocketContext();
 	const isOwner = useMemo(() => {
 		if (!room?.ownerId || !socket) {
 			return false;
@@ -31,6 +30,9 @@ export default function Room() {
 			return;
 		}
 		socket.emit("room-join", query.roomId);
+	}, [socket, query.roomId, hasPlayer]);
+
+	useEffect(() => {
 		return () => {
 			if (!socket || !query.roomId || !room || !hasPlayer) {
 				return;
