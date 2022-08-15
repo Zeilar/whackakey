@@ -2,7 +2,6 @@ import { Flex, Progress } from "@chakra-ui/react";
 import { useSoundContext } from "apps/frontend/hooks";
 import Header from "../Header";
 import Latency from "../Latency";
-import Test from "../Latency/Test";
 import SoundToggler from "../SoundToggler";
 
 interface Props {
@@ -26,7 +25,6 @@ export default function App({ children }: Props) {
 				<>
 					<SoundToggler />
 					<Latency />
-					<Test />
 					<Header />
 					{children}
 				</>

@@ -3,7 +3,7 @@ import { useSoloGameContext, useWebsocketContext } from "apps/frontend/hooks/";
 import NextLink from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import DifficultyItem from "./DifficultyItem";
-import SolidButton from "../FloatingText/SolidButton";
+import SolidButton from "../SolidButton";
 import RoomBrowser from "../RoomBrowser";
 
 type Menu = "solo" | "multiplayer" | "tutorial" | "rooms";
