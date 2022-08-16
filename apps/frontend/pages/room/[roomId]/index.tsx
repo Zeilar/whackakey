@@ -12,7 +12,7 @@ import { Menu } from "apps/frontend/components/Menu";
 
 export default function Room() {
 	const { query, push } = useRouter();
-	const { socket, room } = useWebsocketContext();
+	const { socket, room, isMe } = useWebsocketContext();
 	const isOwner = useMemo(() => {
 		if (!room?.ownerId || !socket) {
 			return false;
@@ -76,6 +76,14 @@ export default function Room() {
 		return <MultiplayerGame timestamp={timestamp} />;
 	}
 
+	function playerBgColor(playerId: string) {
+		return isMe(playerId) ? "player.600" : "blue.900";
+	}
+
+	function playerColor(playerId: string) {
+		return isMe(playerId) ? "player.900" : "blue.900";
+	}
+
 	return (
 		<Flex
 			flexDir="column"
@@ -97,7 +105,7 @@ export default function Room() {
 				{room.players.map(player => (
 					<Flex
 						key={player.id}
-						borderColor="blue.900"
+						borderColor={playerBgColor(player.id)}
 						borderWidth={3}
 						bgColor="gray.100"
 						rounded="md"
@@ -106,10 +114,18 @@ export default function Room() {
 					>
 						{player.id === room.ownerId && (
 							<Tooltip label="Room owner" placement="top" closeOnClick={false}>
-								<Icon as={Crown} h="100%" color="gray.100" w={10} p={2} pr={3} bgColor="blue.900" />
+								<Icon
+									as={Crown}
+									h="100%"
+									color="gray.100"
+									w={10}
+									p={2}
+									pr={3}
+									bgColor={playerBgColor(player.id)}
+								/>
 							</Tooltip>
 						)}
-						<Flex py={2} px={4} justifyContent="space-between" flexGrow={1}>
+						<Flex py={2} px={4} justifyContent="space-between" flexGrow={1} color={playerColor(player.id)}>
 							<Text size="lg">{player.name}</Text>
 							<Tooltip label="Wins" placement="top" closeOnClick={false}>
 								<Flex alignItems="center" gap={1} userSelect="none">

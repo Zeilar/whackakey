@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useWebsocketContext } from "../../hooks/";
 
 export default function Latency() {
-	const { socket, isConnecting, isOnline } = useWebsocketContext();
+	const { socket, isConnecting, isOnline, player } = useWebsocketContext();
 	const [latency, setLatency] = useState<number>();
 
 	useEffect(() => {
@@ -28,35 +28,42 @@ export default function Latency() {
 
 	return (
 		<Portal>
-			<Flex h={8} pos="fixed" top={4} right={4} alignItems="center" gap={2}>
-				{isConnecting ? (
-					<Spinner color="blue.300" size="lg" />
-				) : (
-					<>
-						{!isOnline && socket && (
-							<IconButton
-								variant="unstyled"
-								color="gray.100"
-								border={0}
-								size="sm"
-								aria-label="Reconnect"
-								icon={<Refresh />}
-								onClick={() => socket?.connect()}
-								_focus={{}}
+			<Flex flexDir="column" pos="fixed" top={4} right={4} gap={2}>
+				<Flex h={8} alignItems="center" gap={2} justifyContent="flex-end">
+					{isConnecting ? (
+						<Spinner color="blue.300" size="lg" />
+					) : (
+						<>
+							{!isOnline && socket && (
+								<IconButton
+									variant="unstyled"
+									color="gray.100"
+									border={0}
+									size="sm"
+									aria-label="Reconnect"
+									icon={<Refresh />}
+									onClick={() => socket?.connect()}
+									_focus={{}}
+								/>
+							)}
+							<Heading size="lg" textStyle="stroke">
+								{typeof latency === "number" ? `${latency}ms` : "Pinging..."}
+							</Heading>
+							<Box
+								borderWidth={3}
+								borderColor="blue.900"
+								bgColor={isOnline ? "green.500" : "red.500"}
+								rounded="full"
+								w={6}
+								h={6}
 							/>
-						)}
-						<Heading size="lg" textStyle="stroke">
-							{typeof latency === "number" ? `${latency}ms` : "Pinging..."}
-						</Heading>
-						<Box
-							borderWidth={3}
-							borderColor="blue.900"
-							bgColor={isOnline ? "green.500" : "red.500"}
-							rounded="full"
-							w={6}
-							h={6}
-						/>
-					</>
+						</>
+					)}
+				</Flex>
+				{player && (
+					<Heading textStyle="stroke" color="player.500">
+						{player.name}
+					</Heading>
 				)}
 			</Flex>
 		</Portal>

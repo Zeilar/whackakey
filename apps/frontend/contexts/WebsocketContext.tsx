@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { createContext, useEffect, useMemo, useReducer, useState } from "react";
+import { createContext, useCallback, useEffect, useMemo, useReducer, useState } from "react";
 import { Socket, io } from "socket.io-client";
 import { NewOwnerDto, Player, PlayerJoinDto, PlayerLeaveDto, RoomDto } from "@shared";
 import { RoomAction, RoomActions, roomReducer } from "../reducers/roomReducer";
@@ -14,6 +14,7 @@ interface IWebsocketContext {
 	room: RoomDto | undefined;
 	player: Player | undefined;
 	dispatchRooms(value: RoomAction): void;
+	isMe(playerId: string): boolean;
 }
 
 interface WebsocketProps {
@@ -30,6 +31,16 @@ export function WebsocketContextProvider({ children }: WebsocketProps) {
 	const [rooms, dispatchRooms] = useReducer(roomReducer, []);
 	const room = useMemo(() => rooms.find(room => room.id === query.roomId), [rooms, query.roomId]);
 	const player = useMemo(() => room?.players.find(player => player.id === socket?.id), [room, socket]);
+
+	const isMe = useCallback(
+		(playerId: string) => {
+			if (!socket) {
+				return false;
+			}
+			return socket.id === playerId;
+		},
+		[socket]
+	);
 
 	useEffect(() => {
 		setSocket(io(env.get<string>("WS_ENDPOINT"), { transports: ["websocket"] }));
@@ -123,6 +134,7 @@ export function WebsocketContextProvider({ children }: WebsocketProps) {
 		room,
 		player,
 		dispatchRooms,
+		isMe,
 	};
 
 	return <WebsocketContext.Provider value={values}>{children}</WebsocketContext.Provider>;
