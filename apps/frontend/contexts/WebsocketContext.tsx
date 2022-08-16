@@ -59,6 +59,10 @@ export function WebsocketContextProvider({ children }: WebsocketProps) {
 			})
 			.on("room-new-owner", ({ roomId, ownerId }: NewOwnerDto) => {
 				dispatchRooms({ type: RoomActions.NEW_OWNER, roomId, ownerId });
+				if (ownerId !== socket.id) {
+					return;
+				}
+				toast.info("You are now the room owner.");
 			})
 			.on("room-inactive", (roomId: string) => {
 				dispatchRooms({ type: RoomActions.END, roomId });

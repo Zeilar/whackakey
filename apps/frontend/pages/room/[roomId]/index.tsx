@@ -101,22 +101,23 @@ export default function Room() {
 						borderWidth={3}
 						bgColor="gray.100"
 						rounded="md"
-						py={2}
-						px={4}
 						alignItems="center"
-						justifyContent="space-between"
 						pos="relative"
 					>
 						{player.id === room.ownerId && (
-							<Icon pos="absolute" left={1} top="calc((var(--chakra-space-4) + 1px) * -1)" as={Crown} />
+							<Tooltip label="Room owner" placement="top" closeOnClick={false}>
+								<Icon as={Crown} h="100%" color="gray.100" w={10} p={2} pr={3} bgColor="blue.900" />
+							</Tooltip>
 						)}
-						<Text size="lg">{player.name}</Text>
-						<Tooltip label="Wins" placement="top" closeOnClick={false}>
-							<Flex alignItems="center" gap={1} userSelect="none">
-								<Text>{player.wins}</Text>
-								<Icon as={TrophyFill} />
-							</Flex>
-						</Tooltip>
+						<Flex py={2} px={4} justifyContent="space-between" flexGrow={1}>
+							<Text size="lg">{player.name}</Text>
+							<Tooltip label="Wins" placement="top" closeOnClick={false}>
+								<Flex alignItems="center" gap={1} userSelect="none">
+									<Text>{player.wins}</Text>
+									<Icon as={TrophyFill} />
+								</Flex>
+							</Tooltip>
+						</Flex>
 					</Flex>
 				))}
 				{Array(slotsAvailable)
