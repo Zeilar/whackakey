@@ -39,7 +39,7 @@ export const Button: StyleConfig = {
 		_focus: {
 			outlineOffset: 2,
 			outlineWidth: 2,
-			outlineColor: "blue.300",
+			outlineColor: "blue.200",
 		},
 		_disabled: {
 			pointerEvents: "none",
