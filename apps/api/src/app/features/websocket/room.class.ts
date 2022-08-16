@@ -13,6 +13,8 @@ import {
 	ChangeDifficultyDto,
 	Message,
 	NewMessageDto,
+	DEFAULT_LIVES,
+	SetLivesDto,
 } from "@shared";
 import { randomName } from "../../common/util/nameGenerator";
 import { v4 as uuidv4 } from "uuid";
@@ -29,6 +31,7 @@ export class Room {
 	private timeout: NodeJS.Timer;
 	private letter: string | null = null;
 	private messages: Message[] = [];
+	private lives = DEFAULT_LIVES;
 
 	public constructor(private readonly server: Server, owner: Client, public readonly id: string) {
 		this.ownerId = owner.id;
@@ -46,7 +49,13 @@ export class Room {
 			letter: this.letter,
 			difficulty: this.difficulty,
 			messages: this.messages,
+			lives: this.lives,
 		};
+	}
+
+	public setLives(lives: number) {
+		this.lives = lives;
+		this.server.to(this.id).emit("room-set-lives", { roomId: this.id, lives } as SetLivesDto);
 	}
 
 	private endGame() {

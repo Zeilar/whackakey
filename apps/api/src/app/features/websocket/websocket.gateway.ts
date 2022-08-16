@@ -101,6 +101,27 @@ export class WebsocketGateway implements OnGatewayDisconnect, OnGatewayConnectio
 		return "";
 	}
 
+	@SubscribeMessage("room-set-lives")
+	public setLives(
+		@ConnectedSocket() socket: Socket,
+		@MessageBody("roomId") roomId: string,
+		@MessageBody("lives") lives: number
+	) {
+		const client = this.getClientById(socket.id);
+		if (!client) {
+			return;
+		}
+		const room = this.getRoomById(roomId);
+		if (!room) {
+			socket.emit("error", "Could not find room.");
+			return;
+		}
+		if (!room.hasPlayer(socket.id) || !room.isOwner(socket.id)) {
+			return;
+		}
+		room.setLives(lives);
+	}
+
 	@SubscribeMessage("room-message-new")
 	public sendMessage(
 		@ConnectedSocket() socket: Socket,

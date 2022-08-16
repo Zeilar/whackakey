@@ -1,6 +1,6 @@
 import { Button, Flex, Heading, Icon, Text } from "@chakra-ui/react";
+import { DEFAULT_LIVES } from "@shared";
 import { Heart } from "@styled-icons/evaicons-solid";
-import { DEFAULT_LIVES } from "apps/frontend/common/constants";
 import { useWebsocketContext } from "apps/frontend/hooks";
 import { useEffect, useState } from "react";
 import Keyboard from "./Keyboard";

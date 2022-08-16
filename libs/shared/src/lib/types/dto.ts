@@ -10,6 +10,7 @@ export interface RoomDto {
 	letter: string | null;
 	difficulty: Difficulty;
 	messages: Message[];
+	lives: number;
 }
 
 export interface PlayerJoinDto {
@@ -40,4 +41,9 @@ export interface NewMessageDto {
 export interface SendMessageDto {
 	roomId: string;
 	content: string;
+}
+
+export interface SetLivesDto {
+	roomId: string;
+	lives: number;
 }

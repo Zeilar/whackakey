@@ -1,10 +1,35 @@
-import { Box, Button, Flex, Grid, Heading, Icon, Input, Link, Text, Tooltip } from "@chakra-ui/react";
-import { Undo } from "@styled-icons/evaicons-solid";
+import {
+	Box,
+	Button,
+	Flex,
+	Grid,
+	Heading,
+	Icon,
+	Input,
+	Link,
+	Slider,
+	SliderFilledTrack,
+	SliderThumb,
+	SliderTrack,
+	Text,
+	Tooltip,
+} from "@chakra-ui/react";
+import { Heart, Undo } from "@styled-icons/evaicons-solid";
 import { useWebsocketContext } from "apps/frontend/hooks";
 import { useRouter } from "next/router";
 import NextLink from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ChangeDifficultyDto, Difficulty, MAX_PLAYERS, NewMessageDto, NewOwnerDto, SendMessageDto } from "@shared";
+import {
+	ChangeDifficultyDto,
+	DEFAULT_LIVES,
+	Difficulty,
+	MAX_LILVES,
+	MAX_PLAYERS,
+	NewMessageDto,
+	NewOwnerDto,
+	SendMessageDto,
+	SetLivesDto,
+} from "@shared";
 import { TrophyFill } from "@styled-icons/bootstrap";
 import { Crown } from "@styled-icons/fa-solid";
 import MultiplayerGame from "apps/frontend/components/MultiplayerGame";
@@ -30,6 +55,7 @@ export default function Room() {
 	);
 	const [timestamp, setTimestamp] = useState<number>();
 	const [messageInput, setMessageInput] = useState("");
+	const [lives, setLives] = useState(DEFAULT_LIVES);
 	const chatBox = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
@@ -72,6 +98,13 @@ export default function Room() {
 	}, [socket]);
 
 	useEffect(() => {
+		if (!isOwner || !socket) {
+			return;
+		}
+		socket.emit("room-set-lives", { roomId: query.roomId, lives } as SetLivesDto);
+	}, [isOwner, lives, socket, query.roomId]);
+
+	useEffect(() => {
 		if (!socket) {
 			return;
 		}
@@ -89,9 +122,12 @@ export default function Room() {
 			})
 			.on("room-change-difficulty", (dto: ChangeDifficultyDto) => {
 				dispatchRooms({ type: RoomActions.CHANGE_DIFFICULTY, ...dto });
+			})
+			.on("room-set-lives", (dto: SetLivesDto) => {
+				dispatchRooms({ type: RoomActions.SET_LIVES, ...dto });
 			});
 		return () => {
-			socket.off("room-message-new").off("room-change-difficulty").off("room-new-owner");
+			socket.off("room-message-new").off("room-change-difficulty").off("room-new-owner").off("room-set-lives");
 		};
 	}, [socket, dispatchRooms]);
 
@@ -277,8 +313,29 @@ export default function Room() {
 							))}
 						</Flex>
 					</Flex>
-					<Flex gap={1}>
+					<Flex gap={1} flexDir="column">
 						<Heading size="md">Lives</Heading>
+						<Slider
+							min={1}
+							value={room.lives}
+							isDisabled={!isOwner}
+							size="lg"
+							onChange={setLives}
+							max={MAX_LILVES}
+							defaultValue={DEFAULT_LIVES}
+						>
+							<SliderTrack _disabled={{ bgColor: "gray.200" }}>
+								<SliderFilledTrack bgColor="blue.900" />
+							</SliderTrack>
+							<SliderThumb _disabled={{ bgColor: "gray.200" }} />
+						</Slider>
+						<Flex gap={1}>
+							{Array(room.lives)
+								.fill(null)
+								.map((_, i) => (
+									<Icon key={i} as={Heart} w={4} h={4} color="red.500" stroke="blue.900" />
+								))}
+						</Flex>
 					</Flex>
 				</Flex>
 			</Grid>
@@ -310,16 +367,7 @@ export default function Room() {
 						</Flex>
 					))}
 				</Flex>
-				<Flex
-					as="form"
-					p={4}
-					grow={1}
-					gap={4}
-					onSubmit={sendMessage}
-					// bgColor="gray.200"
-					// borderTopWidth={2}
-					// borderTopColor="gray.400"
-				>
+				<Flex as="form" p={4} grow={1} gap={4} onSubmit={sendMessage}>
 					<Input
 						value={messageInput}
 						autoFocus

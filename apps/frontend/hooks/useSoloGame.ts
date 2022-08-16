@@ -1,9 +1,8 @@
 import { useCallback, useState, useEffect } from "react";
-import { DEFAULT_LIVES } from "../common/constants";
 import { randomUniqueLetter } from "../common/utils";
 import { Point } from "../types/game";
 import { useSoundContext } from ".";
-import { Difficulty, difficultyInMs } from "@shared";
+import { DEFAULT_LIVES, Difficulty, difficultyInMs } from "@shared";
 
 export interface SoloGame {
 	nextDeadline: number;

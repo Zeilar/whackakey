@@ -13,6 +13,7 @@ export enum RoomActions {
 	NEW_OWNER = "new-owner",
 	CHANGE_DIFFICULTY = "change-difficulty",
 	NEW_MESSAGE = "new-message",
+	SET_LIVES = "set-lives",
 }
 
 export type RoomAction =
@@ -27,7 +28,14 @@ export type RoomAction =
 	| EndAction
 	| NewOwnerAction
 	| ChangeDifficultyAction
-	| NewMessageAction;
+	| NewMessageAction
+	| SetLivesAction;
+
+interface SetLivesAction {
+	type: RoomActions.SET_LIVES;
+	roomId: string;
+	lives: number;
+}
 
 interface NewMessageAction {
 	type: RoomActions.NEW_MESSAGE;
@@ -135,6 +143,8 @@ export function roomReducer(state: RoomDto[], action: RoomAction) {
 			return state.map(room =>
 				action.roomId === room.id ? { ...room, messages: [...room.messages, action.message] } : room
 			);
+		case RoomActions.SET_LIVES:
+			return state.map(room => (action.roomId === room.id ? { ...room, lives: action.lives } : room));
 		default:
 			return state;
 	}
