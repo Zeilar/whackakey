@@ -1,7 +1,15 @@
 import { useRouter } from "next/router";
 import { createContext, useCallback, useEffect, useMemo, useReducer, useState } from "react";
 import { Socket, io } from "socket.io-client";
-import { ChangeDifficultyDto, NewOwnerDto, Player, PlayerJoinDto, PlayerLeaveDto, RoomDto } from "@shared";
+import {
+	ChangeDifficultyDto,
+	NewMessageDto,
+	NewOwnerDto,
+	Player,
+	PlayerJoinDto,
+	PlayerLeaveDto,
+	RoomDto,
+} from "@shared";
 import { RoomAction, RoomActions, roomReducer } from "../reducers/roomReducer";
 import env from "../common/config";
 import { toast } from "react-toastify";
@@ -75,6 +83,9 @@ export function WebsocketContextProvider({ children }: WebsocketProps) {
 				}
 				toast.info("You are now the room owner.");
 			})
+			.on("room-message-new", (dto: NewMessageDto) => {
+				dispatchRooms({ type: RoomActions.NEW_MESSAGE, ...dto });
+			})
 			.on("room-change-difficulty", (dto: ChangeDifficultyDto) => {
 				dispatchRooms({ type: RoomActions.CHANGE_DIFFICULTY, ...dto });
 			})
@@ -110,6 +121,7 @@ export function WebsocketContextProvider({ children }: WebsocketProps) {
 				.off("connect")
 				.off("disconnect")
 				.off("error")
+				.off("room-message-new")
 				.off("room-change-difficulty")
 				.off("room-new-owner")
 				.off("rooms-get")

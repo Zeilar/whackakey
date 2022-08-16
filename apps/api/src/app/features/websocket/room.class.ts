@@ -11,8 +11,11 @@ import {
 	NewOwnerDto,
 	difficultyInMs,
 	ChangeDifficultyDto,
+	Message,
+	NewMessageDto,
 } from "@shared";
 import { randomName } from "../../common/util/nameGenerator";
+import { v4 as uuidv4 } from "uuid";
 
 const alphabet = alphabets.english;
 
@@ -25,6 +28,7 @@ export class Room {
 	private interval: NodeJS.Timer;
 	private timeout: NodeJS.Timer;
 	private letter: string | null = null;
+	private messages: Message[] = [];
 
 	public constructor(private readonly server: Server, owner: Client, public readonly id: string) {
 		this.ownerId = owner.id;
@@ -41,15 +45,8 @@ export class Room {
 			ownerId: this.ownerId,
 			letter: this.letter,
 			difficulty: this.difficulty,
+			messages: this.messages,
 		};
-	}
-
-	public setDifficulty(difficulty: Difficulty) {
-		this.difficulty = difficulty;
-	}
-
-	private snapshot() {
-		return this.dto();
 	}
 
 	private endGame() {
@@ -60,6 +57,15 @@ export class Room {
 	private startGame() {
 		this.isGameActive = true;
 		this.server.emit("room-active", this.id);
+	}
+
+	public sendMessage(data: Omit<Message, "id">) {
+		const message: Message = {
+			id: uuidv4(),
+			...data,
+		};
+		this.messages.push(message);
+		this.server.to(this.id).emit("room-message-new", { roomId: this.id, message } as NewMessageDto);
 	}
 
 	private randomLetter(): string {
@@ -152,7 +158,7 @@ export class Room {
 		if (this.playersLeft() > 0) {
 			this.letter = this.randomLetter();
 		}
-		this.server.to(this.id).emit("room-update", this.snapshot());
+		this.server.to(this.id).emit("room-update", this.dto());
 	}
 
 	public isEmpty() {
@@ -167,7 +173,7 @@ export class Room {
 		});
 		this.endGame();
 		this.letter = null;
-		this.server.to(this.id).emit("room-update", this.snapshot());
+		this.server.to(this.id).emit("room-update", this.dto());
 	}
 
 	private playersLeft() {

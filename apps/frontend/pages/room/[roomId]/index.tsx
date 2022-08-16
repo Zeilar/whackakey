@@ -1,10 +1,10 @@
-import { Box, Button, Flex, Grid, Heading, Icon, Link, Text, Tooltip } from "@chakra-ui/react";
+import { Box, Button, Flex, Grid, Heading, Icon, Input, Link, Text, Tooltip } from "@chakra-ui/react";
 import { Undo } from "@styled-icons/evaicons-solid";
 import { useWebsocketContext } from "apps/frontend/hooks";
 import { useRouter } from "next/router";
 import NextLink from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { ChangeDifficultyDto, Difficulty, MAX_PLAYERS } from "@shared";
+import { ChangeDifficultyDto, Difficulty, MAX_PLAYERS, SendMessageDto } from "@shared";
 import { TrophyFill } from "@styled-icons/bootstrap";
 import { Crown } from "@styled-icons/fa-solid";
 import MultiplayerGame from "apps/frontend/components/MultiplayerGame";
@@ -28,6 +28,7 @@ export default function Room() {
 		[room?.players, socket?.id]
 	);
 	const [timestamp, setTimestamp] = useState<number>();
+	const [messageInput, setMessageInput] = useState("");
 
 	useEffect(() => {
 		if (!socket || !query.roomId || hasPlayer) {
@@ -122,6 +123,15 @@ export default function Room() {
 			case "hard":
 				return "red.200";
 		}
+	}
+
+	function sendMessage(e: React.FormEvent) {
+		e.preventDefault();
+		if (!socket || !messageInput) {
+			return;
+		}
+		socket.emit("room-message-new", { roomId: query.roomId, content: messageInput } as SendMessageDto);
+		setMessageInput("");
 	}
 
 	return (
@@ -240,7 +250,27 @@ export default function Room() {
 					</Flex>
 				</Flex>
 			</Grid>
-			<Flex>Chat placeholder</Flex>
+			<Flex borderTopWidth={5} borderBottomWidth={5} borderColor="inherit" flexDir="column">
+				<Flex h={250} overflowY="auto" p={4} flexDir="column" gap={2}>
+					{room.messages.map(message => (
+						<Flex key={message.id} gap={2}>
+							<Text color={isMe(message.authorId) ? "player.500" : undefined}>{message.name}:</Text>
+							<Text>{message.content}</Text>
+						</Flex>
+					))}
+				</Flex>
+				<Flex as="form" p={4} grow={1} gap={4} onSubmit={sendMessage}>
+					<Input
+						value={messageInput}
+						onChange={e => setMessageInput(e.target.value)}
+						variant="unstyled"
+						placeholder="Send a message"
+					/>
+					<Button type="submit" px={12}>
+						Send
+					</Button>
+				</Flex>
+			</Flex>
 			<Flex justifyContent="space-between" bgColor="gray.300" p={4}>
 				<Button
 					px={12}
