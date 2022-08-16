@@ -237,6 +237,7 @@ export default function Room() {
 					</Flex>
 				</Flex>
 			</Grid>
+			<Flex>Chat placeholder</Flex>
 			<Flex justifyContent="space-between" bgColor="gray.300" p={4}>
 				<Button
 					px={12}
