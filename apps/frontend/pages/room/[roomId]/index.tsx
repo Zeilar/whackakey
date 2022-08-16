@@ -209,6 +209,7 @@ export default function Room() {
 							<Box
 								key={difficulty}
 								as="button"
+								userSelect="none"
 								w="100%"
 								alignItems="center"
 								bgColor={difficultyBgColor(difficulty)}
