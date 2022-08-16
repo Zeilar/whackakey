@@ -225,6 +225,7 @@ export default function Room() {
 										difficulty,
 									} as ChangeDifficultyDto)
 								}
+								_disabled={{ cursor: "default" }}
 							>
 								<Text
 									textAlign="center"
