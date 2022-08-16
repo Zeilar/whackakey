@@ -214,6 +214,6 @@ export class Room {
 			return;
 		}
 		this.ownerId = ownerId;
-		this.server.to(this.id).emit("room-new-owner", { roomId: this.id, ownerId: this.ownerId } as NewOwnerDto);
+		this.server.emit("room-new-owner", { roomId: this.id, ownerId: this.ownerId } as NewOwnerDto);
 	}
 }

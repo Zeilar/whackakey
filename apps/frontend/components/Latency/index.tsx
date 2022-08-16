@@ -1,4 +1,5 @@
-import { Box, Flex, Heading, Portal, Spinner } from "@chakra-ui/react";
+import { Box, Flex, Heading, IconButton, Portal, Spinner } from "@chakra-ui/react";
+import { Refresh } from "@styled-icons/evaicons-solid";
 import { useEffect, useState } from "react";
 import { useWebsocketContext } from "../../hooks/";
 
@@ -32,8 +33,20 @@ export default function Latency() {
 					<Spinner color="blue.300" size="lg" />
 				) : (
 					<>
+						{!isOnline && socket && (
+							<IconButton
+								variant="unstyled"
+								color="gray.100"
+								border={0}
+								size="sm"
+								aria-label="Reconnect"
+								icon={<Refresh />}
+								onClick={() => socket?.connect()}
+								_focus={{}}
+							/>
+						)}
 						<Heading size="lg" textStyle="stroke">
-							{typeof latency === "number" ? `${latency}ms` : "Offline"}
+							{typeof latency === "number" ? `${latency}ms` : "Pinging..."}
 						</Heading>
 						<Box
 							borderWidth={3}
