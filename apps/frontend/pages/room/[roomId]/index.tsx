@@ -141,9 +141,9 @@ export default function Room() {
 					.map((_, i) => (
 						<Flex
 							key={i}
-							borderColor="gray.300"
+							borderColor="gray.500"
 							borderWidth={3}
-							bgColor="gray.200"
+							bgColor="gray.400"
 							rounded="md"
 							py={2}
 							px={4}
