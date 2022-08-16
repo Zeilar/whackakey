@@ -1,15 +1,17 @@
-import { Button, Flex, Grid, Heading, Icon, Link, Text, Tooltip } from "@chakra-ui/react";
+import { Box, Button, Flex, Grid, Heading, Icon, Link, Text, Tooltip } from "@chakra-ui/react";
 import { Undo } from "@styled-icons/evaicons-solid";
 import { useWebsocketContext } from "apps/frontend/hooks";
 import { useRouter } from "next/router";
 import NextLink from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { MAX_PLAYERS } from "@shared";
+import { Difficulty, MAX_PLAYERS } from "@shared";
 import { TrophyFill } from "@styled-icons/bootstrap";
 import { Crown } from "@styled-icons/fa-solid";
 import MultiplayerGame from "apps/frontend/components/MultiplayerGame";
 import { Menu } from "apps/frontend/components/Menu";
 import { toast } from "react-toastify";
+
+const difficulties: Difficulty[] = ["easy", "medium", "hard"];
 
 export default function Room() {
 	const { query, push } = useRouter();
@@ -26,6 +28,7 @@ export default function Room() {
 		[room?.players, socket?.id]
 	);
 	const [timestamp, setTimestamp] = useState<number>();
+	const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty>("easy");
 
 	useEffect(() => {
 		if (!socket || !query.roomId || hasPlayer) {
@@ -94,6 +97,34 @@ export default function Room() {
 		return isMe(playerId) ? "player.900" : "blue.900";
 	}
 
+	function difficultyBgColor(difficulty: Difficulty) {
+		if (difficulty !== selectedDifficulty) {
+			return "gray.200";
+		}
+		switch (difficulty) {
+			case "easy":
+				return "green.500";
+			case "medium":
+				return "yellow.500";
+			case "hard":
+				return "red.500";
+		}
+	}
+
+	function difficultyBorderColor(difficulty: Difficulty) {
+		if (difficulty !== selectedDifficulty) {
+			return "gray.400";
+		}
+		switch (difficulty) {
+			case "easy":
+				return "green.200";
+			case "medium":
+				return "yellow.200";
+			case "hard":
+				return "red.200";
+		}
+	}
+
 	return (
 		<Flex
 			flexDir="column"
@@ -117,7 +148,7 @@ export default function Room() {
 						<Flex
 							key={player.id}
 							borderColor={playerBgColor(player.id)}
-							borderWidth={3}
+							borderWidth={2}
 							bgColor="gray.100"
 							rounded="md"
 							alignItems="center"
@@ -159,7 +190,7 @@ export default function Room() {
 							<Flex
 								key={i}
 								borderColor="gray.500"
-								borderWidth={3}
+								borderWidth={2}
 								bgColor="gray.400"
 								rounded="md"
 								py={2}
@@ -172,6 +203,33 @@ export default function Room() {
 								</Text>
 							</Flex>
 						))}
+				</Flex>
+				<Flex flexDir="column" gap={4}>
+					<Flex gap={2}>
+						{difficulties.map(difficulty => (
+							<Box
+								key={difficulty}
+								as="button"
+								w="100%"
+								alignItems="center"
+								bgColor={difficultyBgColor(difficulty)}
+								borderColor={difficultyBorderColor(difficulty)}
+								px={4}
+								py={2}
+								borderWidth={2}
+								rounded="lg"
+								onClick={() => setSelectedDifficulty(difficulty)}
+							>
+								<Text
+									textAlign="center"
+									textTransform="uppercase"
+									color={difficulty === selectedDifficulty ? "gray.100" : undefined}
+								>
+									{difficulty}
+								</Text>
+							</Box>
+						))}
+					</Flex>
 				</Flex>
 			</Grid>
 			<Flex justifyContent="space-between" bgColor="gray.300" p={4}>
