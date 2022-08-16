@@ -240,39 +240,45 @@ export default function Room() {
 						))}
 				</Flex>
 				<Flex flexDir="column" gap={4}>
-					<Flex gap={2}>
-						{difficulties.map(difficulty => (
-							<Box
-								key={difficulty}
-								as="button"
-								userSelect="none"
-								w="100%"
-								alignItems="center"
-								bgColor={difficultyBgColor(difficulty)}
-								borderColor={difficultyBorderColor(difficulty)}
-								px={4}
-								py={2}
-								borderWidth={2}
-								rounded="lg"
-								disabled={!isOwner}
-								opacity={isOwner ? 1 : 0.5}
-								onClick={() =>
-									socket?.emit("room-change-difficulty", {
-										roomId: query.roomId,
-										difficulty,
-									} as ChangeDifficultyDto)
-								}
-								_disabled={{ cursor: "default" }}
-							>
-								<Text
-									textAlign="center"
-									textTransform="uppercase"
-									color={difficulty === room.difficulty ? "gray.100" : undefined}
+					<Flex flexDir="column" gap={1}>
+						<Heading size="md">Difficulty</Heading>
+						<Flex gap={2}>
+							{difficulties.map(difficulty => (
+								<Box
+									key={difficulty}
+									as="button"
+									userSelect="none"
+									w="100%"
+									alignItems="center"
+									bgColor={difficultyBgColor(difficulty)}
+									borderColor={difficultyBorderColor(difficulty)}
+									px={4}
+									py={2}
+									borderWidth={2}
+									rounded="lg"
+									disabled={!isOwner}
+									opacity={isOwner ? 1 : 0.5}
+									onClick={() =>
+										socket?.emit("room-change-difficulty", {
+											roomId: query.roomId,
+											difficulty,
+										} as ChangeDifficultyDto)
+									}
+									_disabled={{ cursor: "default" }}
 								>
-									{difficulty}
-								</Text>
-							</Box>
-						))}
+									<Text
+										textAlign="center"
+										textTransform="uppercase"
+										color={difficulty === room.difficulty ? "gray.100" : undefined}
+									>
+										{difficulty}
+									</Text>
+								</Box>
+							))}
+						</Flex>
+					</Flex>
+					<Flex gap={1}>
+						<Heading size="md">Lives</Heading>
 					</Flex>
 				</Flex>
 			</Grid>
