@@ -64,6 +64,10 @@ export default function Key({ symbol }: Props) {
 		return isPressed ? "whiteAlpha.800" : "whiteAlpha.900";
 	}, [isActive, isPressed]);
 
+	if (!room) {
+		return null;
+	}
+
 	return (
 		<Flex
 			justifyContent="center"
@@ -79,7 +83,7 @@ export default function Key({ symbol }: Props) {
 		>
 			{isActive && (
 				<Box
-					animation={`${animation} ${difficultyInMs("easy")}ms`}
+					animation={`${animation} ${difficultyInMs(room?.difficulty)}ms`}
 					overflow="hidden"
 					rounded="inherit"
 					pos="absolute"
