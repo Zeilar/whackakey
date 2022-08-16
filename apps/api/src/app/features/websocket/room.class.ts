@@ -176,7 +176,7 @@ export class Room {
 
 	public changeDifficulty(difficulty: Difficulty) {
 		this.difficulty = difficulty;
-		this.server.emit("room-change-difficulty", { roomId: this.id, difficulty } as ChangeDifficultyDto);
+		this.server.to(this.id).emit("room-change-difficulty", { roomId: this.id, difficulty } as ChangeDifficultyDto);
 	}
 
 	public playerPick(clientId: string, letter: string) {

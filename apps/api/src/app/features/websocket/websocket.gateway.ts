@@ -157,6 +157,7 @@ export class WebsocketGateway implements OnGatewayDisconnect, OnGatewayConnectio
 		room.makePlayer(this.getOrCreateClient(socket.id));
 		socket.join(room.id);
 		socket.emit("room-join", room.id);
+		socket.emit("room-update", room.dto());
 	}
 
 	@SubscribeMessage("room-create")
