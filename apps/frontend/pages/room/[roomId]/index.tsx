@@ -219,6 +219,7 @@ export default function Room() {
 								borderWidth={2}
 								rounded="lg"
 								disabled={!isOwner}
+								opacity={isOwner ? 1 : 0.5}
 								onClick={() =>
 									socket?.emit("room-change-difficulty", {
 										roomId: query.roomId,
