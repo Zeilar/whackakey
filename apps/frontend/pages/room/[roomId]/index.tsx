@@ -9,6 +9,7 @@ import { TrophyFill } from "@styled-icons/bootstrap";
 import { Crown } from "@styled-icons/fa-solid";
 import MultiplayerGame from "apps/frontend/components/MultiplayerGame";
 import { Menu } from "apps/frontend/components/Menu";
+import { toast } from "react-toastify";
 
 export default function Room() {
 	const { query, push } = useRouter();
@@ -50,9 +51,18 @@ export default function Room() {
 		if (!socket) {
 			return;
 		}
-		socket.on("game-starting", setTimestamp);
+		socket
+			.on("game-starting", setTimestamp)
+			.on("winner", (name: string) => {
+				toast.success(`${name} wins the game!`);
+				setTimestamp(undefined);
+			})
+			.on("tie", () => {
+				toast.warn("The game ends in a tie!");
+				setTimestamp(undefined);
+			});
 		return () => {
-			socket.off("game-starting");
+			socket.off("game-starting").off("winner").off("tie");
 		};
 	}, [socket]);
 

@@ -104,6 +104,10 @@ export class Room {
 			this.setOwner(this.players[0].id);
 		}
 		this.server.emit("room-player-leave", { playerId: clientId, roomId: this.id } as PlayerLeaveDto);
+		if (!this.isGameActive) {
+			return;
+		}
+		this.attemptWinner();
 	}
 
 	public isFull() {
@@ -118,13 +122,12 @@ export class Room {
 		clearInterval(this.interval);
 		clearTimeout(this.timeout);
 		const winner = this.players.find(player => player.isEliminated === false);
-		if (!winner) {
-			this.server.to(this.id).emit("error", "Tie.");
-			// this.server.to(this.id).emit("tie", this.snapshot());
-			return;
+		if (winner) {
+			winner.wins++;
+			this.server.to(this.id).emit("winner", winner.name);
+		} else {
+			this.server.to(this.id).emit("tie");
 		}
-		winner.wins++;
-		this.server.to(this.id).emit("winner", winner.id);
 		this.reset();
 	}
 
