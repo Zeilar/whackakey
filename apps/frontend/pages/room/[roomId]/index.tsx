@@ -3,19 +3,20 @@ import { Undo } from "@styled-icons/evaicons-solid";
 import { useWebsocketContext } from "apps/frontend/hooks";
 import { useRouter } from "next/router";
 import NextLink from "next/link";
-import { useEffect, useMemo, useState } from "react";
-import { ChangeDifficultyDto, Difficulty, MAX_PLAYERS, SendMessageDto } from "@shared";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { ChangeDifficultyDto, Difficulty, MAX_PLAYERS, NewMessageDto, NewOwnerDto, SendMessageDto } from "@shared";
 import { TrophyFill } from "@styled-icons/bootstrap";
 import { Crown } from "@styled-icons/fa-solid";
 import MultiplayerGame from "apps/frontend/components/MultiplayerGame";
 import { Menu } from "apps/frontend/components/Menu";
 import { toast } from "react-toastify";
+import { RoomActions } from "apps/frontend/reducers/roomReducer";
 
 const difficulties: Difficulty[] = ["easy", "medium", "hard"];
 
 export default function Room() {
 	const { query, push } = useRouter();
-	const { socket, room, isMe } = useWebsocketContext();
+	const { socket, room, isMe, dispatchRooms } = useWebsocketContext();
 	const isOwner = useMemo(() => {
 		if (!room?.ownerId || !socket) {
 			return false;
@@ -29,6 +30,7 @@ export default function Room() {
 	);
 	const [timestamp, setTimestamp] = useState<number>();
 	const [messageInput, setMessageInput] = useState("");
+	const chatBox = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
 		if (!socket || !query.roomId || hasPlayer) {
@@ -68,6 +70,30 @@ export default function Room() {
 			socket.off("game-starting").off("winner").off("tie");
 		};
 	}, [socket]);
+
+	useEffect(() => {
+		if (!socket) {
+			return;
+		}
+		socket
+			.on("room-message-new", (dto: NewMessageDto) => {
+				dispatchRooms({ type: RoomActions.NEW_MESSAGE, ...dto });
+				chatBox.current?.scrollTo({ top: 9999 });
+			})
+			.on("room-new-owner", ({ roomId, ownerId }: NewOwnerDto) => {
+				dispatchRooms({ type: RoomActions.NEW_OWNER, roomId, ownerId });
+				if (ownerId !== socket.id) {
+					return;
+				}
+				toast.info("You are now the room owner.");
+			})
+			.on("room-change-difficulty", (dto: ChangeDifficultyDto) => {
+				dispatchRooms({ type: RoomActions.CHANGE_DIFFICULTY, ...dto });
+			});
+		return () => {
+			socket.off("room-message-new").off("room-change-difficulty").off("room-new-owner");
+		};
+	}, [socket, dispatchRooms]);
 
 	if (!room) {
 		return (
@@ -251,7 +277,7 @@ export default function Room() {
 				</Flex>
 			</Grid>
 			<Flex borderTopWidth={5} borderBottomWidth={5} borderColor="inherit" flexDir="column">
-				<Flex h={250} overflowY="auto" p={4} flexDir="column" gap={2}>
+				<Flex h={250} overflowY="auto" p={4} flexDir="column" gap={2} ref={chatBox}>
 					{room.messages.map(message => (
 						<Flex key={message.id} gap={2}>
 							<Text color={isMe(message.authorId) ? "player.500" : undefined}>{message.name}:</Text>

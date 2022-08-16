@@ -1,15 +1,7 @@
 import { useRouter } from "next/router";
 import { createContext, useCallback, useEffect, useMemo, useReducer, useState } from "react";
 import { Socket, io } from "socket.io-client";
-import {
-	ChangeDifficultyDto,
-	NewMessageDto,
-	NewOwnerDto,
-	Player,
-	PlayerJoinDto,
-	PlayerLeaveDto,
-	RoomDto,
-} from "@shared";
+import { Player, PlayerJoinDto, PlayerLeaveDto, RoomDto } from "@shared";
 import { RoomAction, RoomActions, roomReducer } from "../reducers/roomReducer";
 import env from "../common/config";
 import { toast } from "react-toastify";
@@ -76,19 +68,6 @@ export function WebsocketContextProvider({ children }: WebsocketProps) {
 				setisOnline(true);
 				setIsConnecting(false);
 			})
-			.on("room-new-owner", ({ roomId, ownerId }: NewOwnerDto) => {
-				dispatchRooms({ type: RoomActions.NEW_OWNER, roomId, ownerId });
-				if (ownerId !== socket.id) {
-					return;
-				}
-				toast.info("You are now the room owner.");
-			})
-			.on("room-message-new", (dto: NewMessageDto) => {
-				dispatchRooms({ type: RoomActions.NEW_MESSAGE, ...dto });
-			})
-			.on("room-change-difficulty", (dto: ChangeDifficultyDto) => {
-				dispatchRooms({ type: RoomActions.CHANGE_DIFFICULTY, ...dto });
-			})
 			.on("room-inactive", (roomId: string) => {
 				dispatchRooms({ type: RoomActions.END, roomId });
 			})
@@ -121,9 +100,6 @@ export function WebsocketContextProvider({ children }: WebsocketProps) {
 				.off("connect")
 				.off("disconnect")
 				.off("error")
-				.off("room-message-new")
-				.off("room-change-difficulty")
-				.off("room-new-owner")
 				.off("rooms-get")
 				.off("room-update")
 				.off("room-new")
