@@ -277,17 +277,46 @@ export default function Room() {
 				</Flex>
 			</Grid>
 			<Flex borderTopWidth={5} borderBottomWidth={5} borderColor="inherit" flexDir="column">
-				<Flex h={250} overflowY="auto" p={4} flexDir="column" gap={2} ref={chatBox}>
+				<Flex
+					h={250}
+					overflowY="auto"
+					p={4}
+					pb={0}
+					flexDir="column"
+					gap={2}
+					ref={chatBox}
+					sx={{
+						"&::-webkit-scrollbar": { width: 4 },
+						"&::-webkit-scrollbar-thumb": {
+							border: "4px solid transparent",
+							rounded: 100,
+							bgColor: "blue.900",
+							bgClip: "padding-box",
+						},
+					}}
+				>
 					{room.messages.map(message => (
 						<Flex key={message.id} gap={2}>
-							<Text color={isMe(message.authorId) ? "player.500" : undefined}>{message.name}:</Text>
+							<Text whiteSpace="nowrap" color={isMe(message.authorId) ? "player.500" : undefined}>
+								{message.name}:
+							</Text>
 							<Text>{message.content}</Text>
 						</Flex>
 					))}
 				</Flex>
-				<Flex as="form" p={4} grow={1} gap={4} onSubmit={sendMessage}>
+				<Flex
+					as="form"
+					p={4}
+					grow={1}
+					gap={4}
+					onSubmit={sendMessage}
+					// bgColor="gray.200"
+					// borderTopWidth={2}
+					// borderTopColor="gray.400"
+				>
 					<Input
 						value={messageInput}
+						autoFocus
 						onChange={e => setMessageInput(e.target.value)}
 						variant="unstyled"
 						placeholder="Send a message"
