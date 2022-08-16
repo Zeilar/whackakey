@@ -1,4 +1,4 @@
-import { Player, RoomDto } from "@shared";
+import { Difficulty, Player, RoomDto } from "@shared";
 
 export enum RoomActions {
 	ADD = "add",
@@ -11,6 +11,7 @@ export enum RoomActions {
 	START = "start",
 	END = "end",
 	NEW_OWNER = "new-owner",
+	CHANGE_DIFFICULTY = "change-difficulty",
 }
 
 export type RoomAction =
@@ -23,7 +24,14 @@ export type RoomAction =
 	| GetAllAction
 	| StartAction
 	| EndAction
-	| NewOwnerAction;
+	| NewOwnerAction
+	| ChangeDifficultyAction;
+
+interface ChangeDifficultyAction {
+	type: RoomActions.CHANGE_DIFFICULTY;
+	roomId: string;
+	difficulty: Difficulty;
+}
 
 interface NewOwnerAction {
 	type: RoomActions.NEW_OWNER;
@@ -113,6 +121,8 @@ export function roomReducer(state: RoomDto[], action: RoomAction) {
 			return state.map(room => (action.roomId === room.id ? { ...room, isGameActive: false } : room));
 		case RoomActions.NEW_OWNER:
 			return state.map(room => (action.roomId === room.id ? { ...room, ownerId: action.ownerId } : room));
+		case RoomActions.CHANGE_DIFFICULTY:
+			return state.map(room => (action.roomId === room.id ? { ...room, difficulty: action.difficulty } : room));
 		default:
 			return state;
 	}

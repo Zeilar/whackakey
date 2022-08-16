@@ -13,6 +13,7 @@ import { Room } from "./room.class";
 import { v4 as uuidv4 } from "uuid";
 import { Client } from "../../../types/ws";
 import { randomName } from "../../common/util/nameGenerator";
+import { Difficulty } from "@shared";
 
 const { port } = config.ws;
 
@@ -98,6 +99,23 @@ export class WebsocketGateway implements OnGatewayDisconnect, OnGatewayConnectio
 	@SubscribeMessage("ping")
 	public ping() {
 		return "";
+	}
+
+	@SubscribeMessage("room-change-difficulty")
+	public changeDifficulty(
+		@ConnectedSocket() socket: Socket,
+		@MessageBody("roomId") roomId: string,
+		@MessageBody("difficulty") difficulty: Difficulty
+	) {
+		const room = this.getRoomById(roomId);
+		if (!room) {
+			socket.emit("error", "Could not find room.");
+			return;
+		}
+		if (!room.hasPlayer(socket.id) || !room.isOwner(socket.id)) {
+			return;
+		}
+		room.changeDifficulty(difficulty);
 	}
 
 	@SubscribeMessage("player-pick")

@@ -9,7 +9,8 @@ import {
 	Difficulty,
 	Player,
 	NewOwnerDto,
-	difficulties,
+	difficultyInMs,
+	ChangeDifficultyDto,
 } from "@shared";
 import { randomName } from "../../common/util/nameGenerator";
 
@@ -173,8 +174,9 @@ export class Room {
 		return this.players.reduce((total, player) => (!player.isEliminated ? total + 1 : total), 0);
 	}
 
-	private get difficultyInMs() {
-		return difficulties[this.difficulty];
+	public changeDifficulty(difficulty: Difficulty) {
+		this.difficulty = difficulty;
+		this.server.emit("room-change-difficulty", { roomId: this.id, difficulty } as ChangeDifficultyDto);
 	}
 
 	public playerPick(clientId: string, letter: string) {
@@ -198,12 +200,12 @@ export class Room {
 			this.interval = setInterval(() => {
 				this.attemptWinner();
 				this.update();
-			}, this.difficultyInMs);
+			}, difficultyInMs(this.difficulty));
 		}, 3000);
 	}
 
-	public isOwner(id: string) {
-		return id === this.ownerId;
+	public isOwner(clientId: string) {
+		return clientId === this.ownerId;
 	}
 
 	private setOwner(ownerId: string) {

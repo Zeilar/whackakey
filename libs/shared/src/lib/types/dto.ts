@@ -24,3 +24,8 @@ export interface NewOwnerDto {
 	roomId: string;
 	ownerId: string;
 }
+
+export interface ChangeDifficultyDto {
+	roomId: string;
+	difficulty: Difficulty;
+}

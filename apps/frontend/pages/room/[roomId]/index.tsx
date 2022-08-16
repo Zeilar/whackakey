@@ -4,7 +4,7 @@ import { useWebsocketContext } from "apps/frontend/hooks";
 import { useRouter } from "next/router";
 import NextLink from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { Difficulty, MAX_PLAYERS } from "@shared";
+import { ChangeDifficultyDto, Difficulty, MAX_PLAYERS } from "@shared";
 import { TrophyFill } from "@styled-icons/bootstrap";
 import { Crown } from "@styled-icons/fa-solid";
 import MultiplayerGame from "apps/frontend/components/MultiplayerGame";
@@ -28,7 +28,6 @@ export default function Room() {
 		[room?.players, socket?.id]
 	);
 	const [timestamp, setTimestamp] = useState<number>();
-	const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty>("easy");
 
 	useEffect(() => {
 		if (!socket || !query.roomId || hasPlayer) {
@@ -98,7 +97,7 @@ export default function Room() {
 	}
 
 	function difficultyBgColor(difficulty: Difficulty) {
-		if (difficulty !== selectedDifficulty) {
+		if (difficulty !== room?.difficulty) {
 			return "gray.200";
 		}
 		switch (difficulty) {
@@ -112,7 +111,7 @@ export default function Room() {
 	}
 
 	function difficultyBorderColor(difficulty: Difficulty) {
-		if (difficulty !== selectedDifficulty) {
+		if (difficulty !== room?.difficulty) {
 			return "gray.400";
 		}
 		switch (difficulty) {
@@ -218,12 +217,18 @@ export default function Room() {
 								py={2}
 								borderWidth={2}
 								rounded="lg"
-								onClick={() => setSelectedDifficulty(difficulty)}
+								disabled={!isOwner}
+								onClick={() =>
+									socket?.emit("room-change-difficulty", {
+										roomId: query.roomId,
+										difficulty,
+									} as ChangeDifficultyDto)
+								}
 							>
 								<Text
 									textAlign="center"
 									textTransform="uppercase"
-									color={difficulty === selectedDifficulty ? "gray.100" : undefined}
+									color={difficulty === room.difficulty ? "gray.100" : undefined}
 								>
 									{difficulty}
 								</Text>
