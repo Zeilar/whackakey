@@ -3,7 +3,7 @@ import { DEFAULT_LIVES } from "../common/constants";
 import { randomUniqueLetter } from "../common/utils";
 import { Point } from "../types/game";
 import { useSoundContext } from ".";
-import { DifficultyTiming } from "@shared";
+import { Difficulty, difficultyInMs } from "@shared";
 
 export interface SoloGame {
 	nextDeadline: number;
@@ -12,10 +12,10 @@ export interface SoloGame {
 	userInput: Letter;
 	isPlaying: boolean;
 	setIsPlaying: React.Dispatch<React.SetStateAction<boolean>>;
-	difficultyTiming: DifficultyTiming;
-	setDifficultyTiming: React.Dispatch<React.SetStateAction<DifficultyTiming>>;
-	timeLeft: DifficultyTiming;
-	setTimeLeft: React.Dispatch<React.SetStateAction<DifficultyTiming>>;
+	difficulty: Difficulty;
+	setDifficulty: React.Dispatch<React.SetStateAction<Difficulty>>;
+	timeLeft: number;
+	setTimeLeft: React.Dispatch<React.SetStateAction<number>>;
 	hasPicked: boolean;
 	score: number;
 	isGameOver: boolean;
@@ -30,7 +30,7 @@ export interface SoloGame {
 
 type Letter = string | null;
 
-export function useSoloGame() {
+export function useSoloGame(): SoloGame {
 	const { playAudio } = useSoundContext();
 	const [lives, setLives] = useState(DEFAULT_LIVES);
 	const [isGameOver, setIsGameOver] = useState(false);
@@ -38,9 +38,9 @@ export function useSoloGame() {
 	const [letter, setLetter] = useState<Letter>(null);
 	const [score, setScore] = useState(0);
 	const [isPlaying, setIsPlaying] = useState(false);
-	const [difficultyTiming, setDifficultyTiming] = useState(DifficultyTiming.EASY);
-	const [nextDeadline, setNextDeadline] = useState(new Date().getTime() + difficultyTiming);
-	const [timeLeft, setTimeLeft] = useState(difficultyTiming);
+	const [difficulty, setDifficulty] = useState<Difficulty>("easy");
+	const [nextDeadline, setNextDeadline] = useState(new Date().getTime() + difficultyInMs(difficulty));
+	const [timeLeft, setTimeLeft] = useState(difficultyInMs(difficulty));
 
 	const randomLetter = useCallback(() => {
 		setLetter(randomUniqueLetter(letter));
@@ -49,8 +49,8 @@ export function useSoloGame() {
 	const nextRound = useCallback(() => {
 		setUserInput(null);
 		randomLetter();
-		setNextDeadline(new Date().getTime() + difficultyTiming);
-	}, [difficultyTiming, randomLetter]);
+		setNextDeadline(new Date().getTime() + difficultyInMs(difficulty));
+	}, [difficulty, randomLetter]);
 
 	const hit = useCallback(() => {
 		playAudio("hit");
@@ -76,9 +76,9 @@ export function useSoloGame() {
 		setLetter(null);
 		setLives(DEFAULT_LIVES);
 		setScore(0);
-		setTimeLeft(difficultyTiming);
+		setTimeLeft(difficultyInMs(difficulty));
 		setIsGameOver(false);
-	}, [difficultyTiming]);
+	}, [difficulty]);
 
 	const play = useCallback(() => {
 		restart();
@@ -91,13 +91,13 @@ export function useSoloGame() {
 	}, [restart]);
 
 	useEffect(() => {
-		const difficultyTiming = localStorage.getItem("difficultyTiming");
-		setDifficultyTiming(difficultyTiming ? JSON.parse(difficultyTiming) : DifficultyTiming.EASY);
+		const difficulty = localStorage.getItem("difficulty");
+		setDifficulty(difficulty ? JSON.parse(difficulty) : "easy");
 	}, []);
 
 	useEffect(() => {
-		localStorage.setItem("difficultyTiming", JSON.stringify(difficultyTiming));
-	}, [difficultyTiming]);
+		localStorage.setItem("difficulty", JSON.stringify(difficulty));
+	}, [difficulty]);
 
 	useEffect(() => {
 		if (lives > 0) {
@@ -114,8 +114,8 @@ export function useSoloGame() {
 	}, [isPlaying, reset]);
 
 	return {
-		difficultyTiming,
-		setDifficultyTiming,
+		difficulty,
+		setDifficulty,
 		isPlaying,
 		setIsPlaying,
 		letter,
@@ -134,5 +134,5 @@ export function useSoloGame() {
 		randomLetter,
 		setTimeLeft,
 		timeLeft,
-	} as SoloGame;
+	};
 }

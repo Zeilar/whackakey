@@ -1,5 +1,5 @@
 import { Button, IconButton, Text } from "@chakra-ui/react";
-import { Difficulty, DifficultyTiming } from "@shared";
+import { Difficulty } from "@shared";
 import { ArrowLeft } from "@styled-icons/evaicons-solid/ArrowLeft";
 import { ArrowRight } from "@styled-icons/evaicons-solid/ArrowRight";
 import { useSoundContext } from "apps/frontend/hooks/";
@@ -7,16 +7,11 @@ import { motion } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 interface DifficultyItemProps {
-	onChange(difficultyTiming: DifficultyTiming): void;
+	onChange(difficulty: Difficulty): void;
 }
 
-const difficulties: Difficulty[] = ["easy", "medium", "hard"];
-const difficultiesMap: Record<Difficulty, DifficultyTiming> = {
-	easy: DifficultyTiming.EASY,
-	medium: DifficultyTiming.MEDIUM,
-	hard: DifficultyTiming.HARD,
-};
 const difficultyColors = ["green.500", "yellow.500", "red.500"];
+const difficulties: Difficulty[] = ["easy", "medium", "hard"];
 
 export default function DifficultyItem({ onChange }: DifficultyItemProps) {
 	const { playAudio } = useSoundContext();
@@ -56,7 +51,7 @@ export default function DifficultyItem({ onChange }: DifficultyItemProps) {
 	}, [next, previous]);
 
 	useEffect(() => {
-		onChange(difficultiesMap[difficulties[selected]]);
+		onChange(difficulties[selected]);
 	}, [selected, onChange]);
 
 	return (

@@ -13,7 +13,7 @@ export default function Menu() {
 	const { query, push } = useRouter();
 	const menu = query?.menu as Menu | undefined;
 	const { socket } = useWebsocketContext();
-	const { play, setDifficultyTiming } = useSoloGameContext();
+	const { play, setDifficulty } = useSoloGameContext();
 	const [isCountingDown, setIsCountingDown] = useState(false);
 	const [countdown, setCountdown] = useState(3);
 	const heading = useMemo(() => {
@@ -100,7 +100,7 @@ export default function Menu() {
 					<SolidButton onClick={() => setIsCountingDown(true)} autoFocus>
 						Play
 					</SolidButton>
-					<DifficultyItem onChange={setDifficultyTiming} />
+					<DifficultyItem onChange={setDifficulty} />
 					<NextLink passHref href="/tutorial/solo">
 						<Link _hover={{}} tabIndex={-1}>
 							<SolidButton role="link">How to play</SolidButton>

@@ -111,60 +111,68 @@ export default function Room() {
 					{room.players.length} / {MAX_PLAYERS}
 				</Heading>
 			</Flex>
-			<Grid gridTemplateColumns="repeat(2, 1fr)" p={4} bgColor="gray.300" gridGap={4}>
-				{room.players.map(player => (
-					<Flex
-						key={player.id}
-						borderColor={playerBgColor(player.id)}
-						borderWidth={3}
-						bgColor="gray.100"
-						rounded="md"
-						alignItems="center"
-						pos="relative"
-					>
-						{player.id === room.ownerId && (
-							<Tooltip label="Room owner" placement="top" closeOnClick={false}>
-								<Icon
-									as={Crown}
-									h="100%"
-									color="gray.100"
-									w={10}
-									p={2}
-									pr={3}
-									bgColor={playerBgColor(player.id)}
-								/>
-							</Tooltip>
-						)}
-						<Flex py={2} px={4} justifyContent="space-between" flexGrow={1} color={playerColor(player.id)}>
-							<Text size="lg">{player.name}</Text>
-							<Tooltip label="Wins" placement="top" closeOnClick={false}>
-								<Flex alignItems="center" gap={1} userSelect="none">
-									<Text>{player.wins}</Text>
-									<Icon as={TrophyFill} />
-								</Flex>
-							</Tooltip>
-						</Flex>
-					</Flex>
-				))}
-				{Array(slotsAvailable)
-					.fill(null)
-					.map((_, i) => (
+			<Grid gridTemplateColumns="1fr 1fr" gridGap={4} p={4} bgColor="gray.300">
+				<Flex flexDir="column" gap={4}>
+					{room.players.map(player => (
 						<Flex
-							key={i}
-							borderColor="gray.500"
+							key={player.id}
+							borderColor={playerBgColor(player.id)}
 							borderWidth={3}
-							bgColor="gray.400"
+							bgColor="gray.100"
 							rounded="md"
-							py={2}
-							px={4}
 							alignItems="center"
-							justifyContent="space-between"
+							pos="relative"
 						>
-							<Text size="lg" fontStyle="italic" color="gray.500" userSelect="none">
-								Slot available
-							</Text>
+							{player.id === room.ownerId && (
+								<Tooltip label="Room owner" placement="top" closeOnClick={false}>
+									<Icon
+										as={Crown}
+										h="100%"
+										color="gray.100"
+										w={10}
+										p={2}
+										pr={3}
+										bgColor={playerBgColor(player.id)}
+									/>
+								</Tooltip>
+							)}
+							<Flex
+								py={2}
+								px={4}
+								justifyContent="space-between"
+								flexGrow={1}
+								color={playerColor(player.id)}
+							>
+								<Text size="lg">{player.name}</Text>
+								<Tooltip label="Wins" placement="top" closeOnClick={false}>
+									<Flex alignItems="center" gap={1} userSelect="none">
+										<Text>{player.wins}</Text>
+										<Icon as={TrophyFill} />
+									</Flex>
+								</Tooltip>
+							</Flex>
 						</Flex>
 					))}
+					{Array(slotsAvailable)
+						.fill(null)
+						.map((_, i) => (
+							<Flex
+								key={i}
+								borderColor="gray.500"
+								borderWidth={3}
+								bgColor="gray.400"
+								rounded="md"
+								py={2}
+								px={4}
+								alignItems="center"
+								justifyContent="space-between"
+							>
+								<Text size="lg" fontStyle="italic" color="gray.500" userSelect="none">
+									Slot available
+								</Text>
+							</Flex>
+						))}
+				</Flex>
 			</Grid>
 			<Flex justifyContent="space-between" bgColor="gray.300" p={4}>
 				<Button

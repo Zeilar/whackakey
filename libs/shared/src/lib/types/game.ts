@@ -1,10 +1,10 @@
 export type Difficulty = "easy" | "medium" | "hard";
 
-export enum DifficultyTiming {
-	EASY = 1000,
-	MEDIUM = 750,
-	HARD = 500,
-}
+export const difficulties: Record<Difficulty, number> = {
+	easy: 1000,
+	medium: 750,
+	hard: 500,
+};
 
 export interface Player {
 	name: string;

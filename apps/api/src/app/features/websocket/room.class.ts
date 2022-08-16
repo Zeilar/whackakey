@@ -6,20 +6,14 @@ import {
 	PlayerLeaveDto,
 	RoomDto,
 	alphabets,
-	DifficultyTiming,
 	Difficulty,
 	Player,
 	NewOwnerDto,
+	difficulties,
 } from "@shared";
 import { randomName } from "../../common/util/nameGenerator";
 
 const alphabet = alphabets.english;
-
-const difficultiesMap: Record<Difficulty, DifficultyTiming> = {
-	easy: DifficultyTiming.EASY,
-	medium: DifficultyTiming.MEDIUM,
-	hard: DifficultyTiming.HARD,
-};
 
 export class Room {
 	private ownerId: string;
@@ -180,7 +174,7 @@ export class Room {
 	}
 
 	private get difficultyInMs() {
-		return difficultiesMap[this.difficulty];
+		return difficulties[this.difficulty];
 	}
 
 	public playerPick(clientId: string, letter: string) {

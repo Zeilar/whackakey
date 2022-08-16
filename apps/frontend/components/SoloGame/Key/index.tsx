@@ -1,4 +1,5 @@
 import { Box, Flex, Text } from "@chakra-ui/react";
+import { difficultyInMs } from "@shared";
 import { useSoundContext, useSoloGameContext } from "apps/frontend/hooks";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
@@ -7,13 +8,13 @@ interface Props {
 }
 
 export default function Key({ symbol }: Props) {
-	const { letter, hasPicked, isPlaying, difficultyTiming, pick, timeLeft } = useSoloGameContext();
+	const { letter, hasPicked, isPlaying, difficulty, pick, timeLeft } = useSoloGameContext();
 	const { playAudio } = useSoundContext();
 	const [isPressed, setIsPressed] = useState(false);
 	const isActive = useMemo(() => letter === symbol, [letter, symbol]);
 	const percentLeft = useMemo(
-		() => (isActive ? timeLeft / difficultyTiming : 1),
-		[isActive, difficultyTiming, timeLeft]
+		() => (isActive ? timeLeft / difficultyInMs(difficulty) : 1),
+		[isActive, difficulty, timeLeft]
 	);
 
 	useEffect(() => {

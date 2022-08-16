@@ -1,5 +1,5 @@
 import { Box, Flex, keyframes, Text } from "@chakra-ui/react";
-import { DifficultyTiming } from "@shared";
+import { difficultyInMs } from "@shared";
 import { useSoundContext, useWebsocketContext } from "apps/frontend/hooks";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -79,7 +79,7 @@ export default function Key({ symbol }: Props) {
 		>
 			{isActive && (
 				<Box
-					animation={`${animation} ${DifficultyTiming.EASY}ms`}
+					animation={`${animation} ${difficultyInMs("easy")}ms`}
 					overflow="hidden"
 					rounded="inherit"
 					pos="absolute"
