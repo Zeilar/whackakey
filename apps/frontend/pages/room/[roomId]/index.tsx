@@ -179,11 +179,11 @@ export default function Room() {
 		}
 		switch (difficulty) {
 			case "easy":
-				return "green.200";
+				return "green.100";
 			case "medium":
-				return "yellow.200";
+				return "yellow.100";
 			case "hard":
-				return "red.200";
+				return "red.100";
 		}
 	}
 
@@ -288,9 +288,9 @@ export default function Room() {
 									alignItems="center"
 									bgColor={difficultyBgColor(difficulty)}
 									borderColor={difficultyBorderColor(difficulty)}
+									borderWidth={2}
 									px={4}
 									py={2}
-									borderWidth={2}
 									rounded="lg"
 									disabled={!isOwner}
 									opacity={isOwner ? 1 : 0.5}
@@ -320,7 +320,15 @@ export default function Room() {
 								{Array(room.lives)
 									.fill(null)
 									.map((_, i) => (
-										<Icon key={i} as={Heart} w={6} h={6} color="red.500" stroke="blue.900" />
+										<Icon
+											key={i}
+											strokeWidth={3}
+											as={Heart}
+											w={6}
+											h={6}
+											color="red.500"
+											stroke="blue.900"
+										/>
 									))}
 							</Flex>
 						</Flex>
@@ -336,7 +344,7 @@ export default function Room() {
 							<SliderTrack _disabled={{ bgColor: "gray.200" }}>
 								<SliderFilledTrack bgColor="blue.900" />
 							</SliderTrack>
-							<SliderThumb _disabled={{ bgColor: "gray.200" }} />
+							<SliderThumb borderColor="blue.900" borderWidth={2} _disabled={{ bgColor: "gray.200" }} />
 						</Slider>
 					</Flex>
 				</Flex>
