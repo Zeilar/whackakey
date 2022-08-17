@@ -314,7 +314,16 @@ export default function Room() {
 						</Flex>
 					</Flex>
 					<Flex gap={1} flexDir="column">
-						<Heading size="md">Lives</Heading>
+						<Flex alignItems="center" gap={2}>
+							<Heading size="md">Lives</Heading>
+							<Flex gap={1}>
+								{Array(room.lives)
+									.fill(null)
+									.map((_, i) => (
+										<Icon key={i} as={Heart} w={6} h={6} color="red.500" stroke="blue.900" />
+									))}
+							</Flex>
+						</Flex>
 						<Slider
 							min={1}
 							value={room.lives}
@@ -329,13 +338,6 @@ export default function Room() {
 							</SliderTrack>
 							<SliderThumb _disabled={{ bgColor: "gray.200" }} />
 						</Slider>
-						<Flex gap={1}>
-							{Array(room.lives)
-								.fill(null)
-								.map((_, i) => (
-									<Icon key={i} as={Heart} w={4} h={4} color="red.500" stroke="blue.900" />
-								))}
-						</Flex>
 					</Flex>
 				</Flex>
 			</Grid>
