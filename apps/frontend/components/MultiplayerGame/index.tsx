@@ -1,5 +1,4 @@
 import { Button, Flex, Heading, Icon, Text } from "@chakra-ui/react";
-import { DEFAULT_LIVES } from "@shared";
 import { Heart } from "@styled-icons/evaicons-solid";
 import { useWebsocketContext } from "apps/frontend/hooks";
 import { useEffect, useState } from "react";
@@ -57,7 +56,7 @@ export default function MultiplayerGame({ timestamp }: Props) {
 							color="gray.100"
 							boxShadow="lg"
 						>
-							<Text textStyle="stroke" fontSize="lg" mr={4}>
+							<Text fontSize="lg" mr={4}>
 								{element.name}
 							</Text>
 							<Button variant="key" as="div" w={4}>
@@ -75,19 +74,21 @@ export default function MultiplayerGame({ timestamp }: Props) {
 							borderColor="gray.100"
 						>
 							{element.lives > 0 ? (
-								Array(DEFAULT_LIVES)
+								Array(room.lives)
 									.fill(null)
 									.map((_, i) => (
 										<Icon
 											color={i < element.lives ? "red.500" : "whiteAlpha.300"}
-											w={6}
-											h={6}
+											strokeWidth={3}
+											stroke="blue.900"
+											w={8}
+											h={8}
 											as={Heart}
 											key={i}
 										/>
 									))
 							) : (
-								<Heading color="red.500" size="lg" fontWeight={500} textStyle="stroke">
+								<Heading color="red.500" size="lg">
 									K.O
 								</Heading>
 							)}
