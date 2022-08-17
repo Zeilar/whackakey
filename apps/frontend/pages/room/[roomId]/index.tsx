@@ -55,7 +55,7 @@ export default function Room() {
 	);
 	const [timestamp, setTimestamp] = useState<number>();
 	const [messageInput, setMessageInput] = useState("");
-	const [lives, setLives] = useState(DEFAULT_LIVES);
+	const [lives, setLives] = useState(room?.lives ?? DEFAULT_LIVES);
 	const chatBox = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
@@ -210,6 +210,7 @@ export default function Room() {
 							rounded="md"
 							alignItems="center"
 							pos="relative"
+							order={!isMe(player.id) ? 1 : undefined}
 						>
 							{player.id === room.ownerId && (
 								<Tooltip label="Room owner" placement="top" closeOnClick={false}>
@@ -254,6 +255,7 @@ export default function Room() {
 								px={4}
 								alignItems="center"
 								justifyContent="space-between"
+								order={1}
 							>
 								<Text size="lg" fontStyle="italic" color="gray.500" userSelect="none">
 									Slot available
