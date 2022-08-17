@@ -187,15 +187,15 @@ export default function Room() {
 			flexDir="column"
 			bgColor="gray.100"
 			rounded="xl"
-			borderWidth={5}
+			borderWidth={4}
 			borderColor="blue.900"
 			w={800}
 			overflow="hidden"
 			boxShadow="lg"
 		>
 			<Flex p={4} justifyContent="space-between" borderBottomWidth="inherit" borderBottomColor="inherit">
-				<Heading size="lg">{room.name}</Heading>
-				<Heading size="lg">
+				<Heading size="md">{room.name}</Heading>
+				<Heading size="md">
 					{room.players.length} / {MAX_PLAYERS}
 				</Heading>
 			</Flex>
@@ -337,7 +337,13 @@ export default function Room() {
 					</Flex>
 				</Flex>
 			</Grid>
-			<Flex borderTopWidth={5} borderBottomWidth={5} borderColor="inherit" flexDir="column" bgColor="gray.300">
+			<Flex
+				borderTopWidth="inherit"
+				borderBottomWidth="inherit"
+				borderColor="inherit"
+				flexDir="column"
+				bgColor="gray.300"
+			>
 				<Flex
 					h={200}
 					overflowY="auto"
