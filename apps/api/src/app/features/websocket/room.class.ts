@@ -147,6 +147,9 @@ export class Room {
 			return;
 		}
 		this.players.forEach(player => {
+			if (player.lives <= 0) {
+				player.isEliminated = true;
+			}
 			if (player.isEliminated) {
 				return;
 			}
@@ -160,6 +163,10 @@ export class Room {
 			}
 			player.pick = null;
 		});
+		if (this.playersLeft() === 0) {
+			this.attemptWinner();
+			return;
+		}
 		this.newRound();
 	}
 
@@ -213,8 +220,8 @@ export class Room {
 			this.attemptWinner();
 			this.newRound();
 			this.interval = setInterval(() => {
-				this.attemptWinner();
 				this.update();
+				this.attemptWinner();
 			}, difficultyInMs(this.difficulty));
 		}, 3000);
 	}
