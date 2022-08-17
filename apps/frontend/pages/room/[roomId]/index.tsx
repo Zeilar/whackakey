@@ -161,7 +161,7 @@ export default function Room() {
 
 	function difficultyBgColor(difficulty: Difficulty) {
 		if (difficulty !== room?.difficulty) {
-			return "gray.200";
+			return "gray.100";
 		}
 		switch (difficulty) {
 			case "easy":
@@ -200,7 +200,7 @@ export default function Room() {
 				</Heading>
 			</Flex>
 			<Grid gridTemplateColumns="1fr 1fr" gridGap={4} p={4} bgColor="gray.300">
-				<Flex flexDir="column" gap={4}>
+				<Flex flexDir="column" gap={2}>
 					{room.players.map(player => (
 						<Flex
 							key={player.id}
@@ -220,7 +220,7 @@ export default function Room() {
 										color="gray.100"
 										w={10}
 										p={2}
-										pr={3}
+										pr={2.5}
 										bgColor={playerBgColor(player.id)}
 									/>
 								</Tooltip>
@@ -329,7 +329,7 @@ export default function Room() {
 							max={MAX_LILVES}
 							defaultValue={DEFAULT_LIVES}
 						>
-							<SliderTrack _disabled={{ bgColor: "gray.200" }}>
+							<SliderTrack bgColor="gray.100" _disabled={{ bgColor: "gray.200" }}>
 								<SliderFilledTrack bgColor="blue.900" />
 							</SliderTrack>
 							<SliderThumb borderColor="blue.900" borderWidth={2} _disabled={{ bgColor: "gray.200" }} />
@@ -337,9 +337,9 @@ export default function Room() {
 					</Flex>
 				</Flex>
 			</Grid>
-			<Flex borderTopWidth={5} borderBottomWidth={5} borderColor="inherit" flexDir="column">
+			<Flex borderTopWidth={5} borderBottomWidth={5} borderColor="inherit" flexDir="column" bgColor="gray.300">
 				<Flex
-					h={250}
+					h={200}
 					overflowY="auto"
 					p={4}
 					pb={0}
@@ -378,7 +378,7 @@ export default function Room() {
 					</Button>
 				</Flex>
 			</Flex>
-			<Flex justifyContent="space-between" bgColor="gray.300" p={4}>
+			<Flex justifyContent="space-between" bgColor="gray.100" p={4}>
 				<Button
 					px={12}
 					size="lg"
