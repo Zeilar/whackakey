@@ -97,7 +97,7 @@ export class Room {
 		const player: Player = {
 			...client,
 			isEliminated: false,
-			lives: 3,
+			lives: this.lives,
 			wins: 0,
 			pick: null,
 		};
@@ -176,7 +176,7 @@ export class Room {
 
 	private reset() {
 		this.players.forEach(player => {
-			player.lives = 3;
+			player.lives = this.lives;
 			player.isEliminated = false;
 			player.pick = null;
 		});
