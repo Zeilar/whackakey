@@ -173,20 +173,6 @@ export default function Room() {
 		}
 	}
 
-	function difficultyBorderColor(difficulty: Difficulty) {
-		if (difficulty !== room?.difficulty) {
-			return "gray.400";
-		}
-		switch (difficulty) {
-			case "easy":
-				return "green.100";
-			case "medium":
-				return "yellow.100";
-			case "hard":
-				return "red.100";
-		}
-	}
-
 	function sendMessage(e: React.FormEvent) {
 		e.preventDefault();
 		if (!socket || !messageInput) {
@@ -287,8 +273,8 @@ export default function Room() {
 									w="100%"
 									alignItems="center"
 									bgColor={difficultyBgColor(difficulty)}
-									borderColor={difficultyBorderColor(difficulty)}
-									borderWidth={2}
+									borderColor={difficulty === room?.difficulty ? "blue.900" : "gray.400"}
+									borderWidth={3}
 									px={4}
 									py={2}
 									rounded="lg"
