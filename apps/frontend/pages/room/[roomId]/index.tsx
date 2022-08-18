@@ -151,14 +151,6 @@ export default function Room() {
 		return <MultiplayerGame timestamp={timestamp} />;
 	}
 
-	function playerBgColor(playerId: string) {
-		return isMe(playerId) ? "player.600" : "blue.900";
-	}
-
-	function playerColor(playerId: string) {
-		return isMe(playerId) ? "player.900" : "blue.900";
-	}
-
 	function difficultyBgColor(difficulty: Difficulty) {
 		if (difficulty !== room?.difficulty) {
 			return "gray.100";
@@ -204,7 +196,7 @@ export default function Room() {
 					{room.players.map(player => (
 						<Flex
 							key={player.id}
-							borderColor={playerBgColor(player.id)}
+							borderColor="blue.900"
 							borderWidth={2}
 							bgColor="gray.100"
 							rounded="md"
@@ -221,18 +213,19 @@ export default function Room() {
 										w={10}
 										p={2}
 										pr={2.5}
-										bgColor={playerBgColor(player.id)}
+										bgColor="blue.900"
 									/>
 								</Tooltip>
 							)}
-							<Flex
-								py={2}
-								px={4}
-								justifyContent="space-between"
-								flexGrow={1}
-								color={playerColor(player.id)}
-							>
-								<Text size="lg">{player.name}</Text>
+							<Flex py={2} px={4} justifyContent="space-between" flexGrow={1}>
+								<Text size="lg">
+									{isMe(player.id) ? (
+										<Text userSelect="none" as="span">
+											(You)&nbsp;
+										</Text>
+									) : undefined}
+									{player.name}
+								</Text>
 								<Tooltip label="Wins" placement="top" closeOnClick={false}>
 									<Flex alignItems="center" gap={1} userSelect="none">
 										<Text>{player.wins}</Text>
