@@ -37,6 +37,16 @@ export function SoundContextProvider({ children }: SoundProps) {
 
 	useEffect(() => {
 		soundKeys.forEach(sound => {
+			const file = audioFiles[sound];
+			if (!file) {
+				return;
+			}
+			file.volume = volume;
+		});
+	}, [volume, audioFiles]);
+
+	useEffect(() => {
+		soundKeys.forEach(sound => {
 			const audio = new Audio(`/assets/sound/${sound}.wav`);
 			audio.volume = DEFAULT_VOLUME;
 			audio.addEventListener("loadeddata", () => {
