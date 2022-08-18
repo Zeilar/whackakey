@@ -61,7 +61,7 @@ export default function Latency() {
 					)}
 				</Flex>
 				{player && (
-					<Heading textStyle="stroke" color="blue.500">
+					<Heading textStyle="stroke" color="yellow.500">
 						{player.name}
 					</Heading>
 				)}

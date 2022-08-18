@@ -181,7 +181,7 @@ export default function Room() {
 			rounded="xl"
 			borderWidth={4}
 			borderColor="blue.900"
-			w={800}
+			w={900}
 			overflow="hidden"
 			boxShadow="lg"
 		>
@@ -194,51 +194,56 @@ export default function Room() {
 			<Grid gridTemplateColumns="1fr 1fr" gridGap={4} p={4} bgColor="gray.300">
 				<Flex flexDir="column" gap={2}>
 					{room.players.map(player => (
-						<Flex
-							key={player.id}
-							borderColor={isMe(player.id) ? "blue.500" : "blue.900"}
-							borderWidth={2}
-							bgColor="gray.100"
-							rounded="md"
-							alignItems="center"
-							pos="relative"
-							order={!isMe(player.id) ? 1 : undefined}
-							overflow="hidden"
-						>
+						<Flex key={player.id} gap={1}>
 							{player.id === room.ownerId && (
 								<Tooltip label="Room owner" placement="top" closeOnClick={false}>
 									<Icon
 										as={Crown}
 										h="100%"
+										rounded="md"
 										color="gray.100"
-										w={10}
+										borderWidth={3}
+										borderColor={isMe(player.id) ? "yellow.600" : "blue.900"}
+										w="44px"
 										p={2}
-										pr={2.5}
-										bgColor={isMe(player.id) ? "blue.500" : "blue.900"}
+										bgColor={isMe(player.id) ? "yellow.500" : "blue.900"}
 									/>
 								</Tooltip>
 							)}
 							<Flex
-								py={2}
-								px={4}
-								justifyContent="space-between"
-								flexGrow={1}
-								color={isMe(player.id) ? "blue.500" : undefined}
+								borderColor={isMe(player.id) ? "yellow.600" : "blue.900"}
+								borderWidth={3}
+								bgColor="gray.100"
+								rounded="md"
+								alignItems="center"
+								pos="relative"
+								order={!isMe(player.id) ? 1 : undefined}
+								overflow="hidden"
+								grow={1}
 							>
-								<Text size="lg">
-									{isMe(player.id) ? (
-										<Text userSelect="none" as="span">
-											(You)&nbsp;
-										</Text>
-									) : undefined}
-									{player.name}
-								</Text>
 								<Tooltip label="Wins" placement="top" closeOnClick={false}>
-									<Flex alignItems="center" gap={1} userSelect="none">
+									<Flex
+										h="100%"
+										alignItems="center"
+										userSelect="none"
+										color="gray.100"
+										bgColor={isMe(player.id) ? "yellow.500" : "blue.700"}
+										pr={3}
+									>
+										<Icon as={TrophyFill} w={10} h="100%" p={3} />
 										<Text>{player.wins}</Text>
-										<Icon as={TrophyFill} />
 									</Flex>
 								</Tooltip>
+								<Flex justifyContent="space-between" flexGrow={1}>
+									<Text py={2} px={4} size="lg" color={isMe(player.id) ? "yellow.600" : undefined}>
+										{isMe(player.id) ? (
+											<Text userSelect="none" as="span">
+												(You)&nbsp;
+											</Text>
+										) : undefined}
+										{player.name}
+									</Text>
+								</Flex>
 							</Flex>
 						</Flex>
 					))}
@@ -248,7 +253,7 @@ export default function Room() {
 							<Flex
 								key={i}
 								borderColor="gray.500"
-								borderWidth={2}
+								borderWidth={3}
 								bgColor="gray.400"
 								rounded="md"
 								py={2}
@@ -364,7 +369,7 @@ export default function Room() {
 				>
 					{room.messages.map(message => (
 						<Flex key={message.id} gap={2}>
-							<Text whiteSpace="nowrap" color={isMe(message.authorId) ? "blue.500" : undefined}>
+							<Text whiteSpace="nowrap" color={isMe(message.authorId) ? "yellow.500" : undefined}>
 								{message.name}:
 							</Text>
 							<Text>{message.content}</Text>
