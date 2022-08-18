@@ -231,7 +231,7 @@ export default function Room() {
 										pr={3}
 									>
 										<Icon as={TrophyFill} w={10} h="100%" p={3} />
-										<Text>{player.wins}</Text>
+										<Text ml={-1}>{player.wins}</Text>
 									</Flex>
 								</Tooltip>
 								<Flex justifyContent="space-between" flexGrow={1}>
