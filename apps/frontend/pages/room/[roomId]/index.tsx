@@ -5,6 +5,7 @@ import {
 	Grid,
 	Heading,
 	Icon,
+	IconButton,
 	Input,
 	Link,
 	Slider,
@@ -195,21 +196,30 @@ export default function Room() {
 				<Flex flexDir="column" gap={2}>
 					{room.players.map(player => (
 						<Flex key={player.id} gap={1}>
-							{player.id === room.ownerId && (
-								<Tooltip label="Room owner" placement="top" closeOnClick={false}>
-									<Icon
-										as={Crown}
-										h="100%"
-										rounded="md"
-										color="gray.100"
-										borderWidth={3}
-										borderColor={isMe(player.id) ? "yellow.600" : "blue.900"}
-										w="44px"
-										p={2}
-										bgColor={isMe(player.id) ? "yellow.500" : "blue.900"}
-									/>
-								</Tooltip>
-							)}
+							<Tooltip label="Room owner" placement="top" closeOnClick={false}>
+								<IconButton
+									aria-label="Make owner"
+									variant="unstyled"
+									icon={<Crown style={{ padding: "0.5rem" }} />}
+									h="100%"
+									rounded="md"
+									color="gray.100"
+									borderWidth={3}
+									borderColor={isMe(player.id) ? "yellow.600" : "blue.900"}
+									bgColor={isMe(player.id) ? "yellow.500" : "blue.700"}
+									disabled={!isOwner}
+									w="44px"
+									opacity={player.id === room.ownerId ? 1 : 0.5}
+									_hover={
+										isOwner && player.id !== room.ownerId
+											? {
+													opacity: 1,
+													"& > svg": { color: "yellow.500" },
+											  }
+											: undefined
+									}
+								/>
+							</Tooltip>
 							<Flex
 								borderColor={isMe(player.id) ? "yellow.600" : "blue.900"}
 								borderWidth={3}
