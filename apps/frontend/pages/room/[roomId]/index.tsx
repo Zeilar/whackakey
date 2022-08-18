@@ -115,6 +115,7 @@ export default function Room() {
 				chatBox.current?.scrollTo({ top: 9999 });
 			})
 			.on("room-new-owner", ({ roomId, ownerId }: NewOwnerDto) => {
+				console.log("new owner", ownerId, "me", socket.id);
 				dispatchRooms({ type: RoomActions.NEW_OWNER, roomId, ownerId });
 				if (ownerId !== socket.id) {
 					return;
@@ -200,7 +201,6 @@ export default function Room() {
 								isDisabled={!isOwner}
 								label={player.id === room.ownerId ? "Room owner" : "Make owner"}
 								placement="top"
-								closeOnClick={false}
 							>
 								<IconButton
 									aria-label="Make owner"
@@ -212,7 +212,6 @@ export default function Room() {
 									borderWidth={3}
 									borderColor={isMe(player.id) ? "yellow.600" : "blue.900"}
 									bgColor={isMe(player.id) ? "yellow.500" : "blue.700"}
-									disabled={!isOwner}
 									w="44px"
 									opacity={player.id === room.ownerId ? 1 : 0.5}
 									_hover={
@@ -223,6 +222,14 @@ export default function Room() {
 											  }
 											: undefined
 									}
+									onClick={() =>
+										socket?.emit("room-set-owner", {
+											roomId: query.roomId,
+											ownerId: player.id,
+										} as NewOwnerDto)
+									}
+									disabled={!isOwner}
+									_disabled={{ pointerEvents: "none" }}
 								/>
 							</Tooltip>
 							<Flex
