@@ -115,7 +115,6 @@ export default function Room() {
 				chatBox.current?.scrollTo({ top: 9999 });
 			})
 			.on("room-new-owner", ({ roomId, ownerId }: NewOwnerDto) => {
-				console.log("new owner", ownerId, "me", socket.id);
 				dispatchRooms({ type: RoomActions.NEW_OWNER, roomId, ownerId });
 				if (ownerId !== socket.id) {
 					return;
