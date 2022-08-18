@@ -1,6 +1,6 @@
 import { Button, Flex, Heading, Icon, Text } from "@chakra-ui/react";
 import { Heart } from "@styled-icons/evaicons-solid";
-import { useWebsocketContext } from "apps/frontend/hooks";
+import { useSoundContext, useWebsocketContext } from "apps/frontend/hooks";
 import { useEffect, useState } from "react";
 import Keyboard from "./Keyboard";
 
@@ -10,6 +10,7 @@ interface Props {
 
 export default function MultiplayerGame({ timestamp }: Props) {
 	const { room, player } = useWebsocketContext();
+	const { playAudio, stopAudio } = useSoundContext();
 	const [countdown, setCountdown] = useState<number>();
 
 	useEffect(() => {
@@ -18,11 +19,12 @@ export default function MultiplayerGame({ timestamp }: Props) {
 		}
 		let animationFrame: number;
 		function frameHandler() {
-			if (typeof timestamp !== "number") {
+			if (typeof timestamp !== "number" || !room) {
 				return;
 			}
 			if (Date.now() >= timestamp) {
 				setCountdown(undefined);
+				playAudio(`level-${room.difficulty}`);
 				return;
 			}
 			setCountdown(timestamp - Date.now());
@@ -32,7 +34,16 @@ export default function MultiplayerGame({ timestamp }: Props) {
 		return () => {
 			cancelAnimationFrame(animationFrame);
 		};
-	}, [timestamp]);
+	}, [timestamp, playAudio, room]);
+
+	useEffect(() => {
+		if (!room?.difficulty) {
+			return;
+		}
+		return () => {
+			stopAudio(`level-${room.difficulty}`);
+		};
+	}, [room?.difficulty, stopAudio]);
 
 	if (!room || !player) {
 		return null;

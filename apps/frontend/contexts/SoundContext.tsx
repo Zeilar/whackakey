@@ -5,27 +5,31 @@ interface SoundContext {
 	isMuted: boolean;
 	toggle(): void;
 	volume: number;
-	playAudio(path: string): void;
 	hasLoadedSounds: boolean;
 	progress: number;
+	playAudio(path: SoundFileName): void;
+	stopAudio(path: SoundFileName): void;
 }
 
 interface SoundProps {
 	children: React.ReactNode;
 }
 
+type AudioState = Record<SoundFileName, HTMLAudioElement>;
+
 export const SoundContext = createContext({} as SoundContext);
 
 const DEFAULT_VOLUME = 0.1;
 
-const soundKeys = Object.keys(sounds);
+const soundKeys = Object.keys(sounds) as SoundFileName[];
 
 export function SoundContextProvider({ children }: SoundProps) {
 	const [isMuted, setIsMuted] = useState(false);
 	const [volume, setVolume] = useState(DEFAULT_VOLUME);
-	const [loadedSounds, setLoadedSounds] = useState(0);
-	const hasLoadedSounds = useMemo(() => loadedSounds >= soundKeys.length, [loadedSounds]);
-	const progress = useMemo(() => (loadedSounds / soundKeys.length) * 100, [loadedSounds]);
+	const [audioFiles, setAudioFiles] = useState<AudioState>({} as AudioState);
+	const audioFilesLength = useMemo(() => Object.keys(audioFiles).length, [audioFiles]);
+	const hasLoadedSounds = useMemo(() => audioFilesLength >= soundKeys.length, [audioFilesLength]);
+	const progress = useMemo(() => (audioFilesLength / soundKeys.length) * 100, [audioFilesLength]);
 
 	useEffect(() => {
 		setVolume(isMuted ? 0 : DEFAULT_VOLUME);
@@ -34,8 +38,9 @@ export function SoundContextProvider({ children }: SoundProps) {
 	useEffect(() => {
 		soundKeys.forEach(sound => {
 			const audio = new Audio(`/assets/sound/${sound}.wav`);
+			audio.volume = DEFAULT_VOLUME;
 			audio.addEventListener("loadeddata", () => {
-				setLoadedSounds(p => p + 1);
+				setAudioFiles(p => ({ ...p, [sound]: audio }));
 			});
 		});
 	}, []);
@@ -46,14 +51,17 @@ export function SoundContextProvider({ children }: SoundProps) {
 
 	const playAudio = useCallback(
 		(path: SoundFileName) => {
-			if (isMuted) {
-				return;
-			}
-			const audio = new Audio(`/assets/sound/${path}.wav`);
-			audio.volume = volume;
-			audio.play();
+			audioFiles[path].play();
 		},
-		[isMuted, volume]
+		[audioFiles]
+	);
+
+	const stopAudio = useCallback(
+		(path: SoundFileName) => {
+			audioFiles[path].pause();
+			audioFiles[path].currentTime = 0;
+		},
+		[audioFiles]
 	);
 
 	const values: SoundContext = {
@@ -63,6 +71,7 @@ export function SoundContextProvider({ children }: SoundProps) {
 		playAudio,
 		hasLoadedSounds,
 		progress,
+		stopAudio,
 	};
 
 	return <SoundContext.Provider value={values}>{children}</SoundContext.Provider>;
