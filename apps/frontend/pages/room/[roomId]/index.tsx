@@ -228,7 +228,7 @@ export default function Room() {
 											ownerId: player.id,
 										} as NewOwnerDto)
 									}
-									disabled={!isOwner}
+									disabled={!isOwner || player.id === room.ownerId}
 									_disabled={{ pointerEvents: "none" }}
 								/>
 							</Tooltip>
