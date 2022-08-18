@@ -15,6 +15,7 @@ interface IWebsocketContext {
 	player: Player | undefined;
 	dispatchRooms(value: RoomAction): void;
 	isMe(playerId: string): boolean;
+	name: string | null;
 }
 
 interface WebsocketProps {
@@ -29,6 +30,7 @@ export function WebsocketContextProvider({ children }: WebsocketProps) {
 	const [isConnecting, setIsConnecting] = useState(true);
 	const [isOnline, setisOnline] = useState(false);
 	const [rooms, dispatchRooms] = useReducer(roomReducer, []);
+	const [name, setName] = useState<string | null>(null);
 	const room = useMemo(() => rooms.find(room => room.id === query.roomId), [rooms, query.roomId]);
 	const player = useMemo(() => room?.players.find(player => player.id === socket?.id), [room, socket]);
 
@@ -68,6 +70,7 @@ export function WebsocketContextProvider({ children }: WebsocketProps) {
 				setisOnline(true);
 				setIsConnecting(false);
 			})
+			.on("name", setName)
 			.on("room-inactive", (roomId: string) => {
 				dispatchRooms({ type: RoomActions.END, roomId });
 			})
@@ -100,6 +103,7 @@ export function WebsocketContextProvider({ children }: WebsocketProps) {
 				.off("connect")
 				.off("disconnect")
 				.off("error")
+				.off("name")
 				.off("rooms-get")
 				.off("room-update")
 				.off("room-new")
@@ -127,6 +131,7 @@ export function WebsocketContextProvider({ children }: WebsocketProps) {
 		player,
 		dispatchRooms,
 		isMe,
+		name,
 	};
 
 	return <WebsocketContext.Provider value={values}>{children}</WebsocketContext.Provider>;

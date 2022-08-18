@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useWebsocketContext } from "../../hooks/";
 
 export default function Latency() {
-	const { socket, isConnecting, isOnline, player } = useWebsocketContext();
+	const { socket, isConnecting, isOnline, name } = useWebsocketContext();
 	const [latency, setLatency] = useState<number>();
 
 	useEffect(() => {
@@ -60,9 +60,9 @@ export default function Latency() {
 						</>
 					)}
 				</Flex>
-				{player && (
+				{name && (
 					<Heading textStyle="stroke" color="yellow.500">
-						{player.name}
+						{name}
 					</Heading>
 				)}
 			</Flex>

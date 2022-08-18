@@ -67,6 +67,7 @@ export class WebsocketGateway implements OnGatewayDisconnect, OnGatewayConnectio
 			throw new Error("Bad socket.");
 		}
 		this.addClient(client);
+		socket.emit("name", client.name);
 		return client;
 	}
 
