@@ -196,13 +196,14 @@ export default function Room() {
 					{room.players.map(player => (
 						<Flex
 							key={player.id}
-							borderColor="blue.900"
+							borderColor={isMe(player.id) ? "blue.500" : "blue.900"}
 							borderWidth={2}
 							bgColor="gray.100"
 							rounded="md"
 							alignItems="center"
 							pos="relative"
 							order={!isMe(player.id) ? 1 : undefined}
+							overflow="hidden"
 						>
 							{player.id === room.ownerId && (
 								<Tooltip label="Room owner" placement="top" closeOnClick={false}>
@@ -213,11 +214,17 @@ export default function Room() {
 										w={10}
 										p={2}
 										pr={2.5}
-										bgColor="blue.900"
+										bgColor={isMe(player.id) ? "blue.500" : "blue.900"}
 									/>
 								</Tooltip>
 							)}
-							<Flex py={2} px={4} justifyContent="space-between" flexGrow={1}>
+							<Flex
+								py={2}
+								px={4}
+								justifyContent="space-between"
+								flexGrow={1}
+								color={isMe(player.id) ? "blue.500" : undefined}
+							>
 								<Text size="lg">
 									{isMe(player.id) ? (
 										<Text userSelect="none" as="span">
@@ -357,7 +364,7 @@ export default function Room() {
 				>
 					{room.messages.map(message => (
 						<Flex key={message.id} gap={2}>
-							<Text whiteSpace="nowrap" color={isMe(message.authorId) ? "player.500" : undefined}>
+							<Text whiteSpace="nowrap" color={isMe(message.authorId) ? "blue.500" : undefined}>
 								{message.name}:
 							</Text>
 							<Text>{message.content}</Text>
