@@ -196,7 +196,7 @@ export default function Room() {
 			<Grid gridTemplateColumns="1fr 1fr" gridGap={4} p={4} bgColor="gray.300">
 				<Flex flexDir="column" gap={2}>
 					{room.players.map(player => (
-						<Flex key={player.id} gap={1}>
+						<Flex key={player.id} gap={1} order={!isMe(player.id) ? 1 : undefined}>
 							<Tooltip
 								isDisabled={!isOwner}
 								label={player.id === room.ownerId ? "Room owner" : "Make owner"}
@@ -239,7 +239,6 @@ export default function Room() {
 								rounded="md"
 								alignItems="center"
 								pos="relative"
-								order={!isMe(player.id) ? 1 : undefined}
 								overflow="hidden"
 								grow={1}
 							>
