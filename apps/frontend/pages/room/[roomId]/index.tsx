@@ -196,7 +196,12 @@ export default function Room() {
 				<Flex flexDir="column" gap={2}>
 					{room.players.map(player => (
 						<Flex key={player.id} gap={1}>
-							<Tooltip label="Room owner" placement="top" closeOnClick={false}>
+							<Tooltip
+								isDisabled={!isOwner}
+								label={player.id === room.ownerId ? "Room owner" : "Make owner"}
+								placement="top"
+								closeOnClick={false}
+							>
 								<IconButton
 									aria-label="Make owner"
 									variant="unstyled"
