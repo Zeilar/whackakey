@@ -195,11 +195,15 @@ export class Room {
 		if (this.playersLeft() > 0) {
 			this.letter = this.randomLetter();
 		}
-		this.server.to(this.id).emit("room-update", this.dto());
+		this.updateEmit();
 	}
 
 	public isEmpty() {
 		return this.players.length === 0;
+	}
+
+	public updateEmit() {
+		this.server.to(this.id).emit("room-update", this.dto());
 	}
 
 	private reset() {
@@ -212,7 +216,7 @@ export class Room {
 		this.letter = null;
 		this.elapsedRounds = 0;
 		this.difficulty = "easy";
-		this.server.to(this.id).emit("room-update", this.dto());
+		this.updateEmit();
 	}
 
 	private playersLeft() {
@@ -230,6 +234,7 @@ export class Room {
 			return;
 		}
 		player.pick = letter;
+		this.updateEmit();
 	}
 
 	public start() {

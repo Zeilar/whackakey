@@ -3,7 +3,7 @@ import { StyleConfig } from "@chakra-ui/theme-tools";
 
 const key: ButtonProps = {
 	borderWidth: "0.25em",
-	borderColor: "gray.300",
+	borderColor: "gray.400",
 	boxShadow: "var(--chakra-shadows-lg), 0 0 5px 0 inset rgba(0, 0, 0, 0.1)",
 	bgColor: "gray.100",
 	fontFamily: "Fredoka One, sans-serif",
