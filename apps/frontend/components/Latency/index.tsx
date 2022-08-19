@@ -42,12 +42,12 @@ export default function Latency() {
 									size="sm"
 									aria-label="Reconnect"
 									icon={<Refresh />}
-									onClick={() => socket?.connect()}
+									onClick={() => socket.connect()}
 									_focus={{}}
 								/>
 							)}
 							<Heading size="lg" textStyle="stroke">
-								{typeof latency === "number" ? `${latency}ms` : "Pinging..."}
+								{typeof latency === "number" && `${latency}ms`}
 							</Heading>
 							<Box
 								borderWidth={3}
