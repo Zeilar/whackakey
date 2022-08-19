@@ -1,4 +1,4 @@
-import { Button, Flex, Heading, Icon, Text } from "@chakra-ui/react";
+import { Box, Flex, Heading, Icon, Text } from "@chakra-ui/react";
 import { Heart } from "@styled-icons/evaicons-solid";
 import { useSoundContext, useWebsocketContext } from "apps/frontend/hooks";
 import { useEffect, useState } from "react";
@@ -9,7 +9,7 @@ interface Props {
 }
 
 export default function MultiplayerGame({ timestamp }: Props) {
-	const { room, player } = useWebsocketContext();
+	const { room, player, isMe } = useWebsocketContext();
 	const { playAudio, stopAudio } = useSoundContext();
 	const [countdown, setCountdown] = useState<number>();
 
@@ -51,39 +51,47 @@ export default function MultiplayerGame({ timestamp }: Props) {
 	}
 
 	return (
-		<Flex flexDir="column" gap={2}>
-			<Flex justifyContent="center" gap={2}>
+		<Flex flexDir="column" alignItems="center">
+			<Flex
+				justifyContent="center"
+				gap={2}
+				flexDir="column"
+				bgColor="gray.300"
+				p={2}
+				roundedTop="xl"
+				borderWidth={4}
+				borderBottomWidth={0}
+				borderColor="blue.900"
+			>
 				{room.players.map(element => (
-					<Flex key={element.id}>
+					<Flex key={element.id} gap={1} order={!isMe(element.id) ? 1 : undefined}>
 						<Flex
-							roundedLeft="lg"
-							roundedRight={0}
-							borderWidth={2}
-							borderColor="gray.100"
-							px={4}
+							key={element.id}
+							w="20rem"
+							rounded="lg"
+							borderWidth={3}
+							borderColor={isMe(element.id) ? "yellow.600" : "blue.900"}
+							color={isMe(element.id) ? "yellow.600" : "blue.900"}
 							py={2}
+							px={4}
 							justifyContent="space-between"
 							alignItems="center"
-							bgColor="blue.900"
-							color="gray.100"
+							bgColor="gray.100"
 							boxShadow="lg"
 						>
 							<Text fontSize="lg" mr={4}>
 								{element.name}
 							</Text>
-							<Button variant="key" as="div" w={4}>
-								{element.pick ?? "?"}
-							</Button>
 						</Flex>
 						<Flex
 							px={4}
-							ml="-2px"
 							alignItems="center"
-							bgColor="blue.900"
+							bgColor={isMe(element.id) ? "yellow.500" : "blue.700"}
 							color="gray.100"
-							roundedRight="lg"
-							borderWidth={2}
-							borderColor="gray.100"
+							gap={1}
+							rounded="lg"
+							borderWidth={3}
+							borderColor="blue.900"
 						>
 							{element.lives > 0 ? (
 								Array(room.lives)
@@ -109,7 +117,9 @@ export default function MultiplayerGame({ timestamp }: Props) {
 				))}
 			</Flex>
 			<Heading>{countdown}</Heading>
-			<Keyboard />
+			<Box borderWidth={4} borderColor="blue.900" rounded="xl" boxShadow="lg" p={4} bgColor="gray.300">
+				<Keyboard />
+			</Box>
 		</Flex>
 	);
 }

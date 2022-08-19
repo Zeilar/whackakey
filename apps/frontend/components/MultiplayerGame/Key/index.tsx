@@ -59,9 +59,9 @@ export default function Key({ symbol }: Props) {
 
 	const bgColor = useCallback(() => {
 		if (isActive) {
-			return "blue.300";
+			return "blue.500";
 		}
-		return isPressed ? "whiteAlpha.800" : "whiteAlpha.900";
+		return isPressed ? "gray.200" : "gray.100";
 	}, [isActive, isPressed]);
 
 	if (!room) {
@@ -75,11 +75,11 @@ export default function Key({ symbol }: Props) {
 			w={100}
 			h={100}
 			bgColor={bgColor()}
-			borderColor={isActive ? "blue.200" : "blackAlpha.300"}
+			borderColor={isActive ? "blue.300" : "blackAlpha.300"}
 			borderWidth={4}
 			rounded="xl"
 			pos="relative"
-			boxShadow="var(--chakra-shadows-lg), 0 0 5px 0 inset rgba(0, 0, 0, 0.1)"
+			boxShadow="md"
 		>
 			{isActive && (
 				<Box
