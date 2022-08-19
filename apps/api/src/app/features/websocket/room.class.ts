@@ -15,6 +15,8 @@ import {
 	NewMessageDto,
 	DEFAULT_LIVES,
 	SetLivesDto,
+	ENRAGE_THRESHOLD_MEDIUM,
+	ENRAGE_THRESHOLD_HARD,
 } from "@shared";
 import { randomName } from "../../common/util/nameGenerator";
 import { v4 as uuidv4 } from "uuid";
@@ -32,6 +34,7 @@ export class Room {
 	private letter: string | null = null;
 	private messages: Message[] = [];
 	private lives = DEFAULT_LIVES;
+	private elapsedRounds = 0;
 
 	public constructor(private readonly server: Server, owner: Client, public readonly id: string) {
 		this.ownerId = owner.id;
@@ -66,6 +69,20 @@ export class Room {
 	private startGame() {
 		this.isGameActive = true;
 		this.server.emit("room-active", this.id);
+	}
+
+	private raiseDifficulty() {
+		if (this.difficulty === "hard") {
+			return;
+		}
+		switch (this.difficulty) {
+			case "easy":
+				this.changeDifficulty("medium");
+				break;
+			case "medium":
+				this.changeDifficulty("hard");
+				break;
+		}
 	}
 
 	public sendMessage(data: Omit<Message, "id">) {
@@ -167,6 +184,10 @@ export class Room {
 			this.attemptWinner();
 			return;
 		}
+		this.elapsedRounds++;
+		if (this.elapsedRounds === ENRAGE_THRESHOLD_MEDIUM || this.elapsedRounds === ENRAGE_THRESHOLD_HARD) {
+			this.raiseDifficulty();
+		}
 		this.newRound();
 	}
 
@@ -189,6 +210,8 @@ export class Room {
 		});
 		this.endGame();
 		this.letter = null;
+		this.elapsedRounds = 0;
+		this.difficulty = "easy";
 		this.server.to(this.id).emit("room-update", this.dto());
 	}
 

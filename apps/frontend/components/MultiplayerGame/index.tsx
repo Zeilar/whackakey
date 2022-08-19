@@ -40,10 +40,11 @@ export default function MultiplayerGame({ timestamp }: Props) {
 		if (!room?.difficulty) {
 			return;
 		}
+		playAudio(`level-${room.difficulty}`);
 		return () => {
 			stopAudio(`level-${room.difficulty}`);
 		};
-	}, [room?.difficulty, stopAudio]);
+	}, [room?.difficulty, stopAudio, playAudio]);
 
 	if (!room || !player) {
 		return null;
