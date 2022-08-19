@@ -37,14 +37,14 @@ export default function MultiplayerGame({ timestamp }: Props) {
 	}, [timestamp, playAudio, room]);
 
 	useEffect(() => {
-		if (!room?.difficulty) {
+		if (!room?.difficulty || !room.isGameActive) {
 			return;
 		}
 		playAudio(`level-${room.difficulty}`);
 		return () => {
 			stopAudio(`level-${room.difficulty}`);
 		};
-	}, [room?.difficulty, stopAudio, playAudio]);
+	}, [room?.difficulty, stopAudio, playAudio, room?.isGameActive]);
 
 	if (!room || !player) {
 		return null;
