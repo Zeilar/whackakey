@@ -241,23 +241,10 @@ export default function Room() {
 								overflow="hidden"
 								grow={1}
 							>
-								<Tooltip label="Wins" placement="top" closeOnClick={false}>
-									<Flex
-										h="100%"
-										alignItems="center"
-										userSelect="none"
-										color="gray.100"
-										bgColor={isMe(player.id) ? "yellow.500" : "blue.700"}
-										pr={3}
-									>
-										<Icon as={TrophyFill} w={10} h="100%" p={3} />
-										<Text ml={-1}>{player.wins}</Text>
-									</Flex>
-								</Tooltip>
-								<Flex justifyContent="space-between" flexGrow={1}>
+								<Flex flexGrow={1}>
 									<Text py={2} px={4} size="lg" color={isMe(player.id) ? "yellow.600" : undefined}>
 										{isMe(player.id) ? (
-											<Text userSelect="none" as="span">
+											<Text userSelect="none" as="span" mr={1}>
 												(You)&nbsp;
 											</Text>
 										) : undefined}
@@ -265,6 +252,22 @@ export default function Room() {
 									</Text>
 								</Flex>
 							</Flex>
+							<Tooltip label="Wins" placement="top" closeOnClick={false}>
+								<Flex
+									rounded="md"
+									w="4.5rem"
+									h="100%"
+									alignItems="center"
+									userSelect="none"
+									color="gray.100"
+									borderWidth={3}
+									borderColor={isMe(player.id) ? "yellow.600" : "blue.900"}
+									bgColor={isMe(player.id) ? "yellow.500" : "blue.700"}
+								>
+									<Icon as={TrophyFill} w={10} h="100%" p={3} />
+									{player.wins}
+								</Flex>
+							</Tooltip>
 						</Flex>
 					))}
 					{Array(slotsAvailable)
