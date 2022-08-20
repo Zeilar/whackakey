@@ -2,7 +2,7 @@ import { ButtonProps } from "@chakra-ui/react";
 import { StyleConfig } from "@chakra-ui/theme-tools";
 
 const key: ButtonProps = {
-	borderWidth: "0.25em",
+	borderWidth: "0.15em",
 	borderColor: "gray.400",
 	boxShadow: "var(--chakra-shadows-lg), 0 0 5px 0 inset rgba(0, 0, 0, 0.1)",
 	bgColor: "gray.100",

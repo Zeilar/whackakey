@@ -1,4 +1,5 @@
-import { Box, Button, Flex, Heading, Icon, Text } from "@chakra-ui/react";
+import { Box, Flex, Heading, Icon, Text } from "@chakra-ui/react";
+import { Difficulty } from "@shared";
 import { Heart } from "@styled-icons/evaicons-solid";
 import { useSoundContext, useWebsocketContext } from "apps/frontend/hooks";
 import { useEffect, useState } from "react";
@@ -50,24 +51,61 @@ export default function MultiplayerGame({ timestamp }: Props) {
 		return null;
 	}
 
-	return (
-		<Flex flexDir="column" alignItems="center">
-			<Flex
-				justifyContent="center"
-				gap={4}
-				bgColor="gray.300"
-				p={2}
-				roundedTop="xl"
-				borderWidth={4}
-				borderBottomWidth={0}
-				borderColor="blue.900"
+	function DifficultyBox({ difficulty }: { difficulty: Difficulty }) {
+		let bgColor: string;
+		switch (difficulty) {
+			case "easy":
+				bgColor = "green.500";
+				break;
+			case "medium":
+				bgColor = "yellow.500";
+				break;
+			case "hard":
+				bgColor = "red.500";
+				break;
+		}
+		return (
+			<Box
+				p={4}
+				textTransform="uppercase"
+				bgColor={bgColor}
+				pos="relative"
+				_after={
+					room?.difficulty !== difficulty
+						? {
+								content: `""`,
+								pos: "absolute",
+								inset: 0,
+								w: "100%",
+								h: "100%",
+								bgColor: "blackAlpha.700",
+						  }
+						: undefined
+				}
 			>
+				{difficulty}
+			</Box>
+		);
+	}
+
+	return (
+		<Flex
+			flexDir="column"
+			borderWidth={4}
+			borderColor="blue.900"
+			rounded="xl"
+			boxShadow="lg"
+			p={4}
+			gap={4}
+			bgColor="gray.300"
+		>
+			<Flex gap={4} p={2} justifyContent="space-between">
 				<Flex flexDir="column" gap={2}>
 					{room.players.map(element => (
 						<Flex key={element.id} gap={1} order={!isMe(element.id) ? 1 : undefined}>
 							<Flex
 								key={element.id}
-								w="20rem"
+								w={400}
 								rounded="lg"
 								borderWidth={3}
 								borderColor={isMe(element.id) ? "yellow.600" : "blue.900"}
@@ -98,7 +136,8 @@ export default function MultiplayerGame({ timestamp }: Props) {
 										.fill(null)
 										.map((_, i) => (
 											<Icon
-												color={i < element.lives ? "red.500" : "whiteAlpha.300"}
+												opacity={Number(i < element.lives)}
+												color="red.500"
 												strokeWidth={3}
 												stroke="blue.900"
 												w={8}
@@ -113,17 +152,26 @@ export default function MultiplayerGame({ timestamp }: Props) {
 									</Heading>
 								)}
 							</Flex>
-							<Button variant="key" w="3rem" h="100%" p={0} opacity={element.pick !== null ? 1 : 0.5}>
-								{element.pick}
-							</Button>
 						</Flex>
 					))}
 				</Flex>
+				<Flex
+					borderWidth={3}
+					borderColor="blue.900"
+					color="gray.100"
+					h="fit-content"
+					rounded="lg"
+					overflow="hidden"
+					bgColor="blue.900"
+					gap="2px"
+				>
+					<DifficultyBox difficulty="easy" />
+					<DifficultyBox difficulty="medium" />
+					<DifficultyBox difficulty="hard" />
+				</Flex>
 			</Flex>
 			<Heading>{countdown}</Heading>
-			<Box borderWidth={4} borderColor="blue.900" rounded="xl" boxShadow="lg" p={4} bgColor="gray.300">
-				<Keyboard />
-			</Box>
+			<Keyboard />
 		</Flex>
 	);
 }
