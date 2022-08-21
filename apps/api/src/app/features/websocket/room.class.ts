@@ -83,6 +83,11 @@ export class Room {
 				this.changeDifficulty("hard");
 				break;
 		}
+		clearInterval(this.interval);
+		this.interval = setInterval(() => {
+			this.update();
+			this.attemptWinner();
+		}, difficultyInMs(this.difficulty));
 	}
 
 	public sendMessage(data: Omit<Message, "id">) {
