@@ -2,7 +2,7 @@ import { Box, Flex, keyframes, Text } from "@chakra-ui/react";
 import { difficultyInMs } from "@shared";
 import { useSoundContext, useWebsocketContext } from "apps/frontend/hooks";
 import { useRouter } from "next/router";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 interface Props {
 	symbol: string;
@@ -23,6 +23,33 @@ export default function Key({ symbol }: Props) {
 	const { playAudio } = useSoundContext();
 	const [isPressed, setIsPressed] = useState(false);
 	const isActive = useMemo(() => room?.letter === symbol, [room, symbol]);
+	const bgColor = useMemo(() => {
+		if (!isActive) {
+			return isPressed ? "gray.200" : "gray.100";
+		}
+		switch (room?.difficulty) {
+			case "easy":
+				return "green.900";
+			case "medium":
+				return "yellow.900";
+			case "hard":
+				return "red.900";
+			default:
+				return "green.900";
+		}
+	}, [isActive, isPressed, room?.difficulty]);
+	const growingColor = useMemo(() => {
+		switch (room?.difficulty) {
+			case "easy":
+				return "green.500";
+			case "medium":
+				return "yellow.500";
+			case "hard":
+				return "red.500";
+			default:
+				return "green.500";
+		}
+	}, [room?.difficulty]);
 
 	useEffect(() => {
 		function onKeyDown(e: KeyboardEvent) {
@@ -57,13 +84,6 @@ export default function Key({ symbol }: Props) {
 		};
 	}, [room, socket, player, symbol, isPressed, playAudio, query.roomId]);
 
-	const bgColor = useCallback(() => {
-		if (isActive) {
-			return "blue.500";
-		}
-		return isPressed ? "gray.200" : "gray.100";
-	}, [isActive, isPressed]);
-
 	if (!room) {
 		return null;
 	}
@@ -74,8 +94,8 @@ export default function Key({ symbol }: Props) {
 			alignItems="center"
 			w={100}
 			h={100}
-			bgColor={bgColor()}
-			borderColor={isActive ? "blue.300" : "blackAlpha.300"}
+			bgColor={bgColor}
+			borderColor={isActive ? "blue.900" : "blackAlpha.300"}
 			borderWidth={4}
 			rounded="xl"
 			pos="relative"
@@ -90,7 +110,7 @@ export default function Key({ symbol }: Props) {
 					top={0}
 					left={0}
 					zIndex={5}
-					bgColor="blue.900"
+					bgColor={growingColor}
 					h="full"
 					w="full"
 				/>
