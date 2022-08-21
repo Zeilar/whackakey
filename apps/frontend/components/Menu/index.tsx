@@ -6,6 +6,7 @@ import DifficultyItem from "./DifficultyItem";
 import SolidButton from "../SolidButton";
 import RoomBrowser from "../RoomBrowser";
 import { useRouter } from "next/router";
+import { motion } from "framer-motion";
 
 export type Menu = "solo" | "multiplayer" | "tutorial" | "rooms";
 
@@ -81,22 +82,36 @@ export default function Menu() {
 		);
 	}
 
+	function MenuWrapper({ children }: { children: React.ReactNode }) {
+		return (
+			<Flex
+				flexDir="column"
+				as={motion.div}
+				gap={2}
+				initial={{ opacity: 0.35, transform: "translateX(25px)" }}
+				animate={{ opacity: 1, transform: "translateX(0px)" }}
+			>
+				{children}
+			</Flex>
+		);
+	}
+
 	return (
 		<Flex as="nav" gap={4} flexDir="column" width={550}>
 			<Heading size="4xl" textStyle="stroke" textAlign="center" mb={4}>
 				{heading}
 			</Heading>
 			{menu === undefined && (
-				<>
+				<MenuWrapper>
 					<SolidButton onClick={() => push({ query: { menu: "solo" as Menu } })}>Solo</SolidButton>
 					<SolidButton onClick={() => push({ query: { menu: "multiplayer" as Menu } })}>
 						Multiplayer
 					</SolidButton>
 					<SolidButton onClick={() => push({ query: { menu: "tutorial" as Menu } })}>How to play</SolidButton>
-				</>
+				</MenuWrapper>
 			)}
 			{menu === "solo" && (
-				<>
+				<MenuWrapper>
 					<SolidButton onClick={() => setIsCountingDown(true)} autoFocus>
 						Play
 					</SolidButton>
@@ -107,10 +122,10 @@ export default function Menu() {
 						</Link>
 					</NextLink>
 					<BackButton />
-				</>
+				</MenuWrapper>
 			)}
 			{menu === "multiplayer" && (
-				<>
+				<MenuWrapper>
 					<SolidButton onClick={() => push({ query: { menu: "rooms" as Menu } })}>Browse rooms</SolidButton>
 					<SolidButton onClick={() => socket?.emit("room-create")}>Create room</SolidButton>
 					<NextLink passHref href="/tutorial/multiplayer">
@@ -119,14 +134,14 @@ export default function Menu() {
 						</Link>
 					</NextLink>
 					<BackButton />
-				</>
+				</MenuWrapper>
 			)}
 			{menu === "tutorial" && (
-				<>
+				<MenuWrapper>
 					<TutorialLink href="/tutorial/solo">Solo</TutorialLink>
 					<TutorialLink href="/tutorial/multiplayer">Multiplayer</TutorialLink>
 					<BackButton />
-				</>
+				</MenuWrapper>
 			)}
 			{menu === "rooms" && <RoomBrowser />}
 		</Flex>
