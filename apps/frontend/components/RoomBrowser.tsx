@@ -1,5 +1,6 @@
-import { Button, Flex, Heading, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Heading, Text } from "@chakra-ui/react";
 import { MAX_PLAYERS } from "@shared";
+import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useWebsocketContext } from "../hooks";
@@ -54,52 +55,80 @@ export default function RoomBrowser() {
 			justifyContent="space-between"
 		>
 			<Flex flexDir="column" p={4} gap={2}>
-				{rooms.length > 0 ? (
-					rooms.map(
-						room =>
-							!room.isGameActive && (
-								<Button
-									key={room.id}
-									fontSize="2xl"
-									display="flex"
-									justifyContent="space-between"
-									paddingInline={4}
-									py={8}
-									variant="unstyled"
-									color={isSelected(room.id) ? "gray.100" : "blue.900"}
-									bgColor={isSelected(room.id) ? "blue.900" : "gray.100"}
-									borderColor={isSelected(room.id) ? "blue.900" : "gray.400"}
-									borderWidth={2}
-									disabled={room.isGameActive}
-									onClick={() => setSelectedRoomId(room.id)}
-									onDoubleClick={join}
-									rounded="md"
-									boxShadow={
-										isSelected(room.id) ? "0 0 0 2px var(--chakra-colors-blue-900)" : undefined
-									}
-									_hover={{ bgColor: !isSelected(room.id) ? "gray.50" : undefined }}
-									_focus={{ outline: 0 }}
-								>
-									<Text>{room.name}</Text>
-									<Text>
-										{room.players.length} / {MAX_PLAYERS}
-									</Text>
-								</Button>
-							)
-					)
-				) : (
+				{rooms.length === 0 && (
 					<Heading textStyle="stroke" textAlign="center">
 						No rooms were found
 					</Heading>
 				)}
+				<AnimatePresence>
+					{rooms.length > 0 &&
+						rooms.map(
+							room =>
+								!room.isGameActive && (
+									<Box
+										key={room.id}
+										as={motion.div}
+										w="full"
+										transition={{ duration: "0.25s" }}
+										initial={{
+											opacity: 0.35,
+											transform: "translateX(10px)",
+										}}
+										animate={{
+											opacity: 1,
+											transform: "translateX(0px)",
+										}}
+										exit={{
+											opacity: 0,
+											transform: "translateX(10px)",
+										}}
+									>
+										<Button
+											fontSize="2xl"
+											display="flex"
+											w="full"
+											justifyContent="space-between"
+											paddingInline={4}
+											py={8}
+											variant="unstyled"
+											color={isSelected(room.id) ? "gray.100" : "blue.900"}
+											bgColor={isSelected(room.id) ? "blue.900" : "gray.100"}
+											borderColor={isSelected(room.id) ? "blue.900" : "gray.400"}
+											borderWidth={2}
+											disabled={room.isGameActive}
+											onClick={() => setSelectedRoomId(room.id)}
+											onDoubleClick={join}
+											rounded="md"
+											boxShadow={
+												isSelected(room.id)
+													? "0 0 0 2px var(--chakra-colors-blue-900)"
+													: undefined
+											}
+											_hover={{ bgColor: !isSelected(room.id) ? "gray.50" : undefined }}
+											_focus={{ outline: 0 }}
+										>
+											<Text>{room.name}</Text>
+											<Text>
+												{room.players.length} / {MAX_PLAYERS}
+											</Text>
+										</Button>
+									</Box>
+								)
+						)}
+				</AnimatePresence>
 			</Flex>
 			<Flex p={4} borderTopWidth={4} borderColor="inherit" justifyContent="space-between">
 				<Button px={12} size="lg" onClick={() => push({ query: { menu: "multiplayer" as Menu } })}>
 					Back
 				</Button>
-				<Button size="lg" variant="success" onClick={join} disabled={selectedRoomId === undefined}>
-					Join
-				</Button>
+				<Flex gap={2}>
+					<Button size="lg" onClick={() => socket?.emit("room-create")}>
+						Create
+					</Button>
+					<Button size="lg" variant="success" onClick={join} disabled={selectedRoomId === undefined}>
+						Join
+					</Button>
+				</Flex>
 			</Flex>
 		</Flex>
 	);

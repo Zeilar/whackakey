@@ -417,7 +417,6 @@ export default function Room() {
 					px={12}
 					size="lg"
 					onClick={() => push({ pathname: "/", query: { menu: "multiplayer" as Menu } })}
-					leftIcon={<Icon as={Undo} />}
 				>
 					Back
 				</Button>
