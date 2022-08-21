@@ -10,7 +10,7 @@ export const styles = {
 			flexDir: "column",
 		},
 		"::selection": {
-			bgColor: "yellow.600",
+			bgColor: "blue.300",
 			color: "gray.100",
 		},
 		".Toastify__toast": {
