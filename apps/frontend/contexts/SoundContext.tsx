@@ -3,10 +3,11 @@ import { SoundFileName, sounds } from "../types/sound";
 
 interface SoundContext {
 	isMuted: boolean;
-	toggle(): void;
 	volume: number;
 	hasLoadedSounds: boolean;
 	progress: number;
+	toggle(): void;
+	stopAll(): void;
 	playAudio(path: SoundFileName): void;
 	stopAudio(path: SoundFileName): void;
 }
@@ -20,7 +21,6 @@ type AudioState = Record<SoundFileName, HTMLAudioElement>;
 export const SoundContext = createContext({} as SoundContext);
 
 const DEFAULT_VOLUME = 0.1;
-
 const soundKeys = Object.keys(sounds) as SoundFileName[];
 
 export function SoundContextProvider({ children }: SoundProps) {
@@ -59,6 +59,14 @@ export function SoundContextProvider({ children }: SoundProps) {
 		setIsMuted(p => !p);
 	}
 
+	const stopAll = useCallback(() => {
+		for (const property in audioFiles) {
+			const file = audioFiles[property as SoundFileName];
+			file.pause();
+			file.currentTime = 0;
+		}
+	}, [audioFiles]);
+
 	const playAudio = useCallback(
 		(path: SoundFileName) => {
 			audioFiles[path].play();
@@ -82,6 +90,7 @@ export function SoundContextProvider({ children }: SoundProps) {
 		hasLoadedSounds,
 		progress,
 		stopAudio,
+		stopAll,
 	};
 
 	return <SoundContext.Provider value={values}>{children}</SoundContext.Provider>;

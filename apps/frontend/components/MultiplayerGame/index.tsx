@@ -11,7 +11,7 @@ interface Props {
 
 export default function MultiplayerGame({ timestamp }: Props) {
 	const { room, player, isMe } = useWebsocketContext();
-	const { playAudio, stopAudio } = useSoundContext();
+	const { playAudio, stopAll } = useSoundContext();
 	const [countdown, setCountdown] = useState<number>();
 
 	useEffect(() => {
@@ -38,14 +38,19 @@ export default function MultiplayerGame({ timestamp }: Props) {
 	}, [timestamp, playAudio, room]);
 
 	useEffect(() => {
-		if (!room?.difficulty || !room.isGameActive) {
+		if (!room?.difficulty) {
+			return;
+		}
+		console.log(room.isGameActive);
+		if (!room.isGameActive) {
+			stopAll();
 			return;
 		}
 		playAudio(`level-${room.difficulty}`);
 		return () => {
-			stopAudio(`level-${room.difficulty}`);
+			stopAll();
 		};
-	}, [room?.difficulty, stopAudio, playAudio, room?.isGameActive]);
+	}, [room?.difficulty, stopAll, playAudio, room?.isGameActive]);
 
 	if (!room || !player) {
 		return null;
