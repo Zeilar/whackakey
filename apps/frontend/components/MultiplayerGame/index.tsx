@@ -41,7 +41,6 @@ export default function MultiplayerGame({ timestamp }: Props) {
 		if (!room?.difficulty) {
 			return;
 		}
-		console.log(room.isGameActive);
 		if (!room.isGameActive) {
 			stopAll();
 			return;
@@ -93,6 +92,22 @@ export default function MultiplayerGame({ timestamp }: Props) {
 		);
 	}
 
+	function countdownColor() {
+		if (!countdown) {
+			return "gray.100";
+		}
+		switch (Math.ceil(countdown / 1000)) {
+			case 3:
+				return "green.500";
+			case 2:
+				return "yellow.500";
+			case 1:
+				return "red.500";
+			default:
+				return "gray.100";
+		}
+	}
+
 	return (
 		<Flex
 			flexDir="column"
@@ -100,10 +115,28 @@ export default function MultiplayerGame({ timestamp }: Props) {
 			borderColor="blue.900"
 			rounded="xl"
 			boxShadow="lg"
+			overflow="hidden"
 			p={4}
 			gap={4}
 			bgColor="gray.300"
+			pos="relative"
 		>
+			{countdown && (
+				<Flex
+					justifyContent="center"
+					alignItems="center"
+					pos="absolute"
+					zIndex={1000}
+					inset={0}
+					w="full"
+					h="full"
+					bgColor={`rgba(0, 0, 0, ${Math.round((countdown / 3000 + Number.EPSILON) * 100) / 100})`}
+				>
+					<Heading textStyle="stroke" size="4xl" color={countdownColor()}>
+						{Math.ceil(countdown / 1000)}
+					</Heading>
+				</Flex>
+			)}
 			<Flex gap={4} p={2} justifyContent="space-between">
 				<Flex flexDir="column" gap={2}>
 					{room.players.map(element => (
@@ -175,7 +208,6 @@ export default function MultiplayerGame({ timestamp }: Props) {
 					<DifficultyBox difficulty="hard" />
 				</Flex>
 			</Flex>
-			<Heading>{countdown}</Heading>
 			<Keyboard />
 		</Flex>
 	);

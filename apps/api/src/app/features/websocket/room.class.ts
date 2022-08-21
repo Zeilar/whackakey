@@ -246,7 +246,6 @@ export class Room {
 		if (this.players.length < 2 || this.isGameActive) {
 			return;
 		}
-		this.reset();
 		this.server.to(this.id).emit("game-starting", Date.now() + 3000);
 		this.timeout = setTimeout(() => {
 			this.startGame();
