@@ -51,6 +51,12 @@ export default function MultiplayerGame({ timestamp }: Props) {
 		};
 	}, [room?.difficulty, stopAll, playAudio, room?.isGameActive]);
 
+	useEffect(() => {
+		return () => {
+			stopAll();
+		};
+	}, [stopAll]);
+
 	if (!room || !player) {
 		return null;
 	}

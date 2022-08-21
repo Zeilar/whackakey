@@ -29,6 +29,7 @@ export class Room {
 	public players: Player[] = [];
 	public isGameActive = false;
 	private difficulty: Difficulty = "easy";
+	private lobbyDifficulty: Difficulty = "easy";
 	private interval: NodeJS.Timer;
 	private timeout: NodeJS.Timer;
 	private letter: string | null = null;
@@ -220,12 +221,18 @@ export class Room {
 		this.endGame();
 		this.letter = null;
 		this.elapsedRounds = 0;
-		this.difficulty = "easy";
+		this.difficulty = this.lobbyDifficulty;
 		this.updateEmit();
 	}
 
 	private playersLeft() {
 		return this.players.reduce((total, player) => (!player.isEliminated ? total + 1 : total), 0);
+	}
+
+	public changeLobbyDifficulty(difficulty: Difficulty) {
+		this.lobbyDifficulty = difficulty;
+		this.difficulty = difficulty;
+		this.server.to(this.id).emit("room-change-difficulty", { roomId: this.id, difficulty } as ChangeDifficultyDto);
 	}
 
 	public changeDifficulty(difficulty: Difficulty) {

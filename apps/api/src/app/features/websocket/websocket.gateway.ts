@@ -179,7 +179,7 @@ export class WebsocketGateway implements OnGatewayDisconnect, OnGatewayConnectio
 		if (!room.hasPlayer(socket.id) || !room.isOwner(socket.id)) {
 			return;
 		}
-		room.changeDifficulty(difficulty);
+		room.changeLobbyDifficulty(difficulty);
 	}
 
 	@SubscribeMessage("player-pick")
