@@ -24,18 +24,33 @@ export default function Key({ symbol }: Props) {
 	const { playAudio } = useSoundContext();
 	const [isPressed, setIsPressed] = useState(false);
 	const isActive = useMemo(() => room?.letter === symbol, [room, symbol]);
-	const growingColor = useMemo(() => {
+	const { borderColor, growingColor, textColor } = useMemo(() => {
+		let growingColor = "";
+		let borderColor = "";
+		let textColor = "";
 		switch (room?.difficulty) {
 			case "easy":
-				return "green.500";
+				growingColor = "green.600";
+				borderColor = "green.500";
+				textColor = "green.100";
+				break;
 			case "medium":
-				return "yellow.500";
+				growingColor = "yellow.600";
+				borderColor = "yellow.500";
+				textColor = "yellow.100";
+				break;
 			case "hard":
-				return "red.500";
-			default:
-				return "green.500";
+				growingColor = "red.600";
+				borderColor = "red.500";
+				textColor = "red.100";
+				break;
 		}
-	}, [room?.difficulty]);
+		return {
+			textColor: isActive ? textColor : undefined,
+			growingColor,
+			borderColor: room?.letter === symbol ? borderColor : undefined,
+		};
+	}, [room?.difficulty, room?.letter, symbol, isActive]);
 	const bgColor = useMemo(() => {
 		if (player?.pick == null || player.pick !== symbol || !room?.letter) {
 			return "gray.100";
@@ -107,7 +122,7 @@ export default function Key({ symbol }: Props) {
 				w={100}
 				h={100}
 				bgColor={bgColor}
-				borderColor={isActive ? "blue.900" : "blackAlpha.300"}
+				borderColor={borderColor}
 				borderWidth={4}
 				rounded="xl"
 				pos="relative"
@@ -121,8 +136,8 @@ export default function Key({ symbol }: Props) {
 						zIndex={5}
 						rounded="full"
 						bgColor={growingColor}
-						h="135%"
-						w="135%"
+						h="140%"
+						w="140%"
 					/>
 				)}
 				<Text
@@ -131,7 +146,7 @@ export default function Key({ symbol }: Props) {
 					fontFamily="Inter"
 					fontSize="4xl"
 					userSelect="none"
-					color={isActive ? "gray.100" : "blue.700"}
+					color={textColor}
 					zIndex={10}
 				>
 					{symbol}
