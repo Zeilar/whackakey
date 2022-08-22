@@ -1,5 +1,5 @@
 import { Box, Flex, keyframes, Text } from "@chakra-ui/react";
-import { difficultyInMs } from "@shared";
+import { Difficulty, difficultyInMs } from "@shared";
 import { useSoundContext, useWebsocketContext } from "apps/frontend/hooks";
 import { motion } from "framer-motion";
 import { useRouter } from "next/router";
@@ -17,6 +17,24 @@ const animation = keyframes`
         transform: scale(1);
     }
 `;
+
+const shakeAnimation = [
+	"translate(5px, 5px) rotate(5deg)",
+	"translate(0px, 0px) rotate(0deg)",
+	"translate(-5px, 5px) rotate(-5deg)",
+	"translate(0px, 0px) rotate(0deg)",
+];
+
+function getShakeAnimation(difficulty: Difficulty) {
+	switch (difficulty) {
+		case "easy":
+			return shakeAnimation;
+		case "medium":
+			return [...shakeAnimation, ...shakeAnimation];
+		case "hard":
+			return [...shakeAnimation, ...shakeAnimation, ...shakeAnimation];
+	}
+}
 
 export default function Key({ symbol }: Props) {
 	const { query } = useRouter();
@@ -99,22 +117,7 @@ export default function Key({ symbol }: Props) {
 		<Flex
 			key={String(isActive)}
 			as={motion.div}
-			animate={
-				isActive
-					? {
-							transform: [
-								"translate(5px, 5px) rotate(5deg)",
-								"translate(0px, 0px) rotate(0deg)",
-								"translate(-5px, 5px) rotate(-5deg)",
-								"translate(0px, 0px) rotate(0deg)",
-								"translate(5px, 5px) rotate(5deg)",
-								"translate(0px, 0px) rotate(0deg)",
-								"translate(-5px, 5px) rotate(-5deg)",
-								"translate(0px, 0px) rotate(0deg)",
-							],
-					  }
-					: undefined
-			}
+			animate={isActive ? { transform: getShakeAnimation(room.difficulty) } : undefined}
 		>
 			<Flex
 				justifyContent="center"
