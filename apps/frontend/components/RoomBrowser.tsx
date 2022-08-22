@@ -2,7 +2,7 @@ import { Box, Button, Flex, Heading, Text } from "@chakra-ui/react";
 import { MAX_PLAYERS } from "@shared";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useWebsocketContext } from "../hooks";
 import { RoomActions } from "../reducers/roomReducer";
 import { Menu } from "./Menu";
@@ -11,6 +11,13 @@ export default function RoomBrowser() {
 	const { push } = useRouter();
 	const { rooms, socket, dispatchRooms } = useWebsocketContext();
 	const [selectedRoomId, setSelectedRoomId] = useState<string>();
+
+	const isSelected = useCallback(
+		(roomId: string) => {
+			return selectedRoomId === roomId;
+		},
+		[selectedRoomId]
+	);
 
 	useEffect(() => {
 		if (!socket) {
@@ -34,10 +41,6 @@ export default function RoomBrowser() {
 		}
 		setSelectedRoomId(undefined);
 	}, [rooms]);
-
-	function isSelected(roomId: string) {
-		return selectedRoomId === roomId;
-	}
 
 	function join() {
 		push(`/room/${selectedRoomId}`);
@@ -69,10 +72,10 @@ export default function RoomBrowser() {
 										key={room.id}
 										as={motion.div}
 										w="full"
-										transition={{ duration: "0.25s" }}
+										transition={{ duration: "0.1s" }}
 										initial={{
-											opacity: 0.35,
-											transform: "translateX(10px)",
+											opacity: 0,
+											transform: "translateX(5px)",
 										}}
 										animate={{
 											opacity: 1,
@@ -80,7 +83,7 @@ export default function RoomBrowser() {
 										}}
 										exit={{
 											opacity: 0,
-											transform: "translateX(10px)",
+											transform: "translateX(5px)",
 										}}
 									>
 										<Button

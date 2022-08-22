@@ -251,23 +251,22 @@ export default function Room() {
 										{player.name}
 									</Text>
 								</Flex>
+								<Tooltip label="Wins" placement="top" closeOnClick={false}>
+									<Flex
+										w="4rem"
+										h="100%"
+										alignItems="center"
+										userSelect="none"
+										color="gray.100"
+										borderLeftWidth={3}
+										borderLeftColor="inherit"
+										bgColor={isMe(player.id) ? "yellow.500" : "blue.700"}
+									>
+										<Icon as={TrophyFill} w={10} h="100%" p={3} mr={-1} />
+										{player.wins}
+									</Flex>
+								</Tooltip>
 							</Flex>
-							<Tooltip label="Wins" placement="top" closeOnClick={false}>
-								<Flex
-									rounded="md"
-									w="4.5rem"
-									h="100%"
-									alignItems="center"
-									userSelect="none"
-									color="gray.100"
-									borderWidth={3}
-									borderColor={isMe(player.id) ? "yellow.600" : "blue.900"}
-									bgColor={isMe(player.id) ? "yellow.500" : "blue.700"}
-								>
-									<Icon as={TrophyFill} w={10} h="100%" p={3} />
-									{player.wins}
-								</Flex>
-							</Tooltip>
 						</Flex>
 					))}
 					{Array(slotsAvailable)
