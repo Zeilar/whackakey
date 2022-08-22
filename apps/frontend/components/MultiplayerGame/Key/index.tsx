@@ -1,6 +1,7 @@
 import { Box, Flex, keyframes, Text } from "@chakra-ui/react";
 import { difficultyInMs } from "@shared";
 import { useSoundContext, useWebsocketContext } from "apps/frontend/hooks";
+import { motion } from "framer-motion";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
 
@@ -23,21 +24,6 @@ export default function Key({ symbol }: Props) {
 	const { playAudio } = useSoundContext();
 	const [isPressed, setIsPressed] = useState(false);
 	const isActive = useMemo(() => room?.letter === symbol, [room, symbol]);
-	const bgColor = useMemo(() => {
-		if (!isActive) {
-			return isPressed ? "gray.200" : "gray.100";
-		}
-		switch (room?.difficulty) {
-			case "easy":
-				return "green.900";
-			case "medium":
-				return "yellow.900";
-			case "hard":
-				return "red.900";
-			default:
-				return "green.900";
-		}
-	}, [isActive, isPressed, room?.difficulty]);
 	const growingColor = useMemo(() => {
 		switch (room?.difficulty) {
 			case "easy":
@@ -50,6 +36,12 @@ export default function Key({ symbol }: Props) {
 				return "green.500";
 		}
 	}, [room?.difficulty]);
+	const bgColor = useMemo(() => {
+		if (player?.pick == null || player.pick !== symbol || !room?.letter) {
+			return "gray.100";
+		}
+		return player.pick === room.letter ? "green.500" : "red.500";
+	}, [player?.pick, symbol, room?.letter]);
 
 	useEffect(() => {
 		function onKeyDown(e: KeyboardEvent) {
@@ -90,42 +82,61 @@ export default function Key({ symbol }: Props) {
 
 	return (
 		<Flex
-			justifyContent="center"
-			alignItems="center"
-			w={100}
-			h={100}
-			bgColor={bgColor}
-			borderColor={isActive ? "blue.900" : "blackAlpha.300"}
-			borderWidth={4}
-			rounded="xl"
-			pos="relative"
-			boxShadow="md"
+			key={String(isActive)}
+			as={motion.div}
+			animate={
+				isActive
+					? {
+							transform: [
+								"translate(5px, 5px) rotate(5deg)",
+								"translate(0px, 0px) rotate(0deg)",
+								"translate(-5px, 5px) rotate(-5deg)",
+								"translate(0px, 0px) rotate(0deg)",
+								"translate(5px, 5px) rotate(5deg)",
+								"translate(0px, 0px) rotate(0deg)",
+								"translate(-5px, 5px) rotate(-5deg)",
+								"translate(0px, 0px) rotate(0deg)",
+							],
+					  }
+					: undefined
+			}
 		>
-			{isActive && (
-				<Box
-					animation={`${animation} ${difficultyInMs(room?.difficulty)}ms`}
-					overflow="hidden"
-					rounded="inherit"
-					pos="absolute"
-					top={0}
-					left={0}
-					zIndex={5}
-					bgColor={growingColor}
-					h="full"
-					w="full"
-				/>
-			)}
-			<Text
-				textTransform="uppercase"
-				fontWeight="bold"
-				fontFamily="Inter"
-				fontSize="4xl"
-				userSelect="none"
-				color={isActive ? "gray.100" : "blue.700"}
-				zIndex={10}
+			<Flex
+				justifyContent="center"
+				alignItems="center"
+				w={100}
+				h={100}
+				bgColor={bgColor}
+				borderColor={isActive ? "blue.900" : "blackAlpha.300"}
+				borderWidth={4}
+				rounded="xl"
+				pos="relative"
+				boxShadow="md"
+				overflow="hidden"
 			>
-				{symbol}
-			</Text>
+				{isActive && (
+					<Box
+						animation={`${animation} ${difficultyInMs(room?.difficulty)}ms`}
+						pos="absolute"
+						zIndex={5}
+						rounded="full"
+						bgColor={growingColor}
+						h="135%"
+						w="135%"
+					/>
+				)}
+				<Text
+					textTransform="uppercase"
+					fontWeight="bold"
+					fontFamily="Inter"
+					fontSize="4xl"
+					userSelect="none"
+					color={isActive ? "gray.100" : "blue.700"}
+					zIndex={10}
+				>
+					{symbol}
+				</Text>
+			</Flex>
 		</Flex>
 	);
 }

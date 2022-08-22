@@ -65,11 +65,11 @@ export default function MultiplayerGame({ timestamp }: Props) {
 	function countdownColor() {
 		switch (countdown) {
 			case 3:
-				return "green.500";
+				return "red.500";
 			case 2:
 				return "yellow.500";
 			case 1:
-				return "red.500";
+				return "green.500";
 			default:
 				return "gray.100";
 		}
@@ -84,7 +84,7 @@ export default function MultiplayerGame({ timestamp }: Props) {
 				initial={{ transform: "scale(5)", opacity: 0.5 }}
 				animate={{ transform: "scale(2.5)", opacity: 1 }}
 			>
-				<Heading textStyle="stroke" size="4xl" color={countdownColor()}>
+				<Heading textStyle="stroke" size="4xl" color={countdownColor()} userSelect="none">
 					{countdown}
 				</Heading>
 			</Box>
@@ -106,7 +106,9 @@ export default function MultiplayerGame({ timestamp }: Props) {
 		}
 		return (
 			<Box
-				p={4}
+				py={4}
+				px={8}
+				fontSize="xl"
 				textTransform="uppercase"
 				bgColor={bgColor}
 				pos="relative"
@@ -204,7 +206,6 @@ export default function MultiplayerGame({ timestamp }: Props) {
 					rounded="lg"
 					overflow="hidden"
 					bgColor="blue.900"
-					gap="2px"
 				>
 					<DifficultyBox difficulty="easy" />
 					<DifficultyBox difficulty="medium" />
