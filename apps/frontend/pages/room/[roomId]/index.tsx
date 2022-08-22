@@ -242,7 +242,13 @@ export default function Room() {
 								grow={1}
 							>
 								<Flex flexGrow={1}>
-									<Text py={2} px={4} size="lg" color={isMe(player.id) ? "yellow.600" : undefined}>
+									<Text
+										py={2}
+										px={4}
+										size="lg"
+										color={isMe(player.id) ? "yellow.600" : undefined}
+										whiteSpace="nowrap"
+									>
 										{isMe(player.id) ? (
 											<Text userSelect="none" as="span" mr={1}>
 												(You)&nbsp;
@@ -406,7 +412,7 @@ export default function Room() {
 						variant="unstyled"
 						placeholder="Send a message"
 					/>
-					<Button type="submit" px={12}>
+					<Button type="submit" px={12} disabled={messageInput.length === 0}>
 						Send
 					</Button>
 				</Flex>

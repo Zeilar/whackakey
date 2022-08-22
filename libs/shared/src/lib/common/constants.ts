@@ -1,5 +1,5 @@
 export const DEFAULT_LIVES = 3;
-export const MAX_LILVES = 5;
+export const MAX_LILVES = 50;
 
 export const alphabets = {
 	english: [

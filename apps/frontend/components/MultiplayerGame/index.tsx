@@ -2,6 +2,7 @@ import { Box, Flex, Heading, Icon, Text } from "@chakra-ui/react";
 import { Difficulty } from "@shared";
 import { Heart } from "@styled-icons/evaicons-solid";
 import { useSoundContext, useWebsocketContext } from "apps/frontend/hooks";
+import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import Keyboard from "./Keyboard";
 
@@ -12,7 +13,7 @@ interface Props {
 export default function MultiplayerGame({ timestamp }: Props) {
 	const { room, player, isMe } = useWebsocketContext();
 	const { playAudio, stopAll } = useSoundContext();
-	const [countdown, setCountdown] = useState<number>();
+	const [countdown, setCountdown] = useState<number | null>(null);
 
 	useEffect(() => {
 		if (typeof timestamp !== "number") {
@@ -24,11 +25,11 @@ export default function MultiplayerGame({ timestamp }: Props) {
 				return;
 			}
 			if (Date.now() >= timestamp) {
-				setCountdown(undefined);
+				setCountdown(null);
 				playAudio(`level-${room.difficulty}`);
 				return;
 			}
-			setCountdown(timestamp - Date.now());
+			setCountdown(Math.ceil((timestamp - Date.now()) / 1000));
 			animationFrame = requestAnimationFrame(frameHandler);
 		}
 		animationFrame = requestAnimationFrame(frameHandler);
@@ -59,6 +60,35 @@ export default function MultiplayerGame({ timestamp }: Props) {
 
 	if (!room || !player) {
 		return null;
+	}
+
+	function countdownColor() {
+		switch (countdown) {
+			case 3:
+				return "green.500";
+			case 2:
+				return "yellow.500";
+			case 1:
+				return "red.500";
+			default:
+				return "gray.100";
+		}
+	}
+
+	if (typeof countdown === "number") {
+		return (
+			<Box
+				key={countdown}
+				as={motion.div}
+				transition="0.1s"
+				initial={{ transform: "scale(5)", opacity: 0.5 }}
+				animate={{ transform: "scale(2.5)", opacity: 1 }}
+			>
+				<Heading textStyle="stroke" size="4xl" color={countdownColor()}>
+					{countdown}
+				</Heading>
+			</Box>
+		);
 	}
 
 	function DifficultyBox({ difficulty }: { difficulty: Difficulty }) {
@@ -98,22 +128,6 @@ export default function MultiplayerGame({ timestamp }: Props) {
 		);
 	}
 
-	function countdownColor() {
-		if (!countdown) {
-			return "gray.100";
-		}
-		switch (Math.ceil(countdown / 1000)) {
-			case 3:
-				return "green.500";
-			case 2:
-				return "yellow.500";
-			case 1:
-				return "red.500";
-			default:
-				return "gray.100";
-		}
-	}
-
 	return (
 		<Flex
 			flexDir="column"
@@ -125,24 +139,7 @@ export default function MultiplayerGame({ timestamp }: Props) {
 			p={4}
 			gap={4}
 			bgColor="gray.300"
-			pos="relative"
 		>
-			{countdown && (
-				<Flex
-					justifyContent="center"
-					alignItems="center"
-					pos="absolute"
-					zIndex={1000}
-					inset={0}
-					w="full"
-					h="full"
-					bgColor={`rgba(0, 0, 0, ${Math.round((countdown / 3000 + Number.EPSILON) * 100) / 100})`}
-				>
-					<Heading textStyle="stroke" size="4xl" color={countdownColor()}>
-						{Math.ceil(countdown / 1000)}
-					</Heading>
-				</Flex>
-			)}
 			<Flex gap={4} p={2} justifyContent="space-between">
 				<Flex flexDir="column" gap={2}>
 					{room.players.map(element => (
