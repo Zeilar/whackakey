@@ -11,6 +11,11 @@ export default function RoomBrowser() {
 	const { push } = useRouter();
 	const { rooms, socket, dispatchRooms } = useWebsocketContext();
 	const [selectedRoomId, setSelectedRoomId] = useState<string>();
+	const [hasRendered, setHasRendered] = useState(false);
+
+	useEffect(() => {
+		setHasRendered(true);
+	}, []);
 
 	const isSelected = useCallback(
 		(roomId: string) => {
@@ -73,10 +78,14 @@ export default function RoomBrowser() {
 										as={motion.div}
 										w="full"
 										transition={{ duration: "0.1s" }}
-										initial={{
-											opacity: 0,
-											transform: "translateX(5px)",
-										}}
+										initial={
+											hasRendered
+												? {
+														opacity: 0,
+														transform: "translateX(5px)",
+												  }
+												: undefined
+										}
 										animate={{
 											opacity: 1,
 											transform: "translateX(0px)",
