@@ -26,7 +26,6 @@ const shakeAnimation = [
 ];
 
 function getShakeAnimation(difficulty: Difficulty) {
-	console.log({ difficulty, shakeAnimation });
 	switch (difficulty) {
 		case "easy":
 			return shakeAnimation;
