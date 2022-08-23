@@ -26,6 +26,7 @@ const shakeAnimation = [
 ];
 
 function getShakeAnimation(difficulty: Difficulty) {
+	console.log({ difficulty, shakeAnimation });
 	switch (difficulty) {
 		case "easy":
 			return shakeAnimation;
@@ -114,9 +115,9 @@ export default function Key({ symbol }: Props) {
 	}
 
 	return (
-		<Flex
+		<motion.div
 			key={String(isActive)}
-			as={motion.div}
+			transition={{ duration: difficultyInMs(room.difficulty) / 1000 }}
 			animate={isActive ? { transform: getShakeAnimation(room.difficulty) } : undefined}
 		>
 			<Flex
@@ -155,6 +156,6 @@ export default function Key({ symbol }: Props) {
 					{symbol}
 				</Text>
 			</Flex>
-		</Flex>
+		</motion.div>
 	);
 }
