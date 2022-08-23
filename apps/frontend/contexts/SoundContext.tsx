@@ -62,7 +62,9 @@ export function SoundContextProvider({ children }: SoundProps) {
 	const stopAll = useCallback(() => {
 		for (const property in audioFiles) {
 			const file = audioFiles[property as SoundFileName];
-			file.pause();
+			if (!file.paused) {
+				file.pause();
+			}
 			file.currentTime = 0;
 		}
 	}, [audioFiles]);
