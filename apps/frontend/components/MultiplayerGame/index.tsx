@@ -148,7 +148,6 @@ export default function MultiplayerGame({ timestamp }: Props) {
 						<Flex key={element.id} gap={1} order={!isMe(element.id) ? 1 : undefined}>
 							<Flex
 								key={element.id}
-								w={400}
 								rounded="lg"
 								borderWidth={3}
 								borderColor={isMe(element.id) ? "yellow.600" : "blue.900"}
@@ -160,26 +159,32 @@ export default function MultiplayerGame({ timestamp }: Props) {
 								bgColor="gray.100"
 								boxShadow="lg"
 							>
-								<Text fontSize="lg" mr={4}>
+								<Text
+									fontSize="lg"
+									mr={4}
+									w={250}
+									textOverflow="ellipsis"
+									whiteSpace="nowrap"
+									overflow="hidden"
+								>
 									{element.name}
 								</Text>
 							</Flex>
 							<Flex
 								px={4}
-								alignItems="center"
 								bgColor={isMe(element.id) ? "yellow.500" : "blue.700"}
 								color="gray.100"
 								gap={1}
+								alignItems="center"
 								rounded="lg"
 								borderWidth={3}
 								borderColor="blue.900"
 							>
 								{element.lives > 0 ? (
-									Array(room.lives)
+									Array(element.lives)
 										.fill(null)
 										.map((_, i) => (
 											<Icon
-												opacity={Number(i < element.lives)}
 												color="red.500"
 												strokeWidth={3}
 												stroke="blue.900"
