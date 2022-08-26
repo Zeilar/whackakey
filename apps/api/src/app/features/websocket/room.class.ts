@@ -60,6 +60,9 @@ export class Room {
 	public setLives(lives: number) {
 		this.lives = lives;
 		this.server.to(this.id).emit("room-set-lives", { roomId: this.id, lives } as SetLivesDto);
+		this.players.forEach(player => {
+			player.lives = this.lives;
+		});
 	}
 
 	private endGame() {
@@ -253,6 +256,7 @@ export class Room {
 		if (this.players.length < 2 || this.isGameActive) {
 			return;
 		}
+		console.log(this.lives);
 		this.server.to(this.id).emit("game-starting", Date.now() + 3000);
 		this.timeout = setTimeout(() => {
 			this.startGame();

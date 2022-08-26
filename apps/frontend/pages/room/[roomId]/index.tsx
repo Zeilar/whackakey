@@ -56,7 +56,6 @@ export default function Room() {
 	);
 	const [timestamp, setTimestamp] = useState<number>();
 	const [messageInput, setMessageInput] = useState("");
-	const [lives, setLives] = useState(room?.lives ?? DEFAULT_LIVES);
 	const chatBox = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
@@ -97,13 +96,6 @@ export default function Room() {
 			socket.off("game-starting").off("winner").off("tie");
 		};
 	}, [socket]);
-
-	useEffect(() => {
-		if (!isOwner || !socket) {
-			return;
-		}
-		socket.emit("room-set-lives", { roomId: query.roomId, lives } as SetLivesDto);
-	}, [isOwner, lives, socket, query.roomId]);
 
 	useEffect(() => {
 		if (!socket) {
@@ -173,6 +165,13 @@ export default function Room() {
 		}
 		socket.emit("room-message-new", { roomId: query.roomId, content: messageInput } as SendMessageDto);
 		setMessageInput("");
+	}
+
+	function setLives(lives: number) {
+		if (!room || !isOwner || !socket) {
+			return;
+		}
+		socket.emit("room-set-lives", { roomId: query.roomId, lives } as SetLivesDto);
 	}
 
 	return (
