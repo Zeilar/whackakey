@@ -2,7 +2,8 @@ import { StyleConfig } from "@chakra-ui/theme-tools";
 
 export const Tooltip: StyleConfig = {
 	baseStyle: {
-		bgColor: "blue.900",
+		userSelect: "none",
+		bgColor: "gray.800",
 		color: "gray.100",
 		rounded: "md",
 		boxShadow: "md",

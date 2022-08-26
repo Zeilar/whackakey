@@ -1,5 +1,5 @@
-import { Box, Flex, Heading, IconButton, Portal, Spinner } from "@chakra-ui/react";
-import { Refresh } from "@styled-icons/evaicons-solid";
+import { Box, Flex, Heading, Icon, IconButton, Portal, Spinner, Tooltip } from "@chakra-ui/react";
+import { Person, Refresh } from "@styled-icons/evaicons-solid";
 import { useEffect, useState } from "react";
 import { useWebsocketContext } from "../../hooks/";
 
@@ -28,8 +28,8 @@ export default function Latency() {
 
 	return (
 		<Portal>
-			<Flex flexDir="column" pos="fixed" top={4} right={4} gap={2}>
-				<Flex h={8} alignItems="center" gap={2} justifyContent="flex-end">
+			<Flex pos="fixed" top={4} right={4} gap={2}>
+				<Flex alignItems="center" gap={1}>
 					{isConnecting ? (
 						<Spinner color="blue.300" size="lg" />
 					) : (
@@ -61,9 +61,9 @@ export default function Latency() {
 					)}
 				</Flex>
 				{name && (
-					<Heading textStyle="stroke" color="yellow.500">
-						{name}
-					</Heading>
+					<Tooltip placement="bottom-start" label={name} closeOnClick={false}>
+						<Icon color="yellow.500" stroke="black" as={Person} w={10} h={10} />
+					</Tooltip>
 				)}
 			</Flex>
 		</Portal>
