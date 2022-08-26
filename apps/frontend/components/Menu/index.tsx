@@ -6,7 +6,7 @@ import DifficultyItem from "./DifficultyItem";
 import SolidButton from "../SolidButton";
 import RoomBrowser from "../RoomBrowser";
 import { useRouter } from "next/router";
-import { motion } from "framer-motion";
+import MenuWrapper from "./MenuWrapper";
 
 export type Menu = "solo" | "multiplayer" | "tutorial" | "rooms";
 
@@ -82,22 +82,8 @@ export default function Menu() {
 		);
 	}
 
-	function MenuWrapper({ children }: { children: React.ReactNode }) {
-		return (
-			<Flex
-				flexDir="column"
-				as={motion.div}
-				gap={2}
-				initial={{ opacity: 0.35, transform: "translateX(25px)" }}
-				animate={{ opacity: 1, transform: "translateX(0px)" }}
-			>
-				{children}
-			</Flex>
-		);
-	}
-
 	return (
-		<Flex as="nav" gap={4} flexDir="column" width={550}>
+		<Flex as="nav" gap={4} flexDir="column" width={550} key="test">
 			<Heading size="4xl" textStyle="stroke" textAlign="center" mb={4}>
 				{heading}
 			</Heading>
