@@ -133,6 +133,7 @@ export default function MultiplayerGame({ timestamp }: Props) {
 	return (
 		<Flex
 			flexDir="column"
+			userSelect="none"
 			borderWidth={4}
 			borderColor="blue.900"
 			rounded="xl"

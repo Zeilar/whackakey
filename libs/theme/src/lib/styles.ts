@@ -11,7 +11,7 @@ export const styles = {
 		},
 		"::selection": {
 			bgColor: "blue.300",
-			color: "gray.100",
+			color: "blue.900",
 		},
 		".Toastify__toast": {
 			bgColor: "blue.900",

@@ -42,39 +42,18 @@ export default function Key({ symbol }: Props) {
 	const { playAudio } = useSoundContext();
 	const [isPressed, setIsPressed] = useState(false);
 	const isActive = useMemo(() => room?.letter === symbol, [room, symbol]);
-	const { borderColor, growingColor, textColor } = useMemo(() => {
-		let growingColor = "";
-		let borderColor = "";
-		let textColor = "";
-		switch (room?.difficulty) {
-			case "easy":
-				growingColor = "green.600";
-				borderColor = "green.500";
-				textColor = "green.100";
-				break;
-			case "medium":
-				growingColor = "yellow.600";
-				borderColor = "yellow.500";
-				textColor = "yellow.100";
-				break;
-			case "hard":
-				growingColor = "red.600";
-				borderColor = "red.500";
-				textColor = "red.100";
-				break;
+	const opacity = useMemo(() => {
+		if (isActive || player?.pick === symbol) {
+			return 1;
 		}
+		return player?.pick == null ? 1 : 0.35;
+	}, [isActive, player?.pick, symbol]);
+	const { borderColor, bgColor } = useMemo(() => {
 		return {
-			textColor: isActive ? textColor : undefined,
-			growingColor,
-			borderColor: room?.letter === symbol ? borderColor : undefined,
+			borderColor: player?.pick === room?.letter ? "green.300" : "red.300",
+			bgColor: player?.pick === room?.letter ? "green.500" : "red.500",
 		};
-	}, [room?.difficulty, room?.letter, symbol, isActive]);
-	const bgColor = useMemo(() => {
-		if (player?.pick == null || player.pick !== symbol || !room?.letter) {
-			return "gray.100";
-		}
-		return player.pick === room.letter ? "green.500" : "red.500";
-	}, [player?.pick, symbol, room?.letter]);
+	}, [player?.pick, room?.letter]);
 
 	useEffect(() => {
 		function onKeyDown(e: KeyboardEvent) {
@@ -122,10 +101,11 @@ export default function Key({ symbol }: Props) {
 			<Flex
 				justifyContent="center"
 				alignItems="center"
+				opacity={opacity}
 				w={100}
 				h={100}
-				bgColor={bgColor}
-				borderColor={borderColor}
+				bgColor={isActive ? "blue.700" : "gray.100"}
+				borderColor={isActive ? borderColor : undefined}
 				borderWidth={4}
 				rounded="xl"
 				pos="relative"
@@ -133,15 +113,17 @@ export default function Key({ symbol }: Props) {
 				overflow="hidden"
 			>
 				{isActive && (
-					<Box
-						animation={`${animation} ${difficultyInMs(room?.difficulty)}ms`}
-						pos="absolute"
-						zIndex={5}
-						rounded="full"
-						bgColor={growingColor}
-						h="140%"
-						w="140%"
-					/>
+					<>
+						<Box
+							animation={`${animation} ${difficultyInMs(room?.difficulty)}ms`}
+							pos="absolute"
+							zIndex={0}
+							rounded="full"
+							bgColor={bgColor}
+							h="140%"
+							w="140%"
+						/>
+					</>
 				)}
 				<Text
 					textTransform="uppercase"
@@ -149,7 +131,7 @@ export default function Key({ symbol }: Props) {
 					fontFamily="Inter"
 					fontSize="4xl"
 					userSelect="none"
-					color={textColor}
+					color={isActive ? "gray.100" : undefined}
 					zIndex={10}
 				>
 					{symbol}
