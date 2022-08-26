@@ -61,7 +61,15 @@ export default function Latency() {
 					)}
 				</Flex>
 				{name && (
-					<Tooltip placement="bottom-start" label={name} closeOnClick={false}>
+					<Tooltip
+						sx={{ bgColor: "yellow.500" }}
+						fontSize="lg"
+						borderColor="yellow.600"
+						borderWidth={3}
+						placement="bottom-start"
+						label={name}
+						closeOnClick={false}
+					>
 						<Icon color="yellow.500" stroke="black" as={Person} w={10} h={10} />
 					</Tooltip>
 				)}
