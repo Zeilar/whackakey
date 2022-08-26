@@ -14,10 +14,18 @@ function CustomApp({ Component, pageProps }: AppProps) {
 	return (
 		<>
 			<Head>
-				<title>Whack a key</title>
+				<title>Whack A Key</title>
 			</Head>
 			<CSSReset />
-			<ToastContainer position="top-right" draggable={false} pauseOnHover={false} pauseOnFocusLoss={false} />
+			<ToastContainer
+				autoClose={2000}
+				position="top-right"
+				draggable={false}
+				pauseOnHover={false}
+				pauseOnFocusLoss={false}
+				limit={5}
+				hideProgressBar
+			/>
 			<SoundContextProvider>
 				<WebsocketContextProvider>
 					<SoloGameContextProvider>
