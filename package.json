@@ -25,6 +25,7 @@
 		"@nestjs/websockets": "9.0.8",
 		"@nrwl/next": "14.4.3",
 		"@styled-icons/bootstrap": "10.34.0",
+		"@styled-icons/evaicons-outline": "10.34.0",
 		"@styled-icons/evaicons-solid": "10.34.0",
 		"@styled-icons/fa-solid": "10.34.0",
 		"class-transformer": "0.5.1",

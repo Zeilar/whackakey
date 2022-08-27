@@ -37,6 +37,8 @@ import MultiplayerGame from "apps/frontend/components/MultiplayerGame";
 import { Menu } from "apps/frontend/components/Menu";
 import { toast } from "react-toastify";
 import { RoomActions } from "apps/frontend/reducers/roomReducer";
+import LobbyResult from "apps/frontend/components/LobbyResult";
+import { Result } from "apps/frontend/types/multiplayer";
 
 const difficulties: Difficulty[] = ["easy", "medium", "hard"];
 
@@ -57,6 +59,7 @@ export default function Room() {
 	const [timestamp, setTimestamp] = useState<number>();
 	const [messageInput, setMessageInput] = useState("");
 	const chatBox = useRef<HTMLDivElement>(null);
+	const [result, setResult] = useState<Result>();
 
 	useEffect(() => {
 		if (!socket || !query.roomId || hasPlayer) {
@@ -83,14 +86,17 @@ export default function Room() {
 			return;
 		}
 		socket
-			.on("game-starting", setTimestamp)
+			.on("game-starting", timestamp => {
+				setTimestamp(timestamp);
+				setResult(undefined);
+			})
 			.on("winner", (name: string) => {
-				toast.success(`${name} wins the game!`);
 				setTimestamp(undefined);
+				setResult({ winner: name, type: "winner" });
 			})
 			.on("tie", () => {
-				toast.warn("The game ends in a tie!");
 				setTimestamp(undefined);
+				setResult({ type: "tie" });
 			});
 		return () => {
 			socket.off("game-starting").off("winner").off("tie");
@@ -191,6 +197,7 @@ export default function Room() {
 					{room.players.length} / {MAX_PLAYERS}
 				</Heading>
 			</Flex>
+			{result && <LobbyResult {...result} onClose={() => setResult(undefined)} />}
 			<Grid gridTemplateColumns="1fr 1fr" gridGap={4} p={4} bgColor="gray.300">
 				<Flex flexDir="column" gap={2}>
 					{room.players.map(player => (
