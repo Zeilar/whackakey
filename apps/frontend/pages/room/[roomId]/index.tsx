@@ -39,6 +39,7 @@ import { toast } from "react-toastify";
 import { RoomActions } from "apps/frontend/reducers/roomReducer";
 import LobbyResult from "apps/frontend/components/LobbyResult";
 import { Result } from "apps/frontend/types/multiplayer";
+import { AnimatePresence } from "framer-motion";
 
 const difficulties: Difficulty[] = ["easy", "medium", "hard"];
 
@@ -197,7 +198,9 @@ export default function Room() {
 					{room.players.length} / {MAX_PLAYERS}
 				</Heading>
 			</Flex>
-			{result && <LobbyResult {...result} onClose={() => setResult(undefined)} />}
+			<AnimatePresence>
+				{result && <LobbyResult {...result} onClose={() => setResult(undefined)} />}
+			</AnimatePresence>
 			<Grid gridTemplateColumns="1fr 1fr" gridGap={4} p={4} bgColor="gray.300">
 				<Flex flexDir="column" gap={2}>
 					{room.players.map(player => (
