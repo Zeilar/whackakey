@@ -41,19 +41,21 @@ export default function Key({ symbol }: Props) {
 	const { socket, room, player } = useWebsocketContext();
 	const { playAudio } = useSoundContext();
 	const [isPressed, setIsPressed] = useState(false);
-	const isActive = useMemo(() => room?.letter === symbol, [room, symbol]);
-	const opacity = useMemo(() => {
-		if (isActive || player?.pick === symbol) {
-			return 1;
-		}
-		return player?.pick == null ? 1 : 0.35;
-	}, [isActive, player?.pick, symbol]);
+	const isActive = useMemo(
+		() => room?.letter === symbol || player?.pick === symbol,
+		[room?.letter, symbol, player?.pick]
+	);
 	const { borderColor, bgColor } = useMemo(() => {
-		return {
-			borderColor: player?.pick === room?.letter ? "green.300" : "red.300",
-			bgColor: player?.pick === room?.letter ? "green.500" : "red.500",
-		};
-	}, [player?.pick, room?.letter]);
+		return player?.pick === symbol
+			? {
+					borderColor: player?.pick === room?.letter ? "green.300" : "red.300",
+					bgColor: player?.pick === room?.letter ? "green.500" : "red.500",
+			  }
+			: {
+					bgColor: "gray.100",
+					borderColor: "gray.300",
+			  };
+	}, [player?.pick, room?.letter, symbol]);
 
 	useEffect(() => {
 		function onKeyDown(e: KeyboardEvent) {
@@ -61,7 +63,7 @@ export default function Key({ symbol }: Props) {
 				return;
 			}
 			const { key } = e;
-			if (key !== symbol || isPressed) {
+			if (key !== symbol || isPressed || player.pick != null) {
 				return;
 			}
 			setIsPressed(true);
@@ -96,16 +98,17 @@ export default function Key({ symbol }: Props) {
 		<motion.div
 			key={String(isActive)}
 			transition={{ duration: difficultyInMs(room.difficulty) / 1000 }}
-			animate={isActive ? { transform: getShakeAnimation(room.difficulty) } : undefined}
+			animate={room.letter === symbol ? { transform: getShakeAnimation(room.difficulty) } : undefined}
 		>
 			<Flex
 				justifyContent="center"
 				alignItems="center"
-				opacity={opacity}
+				opacity={isActive ? 1 : 0.35}
 				w={100}
 				h={100}
-				bgColor={isActive ? "blue.700" : "gray.100"}
-				borderColor={isActive ? borderColor : undefined}
+				color={isActive || player?.pick === symbol ? "gray.100" : undefined}
+				bgColor={bgColor}
+				borderColor={borderColor}
 				borderWidth={4}
 				rounded="xl"
 				pos="relative"
@@ -117,9 +120,9 @@ export default function Key({ symbol }: Props) {
 						<Box
 							animation={`${animation} ${difficultyInMs(room?.difficulty)}ms`}
 							pos="absolute"
-							zIndex={0}
+							zIndex={5}
 							rounded="full"
-							bgColor={bgColor}
+							bgColor={player?.pick === symbol ? bgColor : "blue.700"}
 							h="140%"
 							w="140%"
 						/>
