@@ -258,7 +258,7 @@ export default function Room() {
 								</Flex>
 								<Tooltip label="Wins" placement="top" closeOnClick={false}>
 									<Flex
-										w="4rem"
+										w="4.25rem"
 										h="100%"
 										alignItems="center"
 										userSelect="none"
@@ -267,7 +267,7 @@ export default function Room() {
 										borderLeftColor="inherit"
 										bgColor={isMe(player.id) ? "yellow.500" : "blue.700"}
 									>
-										<Icon as={TrophyFill} w={10} h="100%" p={3} mr={-1} />
+										<Icon as={TrophyFill} w={10} h="100%" p={3} />
 										{player.wins}
 									</Flex>
 								</Tooltip>
