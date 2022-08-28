@@ -28,7 +28,7 @@ export default function LobbyResult({ type, winner, onClose }: Props) {
 					<Box
 						h={6}
 						animation={`${bannerAnimation} 2.5s linear infinite`}
-						bgColor={type === "winner" ? "green.500" : "yellow.500"}
+						bgColor={type === "winner" ? "green.500" : "yellow.400"}
 						bgImg={`url(/assets/images/${type === "winner" ? "confetti" : "tie"}.svg)`}
 						bgSize={BANNER_BG_SIZE}
 					/>
