@@ -63,9 +63,7 @@ export default function LobbyResult({ type, winner, onClose }: Props) {
 					icon={<CloseSquareOutline />}
 					onClick={onClose}
 					_focus={{}}
-				>
-					close
-				</IconButton>
+				/>
 			</Flex>
 		</motion.div>
 	);
