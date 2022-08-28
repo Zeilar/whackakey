@@ -26,7 +26,7 @@ export default function LobbyResult({ type, winner, onClose }: Props) {
 			<Flex bgColor="blue.700" borderBottomWidth={4} borderBottomColor="blue.900">
 				<Flex flexDir="column" grow={1}>
 					<Box
-						h={6}
+						h={4}
 						animation={`${bannerAnimation} 2.5s linear infinite`}
 						bgColor={type === "winner" ? "green.500" : "yellow.400"}
 						bgImg={`url(/assets/images/${type === "winner" ? "confetti" : "tie"}.svg)`}
