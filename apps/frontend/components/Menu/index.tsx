@@ -83,7 +83,7 @@ export default function Menu() {
 	}
 
 	return (
-		<Flex as="nav" gap={4} flexDir="column" width={550} key="test">
+		<Flex as="nav" gap={4} flexDir="column" w={550} key="test">
 			<Heading size="4xl" textStyle="stroke" textAlign="center" mb={4}>
 				{heading}
 			</Heading>

@@ -15,7 +15,7 @@ import {
 	Text,
 	Tooltip,
 } from "@chakra-ui/react";
-import { Heart, Undo } from "@styled-icons/evaicons-solid";
+import { Heart } from "@styled-icons/evaicons-solid";
 import { useWebsocketContext } from "apps/frontend/hooks";
 import { useRouter } from "next/router";
 import NextLink from "next/link";
@@ -133,16 +133,22 @@ export default function Room() {
 
 	if (!room) {
 		return (
-			<Flex flexDir="column" alignItems="center" gap={4}>
+			<Flex flexDir="column" alignItems="center" gap={8}>
 				<Heading size="4xl" textStyle="stroke" textTransform="uppercase">
 					Room not found
 				</Heading>
-				<NextLink href="/" passHref>
-					<Button as={Link} size="xl">
-						<Icon as={Undo} mr={4} />
-						Main menu
-					</Button>
-				</NextLink>
+				<Flex w={550} flexDir="column" gap={2}>
+					<NextLink href="/?menu=rooms" passHref>
+						<Button as={Link} size="xl">
+							Browse Rooms
+						</Button>
+					</NextLink>
+					<NextLink href="/" passHref>
+						<Button as={Link} size="xl">
+							Main menu
+						</Button>
+					</NextLink>
+				</Flex>
 			</Flex>
 		);
 	}
