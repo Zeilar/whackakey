@@ -96,7 +96,6 @@ export function WebsocketContextProvider({ children }: WebsocketProps) {
 				setIsConnecting(true);
 				dispatchRooms({ type: RoomActions.EMPTY });
 				setisOnline(false);
-				socket.connect();
 			});
 		return () => {
 			socket
