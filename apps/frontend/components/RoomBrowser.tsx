@@ -47,9 +47,9 @@ export default function RoomBrowser() {
 		setSelectedRoomId(undefined);
 	}, [rooms]);
 
-	function join() {
+	const join = useCallback(() => {
 		push(`/room/${selectedRoomId}`);
-	}
+	}, [push, selectedRoomId]);
 
 	return (
 		<Flex
