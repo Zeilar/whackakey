@@ -13,6 +13,9 @@ export const styles = {
 			bgColor: "blackAlpha.400",
 			color: "blue.500",
 		},
+		"::placeholder": {
+			userSelect: "none",
+		},
 		".Toastify__toast": {
 			bgColor: "blue.900",
 			userSelect: "none",
