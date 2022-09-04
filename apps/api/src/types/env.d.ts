@@ -10,7 +10,6 @@ declare global {
 			PORT: string;
 			GLOBAL_PREFIX: string;
 			CORS_ORIGIN: string;
-			SESSION_SECRET: string;
 			SECURE: BooleanString;
 			WS_PORT: string;
 			DB_TYPE: DatabaseType;
@@ -21,9 +20,6 @@ declare global {
 			DB_NAME: string;
 			DB_SYNCHRONIZE: BooleanString;
 			DB_LOGGING: BooleanString;
-			OAUTH_GITHUB_CLIENT_ID: string;
-			OAUTH_GITHUB_SECRET: string;
-			OAUTH_GITHUB_CALLBACK_URL: string;
 		}
 	}
 }

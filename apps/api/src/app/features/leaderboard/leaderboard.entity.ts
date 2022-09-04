@@ -11,7 +11,7 @@ export class Leaderboard extends BaseEntity {
 	@Column()
 	public score: number;
 
-	@Column({ type: "enum", enum: difficulties, default: "easy" })
+	@Column({ type: "enum", enum: difficulties, default: "easy" as Difficulty })
 	public difficulty: Difficulty;
 
 	@Column()
