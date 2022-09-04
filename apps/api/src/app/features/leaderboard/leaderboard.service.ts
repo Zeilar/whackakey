@@ -10,6 +10,6 @@ export class LeaderboardService {
 	}
 
 	public getLeaderboard() {
-		return Leaderboard.find({ order: { score: { direction: "DESC" } } });
+		return Leaderboard.find({ order: { score: { direction: "DESC" } }, take: 100 });
 	}
 }
