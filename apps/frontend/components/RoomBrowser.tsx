@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Heading, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Text } from "@chakra-ui/react";
 import { MAX_PLAYERS } from "@shared";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/router";
@@ -63,11 +63,6 @@ export default function RoomBrowser() {
 			justifyContent="space-between"
 		>
 			<Flex flexDir="column" p={4} gap={2}>
-				{rooms.length === 0 && (
-					<Heading textStyle="stroke" textAlign="center">
-						No rooms were found
-					</Heading>
-				)}
 				<AnimatePresence>
 					{rooms.length > 0 &&
 						rooms.map(
