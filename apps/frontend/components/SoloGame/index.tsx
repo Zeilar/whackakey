@@ -1,8 +1,9 @@
-import { Flex, Heading } from "@chakra-ui/react";
+import { Flex, Grid, Heading, Icon } from "@chakra-ui/react";
 import { useEffect, useRef } from "react";
 import Keyboard from "./Keyboard";
 import { useSoloGameContext } from "../../hooks";
 import SolidButton from "../SolidButton";
+import { Heart } from "@styled-icons/evaicons-solid";
 
 export default function SoloGame() {
 	const { score, letter, isGameOver, userInput, miss, lives, reset, nextDeadline, hit, nextRound, setTimeLeft } =
@@ -62,23 +63,41 @@ export default function SoloGame() {
 	}
 
 	return (
-		<Flex flexDir="column" gap={10} justifyContent="center" alignItems="center">
-			<Heading
-				color="gray.100"
-				letterSpacing={4}
-				size="4xl"
-				sx={{ WebkitTextStrokeWidth: 1, WebkitTextStrokeColor: "var(--chakra-colors-blue-300)" }}
-			>
-				{score}
-			</Heading>
-			<Heading
-				color="gray.100"
-				letterSpacing={4}
-				size="4xl"
-				sx={{ WebkitTextStrokeWidth: 1, WebkitTextStrokeColor: "var(--chakra-colors-blue-300)" }}
-			>
-				Lives: {lives}
-			</Heading>
+		<Flex
+			flexDir="column"
+			userSelect="none"
+			borderWidth={4}
+			borderColor="blue.900"
+			rounded="xl"
+			boxShadow="lg"
+			overflow="hidden"
+			p={4}
+			gap={4}
+			bgColor="gray.300"
+		>
+			<Grid gridTemplateColumns="1fr 1fr" gridGap={20} alignItems="center">
+				<Flex
+					justifySelf="flex-end"
+					px={4}
+					py={2}
+					bgColor={"yellow.500"}
+					color="gray.100"
+					gap={1}
+					alignItems="center"
+					rounded="lg"
+					borderWidth={3}
+					borderColor="blue.900"
+				>
+					{Array(lives)
+						.fill(null)
+						.map((_, i) => (
+							<Icon color="red.500" strokeWidth={3} stroke="blue.900" w={8} h={8} as={Heart} key={i} />
+						))}
+				</Flex>
+				<Heading letterSpacing={4} size="4xl" textStyle="stroke">
+					{score}
+				</Heading>
+			</Grid>
 			<Keyboard />
 		</Flex>
 	);

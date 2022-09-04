@@ -1,14 +1,20 @@
 import { Flex, Heading, Link } from "@chakra-ui/react";
 import { useSoloGameContext, useWebsocketContext } from "apps/frontend/hooks/";
 import NextLink from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import DifficultyItem from "./DifficultyItem";
 import SolidButton from "../SolidButton";
 import RoomBrowser from "../RoomBrowser";
 import { useRouter } from "next/router";
 import MenuWrapper from "./MenuWrapper";
+import Countdown from "../Countdown";
 
 export type Menu = "solo" | "multiplayer" | "tutorial" | "rooms";
+
+function BackButton() {
+	const { push } = useRouter();
+	return <SolidButton onClick={() => push("/")}>Back</SolidButton>;
+}
 
 export default function Menu() {
 	const { query, push } = useRouter();
@@ -32,6 +38,15 @@ export default function Menu() {
 		}
 	}, [menu]);
 
+	const navigate = useCallback(
+		(menu: Menu) => {
+			return () => {
+				push({ query: { menu } });
+			};
+		},
+		[push]
+	);
+
 	useEffect(() => {
 		if (!isCountingDown) {
 			return;
@@ -48,28 +63,8 @@ export default function Menu() {
 		};
 	}, [countdown, play, isCountingDown]);
 
-	function countdownColor() {
-		if (countdown === 3) {
-			return "red.500";
-		}
-		if (countdown === 2) {
-			return "yellow.500";
-		}
-		if (countdown === 1) {
-			return "green.500";
-		}
-	}
-
 	if (isCountingDown) {
-		return countdown > 0 ? (
-			<Heading userSelect="none" fontSize="10rem" textStyle="stroke" color={countdownColor()}>
-				{countdown}
-			</Heading>
-		) : null;
-	}
-
-	function BackButton() {
-		return <SolidButton onClick={() => push("/")}>Back</SolidButton>;
+		return countdown > 0 ? <Countdown countdown={countdown} /> : null;
 	}
 
 	function TutorialLink({ href, children }: { href: string; children: React.ReactNode }) {
@@ -89,11 +84,9 @@ export default function Menu() {
 			</Heading>
 			{menu === undefined && (
 				<MenuWrapper>
-					<SolidButton onClick={() => push({ query: { menu: "solo" as Menu } })}>Solo</SolidButton>
-					<SolidButton onClick={() => push({ query: { menu: "multiplayer" as Menu } })}>
-						Multiplayer
-					</SolidButton>
-					<SolidButton onClick={() => push({ query: { menu: "tutorial" as Menu } })}>How to play</SolidButton>
+					<SolidButton onClick={navigate("solo")}>Solo</SolidButton>
+					<SolidButton onClick={navigate("multiplayer")}>Multiplayer</SolidButton>
+					<SolidButton onClick={navigate("tutorial")}>How to play</SolidButton>
 				</MenuWrapper>
 			)}
 			{menu === "solo" && (
@@ -112,7 +105,7 @@ export default function Menu() {
 			)}
 			{menu === "multiplayer" && (
 				<MenuWrapper>
-					<SolidButton onClick={() => push({ query: { menu: "rooms" as Menu } })}>Browse rooms</SolidButton>
+					<SolidButton onClick={navigate("rooms")}>Browse rooms</SolidButton>
 					<SolidButton onClick={() => socket?.emit("room-create")}>Create room</SolidButton>
 					<NextLink passHref href="/tutorial/multiplayer">
 						<Link _hover={{}} tabIndex={-1}>

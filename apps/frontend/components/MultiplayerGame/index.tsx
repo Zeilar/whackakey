@@ -2,8 +2,8 @@ import { Box, Flex, Heading, Icon, Text } from "@chakra-ui/react";
 import { Difficulty } from "@shared";
 import { Heart } from "@styled-icons/evaicons-solid";
 import { useSoundContext, useWebsocketContext } from "apps/frontend/hooks";
-import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import Countdown from "../Countdown";
 import Keyboard from "./Keyboard";
 
 interface Props {
@@ -62,33 +62,8 @@ export default function MultiplayerGame({ timestamp }: Props) {
 		return null;
 	}
 
-	function countdownColor() {
-		switch (countdown) {
-			case 3:
-				return "red.500";
-			case 2:
-				return "yellow.500";
-			case 1:
-				return "green.500";
-			default:
-				return "gray.100";
-		}
-	}
-
 	if (typeof countdown === "number") {
-		return (
-			<Box
-				key={countdown}
-				as={motion.div}
-				transition="0.1s"
-				initial={{ transform: "scale(5)", opacity: 0.5 }}
-				animate={{ transform: "scale(2.5)", opacity: 1 }}
-			>
-				<Heading textStyle="stroke" size="4xl" color={countdownColor()} userSelect="none">
-					{countdown}
-				</Heading>
-			</Box>
-		);
+		return <Countdown countdown={countdown} />;
 	}
 
 	function DifficultyBox({ difficulty }: { difficulty: Difficulty }) {
