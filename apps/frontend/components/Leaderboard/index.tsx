@@ -37,34 +37,41 @@ export default function Leaderboard() {
 				<Heading py={4} textAlign="center" bgColor="gray.100" borderBottom="inherit">
 					Leaderboard
 				</Heading>
-				<Table borderBottom="inherit">
-					<Thead pos="sticky" top={0}>
-						<Tr bgColor="blue.700">
-							<Th color="gray.100" fontWeight={400} fontSize="sm" w="60%" border={0}>
-								Name
-							</Th>
-							<Th color="gray.100" fontWeight={400} fontSize="sm" border={0}>
-								Score
-							</Th>
-						</Tr>
-					</Thead>
-				</Table>
+				<Flex flexDir="column" borderBottom="inherit">
+					<Table>
+						<Thead pos="sticky" top={0}>
+							<Tr bgColor="blue.700">
+								<Th fontWeight={400} fontSize="sm" color="gray.100" border={0} w={75} maxW={75}>
+									#
+								</Th>
+								<Th fontWeight={400} fontSize="sm" color="gray.100" border={0}>
+									Name
+								</Th>
+								<Th fontWeight={400} fontSize="sm" color="gray.100" border={0} w={200} maxW={200}>
+									Score
+								</Th>
+							</Tr>
+						</Thead>
+					</Table>
+				</Flex>
 				<Flex
 					flexDir="column"
-					overflowY="auto"
 					sx={scrollbar}
 					bgColor="transparent"
-					_hover={{ bgColor: "blue.900" }}
 					transition="0.25s"
+					_hover={{ bgColor: "blue.900" }}
 				>
 					<Table>
 						<Tbody>
 							{leaderboard.map((highscore, i) => (
 								<Tr key={i} bgColor="gray.300" _odd={{ bgColor: "gray.200" }}>
-									<Td w="60%" border={0}>
-										{highscore.name}
+									<Td w={75} border={0} maxW={75}>
+										{i + 1}
 									</Td>
-									<Td border={0}>{highscore.score}</Td>
+									<Td border={0}>{highscore.name}</Td>
+									<Td border={0} w={200} maxW={200}>
+										{highscore.score}
+									</Td>
 								</Tr>
 							))}
 						</Tbody>
