@@ -10,8 +10,8 @@ export const styles = {
 			flexDir: "column",
 		},
 		"::selection": {
-			bgColor: "blackAlpha.400",
-			color: "blue.500",
+			bgColor: "blue.300",
+			color: "blue.700",
 		},
 		"::placeholder": {
 			userSelect: "none",
