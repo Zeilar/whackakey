@@ -3,7 +3,7 @@ import { IsNumber, IsString, Matches } from "class-validator";
 
 export class HighscoreDto {
 	@IsString()
-	@Matches(`/${Object.keys(difficulties).join("|")}/`)
+	@Matches(`^(${Object.keys(difficulties).join("|")})$`)
 	public difficulty: Difficulty;
 
 	@IsNumber()
