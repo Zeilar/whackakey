@@ -40,6 +40,7 @@ import { RoomActions } from "apps/frontend/reducers/roomReducer";
 import LobbyResult from "apps/frontend/components/LobbyResult";
 import { Result } from "apps/frontend/types/multiplayer";
 import { AnimatePresence } from "framer-motion";
+import { scrollbar } from "apps/frontend/layout/styles";
 
 const difficulties: Difficulty[] = ["easy", "medium", "hard"];
 
@@ -392,24 +393,7 @@ export default function Room() {
 				flexDir="column"
 				bgColor="gray.300"
 			>
-				<Flex
-					h={200}
-					overflowY="auto"
-					p={4}
-					pb={0}
-					flexDir="column"
-					gap={2}
-					ref={chatBox}
-					sx={{
-						"&::-webkit-scrollbar": { width: 4 },
-						"&::-webkit-scrollbar-thumb": {
-							border: "4px solid transparent",
-							rounded: 100,
-							bgColor: "blue.900",
-							bgClip: "padding-box",
-						},
-					}}
-				>
+				<Flex h={200} overflowY="auto" p={4} pb={0} flexDir="column" gap={2} ref={chatBox} sx={scrollbar}>
 					{room.messages.map(message => (
 						<Flex key={message.id} gap={2}>
 							<Text whiteSpace="nowrap" color={isMe(message.authorId) ? "yellow.500" : undefined}>

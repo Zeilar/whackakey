@@ -3,9 +3,9 @@ import { MAX_PLAYERS } from "@shared";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useState } from "react";
-import { useWebsocketContext } from "../hooks";
-import { RoomActions } from "../reducers/roomReducer";
-import { Menu } from "./Menu";
+import { useWebsocketContext } from "../../hooks";
+import { RoomActions } from "../../reducers/roomReducer";
+import { Menu } from "./../Menu";
 
 export default function RoomBrowser() {
 	const { push } = useRouter();

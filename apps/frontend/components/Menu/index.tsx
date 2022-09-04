@@ -1,13 +1,15 @@
 import { Flex, Heading, Link } from "@chakra-ui/react";
 import { useSoloGameContext, useWebsocketContext } from "apps/frontend/hooks/";
 import NextLink from "next/link";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import DifficultyItem from "./DifficultyItem";
 import SolidButton from "../SolidButton";
 import RoomBrowser from "../RoomBrowser";
 import { useRouter } from "next/router";
 import MenuWrapper from "./MenuWrapper";
 import Countdown from "../Countdown";
+import Leaderboard from "../Leaderboard";
+import { useMenu } from "apps/frontend/hooks";
 
 export type Menu = "solo" | "multiplayer" | "tutorial" | "rooms";
 
@@ -17,7 +19,8 @@ function BackButton() {
 }
 
 export default function Menu() {
-	const { query, push } = useRouter();
+	const navigate = useMenu();
+	const { query } = useRouter();
 	const menu = query?.menu as Menu | undefined;
 	const { socket } = useWebsocketContext();
 	const { play, setDifficulty } = useSoloGameContext();
@@ -37,15 +40,6 @@ export default function Menu() {
 				return "Main menu";
 		}
 	}, [menu]);
-
-	const navigate = useCallback(
-		(menu: Menu) => {
-			return () => {
-				push({ query: { menu } });
-			};
-		},
-		[push]
-	);
 
 	useEffect(() => {
 		if (!isCountingDown) {
@@ -91,15 +85,12 @@ export default function Menu() {
 			)}
 			{menu === "solo" && (
 				<MenuWrapper>
+					{query.showLeaderboard && <Leaderboard />}
 					<SolidButton onClick={() => setIsCountingDown(true)} autoFocus>
 						Play
 					</SolidButton>
 					<DifficultyItem onChange={setDifficulty} />
-					<NextLink passHref href="/tutorial/solo">
-						<Link _hover={{}} tabIndex={-1}>
-							<SolidButton role="link">How to play</SolidButton>
-						</Link>
-					</NextLink>
+					<SolidButton onClick={navigate("solo", { showLeaderboard: "true" })}>Leaderboard</SolidButton>
 					<BackButton />
 				</MenuWrapper>
 			)}
@@ -107,11 +98,6 @@ export default function Menu() {
 				<MenuWrapper>
 					<SolidButton onClick={navigate("rooms")}>Browse rooms</SolidButton>
 					<SolidButton onClick={() => socket?.emit("room-create")}>Create room</SolidButton>
-					<NextLink passHref href="/tutorial/multiplayer">
-						<Link _hover={{}} tabIndex={-1}>
-							<SolidButton role="link">How to play</SolidButton>
-						</Link>
-					</NextLink>
 					<BackButton />
 				</MenuWrapper>
 			)}
