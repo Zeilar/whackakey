@@ -3,7 +3,7 @@ export type Difficulty = "easy" | "medium" | "hard";
 export const difficulties: Record<Difficulty, number> = {
 	easy: 1000,
 	medium: 750,
-	hard: 500,
+	hard: 600,
 };
 
 export interface Player {
