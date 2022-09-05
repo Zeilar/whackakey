@@ -9,11 +9,13 @@ export class LeaderboardService {
 		Leaderboard.insert(dto);
 	}
 
-	public getLeaderboard(page: number) {
-		return Leaderboard.find({
+	public async getLeaderboard(page: number) {
+		const leaderboard = await Leaderboard.find({
 			order: { score: { direction: "DESC" } },
 			take: PER_PAGE,
 			skip: (page - 1) * PER_PAGE,
 		});
+		const total = await Leaderboard.count();
+		return { leaderboard, total };
 	}
 }
