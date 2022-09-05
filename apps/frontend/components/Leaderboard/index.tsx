@@ -18,7 +18,7 @@ import {
 	Tr,
 	useDisclosure,
 } from "@chakra-ui/react";
-import { difficulties, Difficulty } from "@shared";
+import { difficulties, Difficulty, PER_PAGE } from "@shared";
 import { ChevronDown } from "@styled-icons/evaicons-solid";
 import { useMenu } from "apps/frontend/hooks";
 import { scrollbar } from "apps/frontend/layout/styles";
@@ -58,7 +58,7 @@ export default function Leaderboard() {
 			<AbsoluteCenter
 				display="flex"
 				flexDir="column"
-				w={600}
+				w={800}
 				h={750}
 				bgColor="gray.300"
 				overflowY="auto"
@@ -74,13 +74,13 @@ export default function Leaderboard() {
 					<Table>
 						<Thead pos="sticky" top={0}>
 							<Tr bgColor="blue.700">
-								<Th fontWeight={400} fontSize="sm" color="gray.100" border={0} w={75} maxW={75}>
+								<Th fontWeight={400} fontSize="sm" color="gray.100" border={0} w={125} maxW={125}>
 									#
 								</Th>
-								<Th fontWeight={400} fontSize="sm" color="gray.100" border={0}>
+								<Th fontWeight={400} fontSize="sm" color="gray.100" border={0} w={250} maxW={250}>
 									Name
 								</Th>
-								<Th fontWeight={400} fontSize="sm" color="gray.100" border={0} w={200} maxW={200}>
+								<Th fontWeight={400} fontSize="sm" color="gray.100" border={0}>
 									Score
 								</Th>
 								<Th fontWeight={400} fontSize="sm" color="gray.100" border={0} w={150} maxW={150}>
@@ -146,13 +146,13 @@ export default function Leaderboard() {
 							{Array.isArray(data) &&
 								data.map((record, i) => (
 									<Tr key={i} bgColor="gray.300" _odd={{ bgColor: "gray.200" }}>
-										<Td w={75} border={0} maxW={75}>
-											{i + 1}
+										<Td w={125} border={0} maxW={125}>
+											{i + 1 + (page - 1) * PER_PAGE}
 										</Td>
-										<Td border={0}>{record.name}</Td>
-										<Td border={0} w={200} maxW={200}>
-											{record.score}
+										<Td border={0} w={250} maxW={250}>
+											{record.name}
 										</Td>
+										<Td border={0}>{record.score}</Td>
 										<Td border={0} w={150} maxW={150}>
 											{record.difficulty}
 										</Td>
