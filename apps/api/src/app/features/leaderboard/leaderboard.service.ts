@@ -1,8 +1,7 @@
 import { Injectable } from "@nestjs/common";
+import { PER_PAGE } from "@shared";
 import { HighscoreDto } from "../../common/dto/leaderboard";
 import { Leaderboard } from "./leaderboard.entity";
-
-const PER_PAGE = 100;
 
 @Injectable()
 export class LeaderboardService {
