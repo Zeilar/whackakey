@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Get, Param, Post } from "@nestjs/common";
 import { HighscoreDto } from "../../common/dto/leaderboard";
 import { LeaderboardService } from "./leaderboard.service";
 
@@ -11,8 +11,11 @@ export class LeaderboardController {
 		this.leaderboardService.highscore(dto);
 	}
 
-	@Get("/")
-	public leaderboard() {
-		return this.leaderboardService.getLeaderboard();
+	@Get("/:page")
+	public leaderboard(@Param("page") page: number) {
+		if (isNaN(page)) {
+			throw new BadRequestException();
+		}
+		return this.leaderboardService.getLeaderboard(page);
 	}
 }
