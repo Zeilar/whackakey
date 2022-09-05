@@ -70,76 +70,74 @@ export default function Leaderboard() {
 				<Heading py={4} textAlign="center" bgColor="gray.100" borderBottom="inherit">
 					Leaderboard
 				</Heading>
-				<Flex borderBottom="inherit">
-					<Table>
-						<Thead pos="sticky" top={0}>
-							<Tr bgColor="blue.700">
-								<Th fontWeight={400} fontSize="sm" color="gray.100" border={0} w={125} maxW={125}>
-									#
-								</Th>
-								<Th fontWeight={400} fontSize="sm" color="gray.100" border={0} w={250} maxW={250}>
-									Name
-								</Th>
-								<Th fontWeight={400} fontSize="sm" color="gray.100" border={0}>
-									Score
-								</Th>
-								<Th fontWeight={400} fontSize="sm" color="gray.100" border={0} w={150} maxW={150}>
-									<Popover
-										placement="bottom"
-										isOpen={difficultyDisclosure.isOpen}
-										onClose={difficultyDisclosure.onClose}
-									>
-										<PopoverTrigger>
-											<Button
-												variant="unstyled"
-												textTransform="uppercase"
-												display="flex"
-												alignItems="center"
-												h="auto"
-												border={0}
-												fontSize="sm"
-												rightIcon={<Icon as={ChevronDown} w={6} h={6} />}
-												onClick={difficultyDisclosure.onToggle}
-												_focus={{}}
-											>
-												{difficulty}
-											</Button>
-										</PopoverTrigger>
-										<Portal>
-											<PopoverContent
-												bgColor="blue.900"
-												w={125}
-												border={0}
-												boxShadow="xl"
-												overflow="hidden"
-											>
-												{difficultyKeys.map(difficulty => (
-													<Button
-														variant="unstyled"
-														color="gray.100"
-														fontSize="sm"
-														border={0}
-														h="auto"
-														py={4}
-														textTransform="uppercase"
-														key={difficulty}
-														rounded="none"
-														onClick={() => changeDifficulty(difficulty)}
-														_hover={{ bgColor: "whiteAlpha.50" }}
-														_active={{ bgColor: "whiteAlpha.200" }}
-														_focus={{}}
-													>
-														{difficulty}
-													</Button>
-												))}
-											</PopoverContent>
-										</Portal>
-									</Popover>
-								</Th>
-							</Tr>
-						</Thead>
-					</Table>
-				</Flex>
+				<Table borderBottom="inherit">
+					<Thead pos="sticky" top={0}>
+						<Tr bgColor="blue.700">
+							<Th fontWeight={400} fontSize="sm" color="gray.100" border={0} w={125} maxW={125}>
+								#
+							</Th>
+							<Th fontWeight={400} fontSize="sm" color="gray.100" border={0} w={250} maxW={250}>
+								Name
+							</Th>
+							<Th fontWeight={400} fontSize="sm" color="gray.100" border={0}>
+								Score
+							</Th>
+							<Th fontWeight={400} fontSize="sm" color="gray.100" border={0} w={150} maxW={150}>
+								<Popover
+									placement="bottom"
+									isOpen={difficultyDisclosure.isOpen}
+									onClose={difficultyDisclosure.onClose}
+								>
+									<PopoverTrigger>
+										<Button
+											variant="unstyled"
+											textTransform="uppercase"
+											display="flex"
+											alignItems="center"
+											h="auto"
+											border={0}
+											fontSize="sm"
+											rightIcon={<Icon as={ChevronDown} w={6} h={6} />}
+											onClick={difficultyDisclosure.onToggle}
+											_focus={{}}
+										>
+											{difficulty}
+										</Button>
+									</PopoverTrigger>
+									<Portal>
+										<PopoverContent
+											bgColor="blue.900"
+											w={125}
+											border={0}
+											boxShadow="xl"
+											overflow="hidden"
+										>
+											{difficultyKeys.map(difficulty => (
+												<Button
+													variant="unstyled"
+													color="gray.100"
+													fontSize="sm"
+													border={0}
+													h="auto"
+													py={4}
+													textTransform="uppercase"
+													key={difficulty}
+													rounded="none"
+													onClick={() => changeDifficulty(difficulty)}
+													_hover={{ bgColor: "whiteAlpha.50" }}
+													_active={{ bgColor: "whiteAlpha.200" }}
+													_focus={{}}
+												>
+													{difficulty}
+												</Button>
+											))}
+										</PopoverContent>
+									</Portal>
+								</Popover>
+							</Th>
+						</Tr>
+					</Thead>
+				</Table>
 				<Flex bgColor="transparent" transition="0.25s" sx={scrollbar} _hover={{ bgColor: "blue.900" }}>
 					<Table>
 						<Tbody>
