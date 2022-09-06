@@ -5,9 +5,6 @@ import {
 	Heading,
 	Icon,
 	IconButton,
-	Popover,
-	PopoverContent,
-	PopoverTrigger,
 	Portal,
 	Spinner,
 	Table,
@@ -16,13 +13,12 @@ import {
 	Th,
 	Thead,
 	Tr,
-	useDisclosure,
 } from "@chakra-ui/react";
 import { difficulties, Difficulty, PER_PAGE } from "@shared";
-import { ChevronDown, Close, ChevronLeft, ChevronRight } from "@styled-icons/evaicons-solid";
+import { Close, ChevronLeft, ChevronRight } from "@styled-icons/evaicons-solid";
 import { useMenu } from "apps/frontend/hooks";
 import { scrollbar } from "apps/frontend/layout/styles";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import useSWRImmutable from "swr/immutable";
 
 interface Highscore {
@@ -36,33 +32,55 @@ interface LeaderboardResponse {
 	total: number;
 }
 
+interface DifficultyButtonProps {
+	isActive: boolean;
+	onClick(): void;
+	children: React.ReactNode;
+}
+
 const difficultyKeys = Object.keys(difficulties) as Difficulty[];
+
+function DifficultyButton({ children, isActive, onClick }: DifficultyButtonProps) {
+	return (
+		<Button
+			onClick={onClick}
+			transitionDuration="0.15s"
+			textTransform="uppercase"
+			variant="unstyled"
+			paddingInline={4}
+			rounded="md"
+			borderWidth={3}
+			bgColor={isActive ? "blue.700" : "gray.100"}
+			borderColor={isActive ? "blue.900" : "gray.400"}
+			color={isActive ? "gray.100" : "blue.900"}
+			_hover={!isActive ? { bgColor: "gray.200" } : undefined}
+			_active={!isActive ? { bgColor: "gray.300" } : undefined}
+			_focus={{}}
+		>
+			{children}
+		</Button>
+	);
+}
 
 export default function Leaderboard() {
 	const [page, setPage] = useState(1);
-	const fetcher = useCallback(async (): Promise<LeaderboardResponse> => {
-		const response = await fetch(`${process.env.NX_API_ENDPOINT}/leaderboard/${page}`);
-		return response.json();
-	}, [page]);
 	const [difficulty, setDifficulty] = useState<Difficulty>("easy");
-	const { isValidating, data } = useSWRImmutable(`leaderboard-${page}`, fetcher);
-	const difficultyDisclosure = useDisclosure();
+	const fetcher = useCallback(async (): Promise<LeaderboardResponse> => {
+		const response = await fetch(`${process.env.NX_API_ENDPOINT}/leaderboard/${page}/${difficulty}`);
+		return response.json();
+	}, [page, difficulty]);
+	const { isValidating, data } = useSWRImmutable(`leaderboard-${page}-${difficulty}`, fetcher);
 	const hasNextPage = useMemo(() => {
 		if (data?.total == null) {
 			return false;
 		}
-		const ellapsed = page * PER_PAGE;
-		return ellapsed <= data?.total;
+		return page * PER_PAGE <= data?.total;
 	}, [data?.total, page]);
 	const navigate = useMenu();
 
-	const changeDifficulty = useCallback(
-		(difficulty: Difficulty) => {
-			difficultyDisclosure.onClose();
-			setDifficulty(difficulty);
-		},
-		[difficultyDisclosure]
-	);
+	useEffect(() => {
+		setPage(1);
+	}, [difficulty]);
 
 	return (
 		<Portal>
@@ -78,7 +96,7 @@ export default function Leaderboard() {
 				borderColor="blue.900"
 				justifyContent="space-between"
 			>
-				<Flex py={4} bgColor="gray.100" borderBottom="inherit" pos="relative" justifyContent="center">
+				<Flex py={4} bgColor="gray.100" borderBottom="inherit" justifyContent="center">
 					<Heading>Leaderboard</Heading>
 					<IconButton
 						variant="unstyled"
@@ -100,70 +118,28 @@ export default function Leaderboard() {
 						_focus={{}}
 					/>
 				</Flex>
+				<Flex py={2} bgColor="gray.300" justifyContent="center" gap={1}>
+					{difficultyKeys.map(element => (
+						<DifficultyButton
+							key={element}
+							onClick={() => setDifficulty(element)}
+							isActive={element === difficulty}
+						>
+							{element}
+						</DifficultyButton>
+					))}
+				</Flex>
 				<Table borderBottom="inherit">
 					<Thead pos="sticky" top={0}>
 						<Tr bgColor="blue.700">
-							<Th fontWeight={400} fontSize="sm" color="gray.100" border={0} w={125} maxW={125}>
+							<Th fontWeight={400} fontSize="sm" color="gray.100" border={0} w={150} maxW={150}>
 								#
 							</Th>
-							<Th fontWeight={400} fontSize="sm" color="gray.100" border={0} w={250} maxW={250}>
+							<Th fontWeight={400} fontSize="sm" color="gray.100" border={0} w="40%" maxW="40%">
 								Name
 							</Th>
 							<Th fontWeight={400} fontSize="sm" color="gray.100" border={0}>
 								Score
-							</Th>
-							<Th fontWeight={400} fontSize="sm" color="gray.100" border={0} w={150} maxW={150}>
-								<Popover
-									placement="bottom"
-									isOpen={difficultyDisclosure.isOpen}
-									onClose={difficultyDisclosure.onClose}
-								>
-									<PopoverTrigger>
-										<Button
-											variant="unstyled"
-											textTransform="uppercase"
-											display="flex"
-											alignItems="center"
-											h="auto"
-											border={0}
-											fontSize="sm"
-											rightIcon={<Icon as={ChevronDown} w={6} h={6} />}
-											onClick={difficultyDisclosure.onToggle}
-											_focus={{}}
-										>
-											{difficulty}
-										</Button>
-									</PopoverTrigger>
-									<Portal>
-										<PopoverContent
-											bgColor="blue.900"
-											w={125}
-											border={0}
-											boxShadow="xl"
-											overflow="hidden"
-										>
-											{difficultyKeys.map(difficulty => (
-												<Button
-													variant="unstyled"
-													color="gray.100"
-													fontSize="sm"
-													border={0}
-													h="auto"
-													py={4}
-													textTransform="uppercase"
-													key={difficulty}
-													rounded="none"
-													onClick={() => changeDifficulty(difficulty)}
-													_hover={{ bgColor: "whiteAlpha.50" }}
-													_active={{ bgColor: "whiteAlpha.200" }}
-													_focus={{}}
-												>
-													{difficulty}
-												</Button>
-											))}
-										</PopoverContent>
-									</Portal>
-								</Popover>
 							</Th>
 						</Tr>
 					</Thead>
@@ -174,16 +150,13 @@ export default function Leaderboard() {
 							{Array.isArray(data?.leaderboard) &&
 								data?.leaderboard.map((record, i) => (
 									<Tr key={i} bgColor="gray.300" _odd={{ bgColor: "gray.200" }}>
-										<Td w={125} border={0} maxW={125}>
+										<Td w={150} border={0} maxW={150}>
 											{i + 1 + (page - 1) * PER_PAGE}
 										</Td>
-										<Td border={0} w={250} maxW={250}>
-											{record.name}
+										<Td border={0} w="40%" maxW="40%">
+											{record.name} {record.difficulty}
 										</Td>
 										<Td border={0}>{record.score}</Td>
-										<Td border={0} w={150} maxW={150}>
-											{record.difficulty}
-										</Td>
 									</Tr>
 								))}
 						</Tbody>
@@ -194,7 +167,15 @@ export default function Leaderboard() {
 						<Spinner m="auto" size="xl" />
 					</AbsoluteCenter>
 				)}
-				<Flex px={4} py={2} bgColor="gray.100" borderTop="inherit" mt="auto" justifyContent="space-between">
+				<Flex
+					px={4}
+					py={2}
+					bgColor="gray.100"
+					borderTop="inherit"
+					mt="auto"
+					justifyContent="space-between"
+					userSelect="none"
+				>
 					<Button onClick={() => setPage(p => Math.max(p - 1, 0))} disabled={page <= 1}>
 						<Icon w={8} h={8} as={ChevronLeft} />
 					</Button>
