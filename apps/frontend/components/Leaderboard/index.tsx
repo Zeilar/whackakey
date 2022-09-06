@@ -96,7 +96,16 @@ export default function Leaderboard() {
 				borderColor="blue.900"
 				justifyContent="space-between"
 			>
-				<Flex py={4} bgColor="gray.100" borderBottom="inherit" justifyContent="center">
+				<Flex
+					pt={4}
+					pb={2}
+					bgColor="gray.100"
+					borderBottom="inherit"
+					justifyContent="center"
+					alignItems="center"
+					flexDir="column"
+					gap={2}
+				>
 					<Heading>Leaderboard</Heading>
 					<IconButton
 						variant="unstyled"
@@ -117,17 +126,17 @@ export default function Leaderboard() {
 						_hover={{ bgColor: "red.400" }}
 						_focus={{}}
 					/>
-				</Flex>
-				<Flex py={2} bgColor="gray.300" justifyContent="center" gap={1}>
-					{difficultyKeys.map(element => (
-						<DifficultyButton
-							key={element}
-							onClick={() => setDifficulty(element)}
-							isActive={element === difficulty}
-						>
-							{element}
-						</DifficultyButton>
-					))}
+					<Flex py={2} justifyContent="center" gap={1}>
+						{difficultyKeys.map(element => (
+							<DifficultyButton
+								key={element}
+								onClick={() => setDifficulty(element)}
+								isActive={element === difficulty}
+							>
+								{element}
+							</DifficultyButton>
+						))}
+					</Flex>
 				</Flex>
 				<Table borderBottom="inherit">
 					<Thead pos="sticky" top={0}>
