@@ -51,7 +51,7 @@ function DifficultyButton({ children, isActive, onClick }: DifficultyButtonProps
 			rounded="md"
 			borderWidth={3}
 			bgColor={isActive ? "blue.700" : "gray.100"}
-			borderColor={isActive ? "blue.900" : "gray.400"}
+			borderColor={isActive ? "blue.900" : "gray.300"}
 			color={isActive ? "gray.100" : "blue.900"}
 			_hover={!isActive ? { bgColor: "gray.200" } : undefined}
 			_active={!isActive ? { bgColor: "gray.300" } : undefined}
@@ -89,7 +89,6 @@ export default function Leaderboard() {
 				flexDir="column"
 				w={800}
 				h={750}
-				bgColor="gray.300"
 				overflowY="auto"
 				rounded="xl"
 				borderWidth={4}
