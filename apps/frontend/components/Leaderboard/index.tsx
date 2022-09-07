@@ -89,6 +89,7 @@ export default function Leaderboard() {
 				flexDir="column"
 				w={800}
 				h={750}
+				bgColor="gray.300"
 				overflowY="auto"
 				rounded="xl"
 				borderWidth={4}
