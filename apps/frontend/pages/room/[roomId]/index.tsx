@@ -16,7 +16,7 @@ import {
 	Tooltip,
 } from "@chakra-ui/react";
 import { Heart } from "@styled-icons/evaicons-solid";
-import { useWebsocketContext } from "apps/frontend/hooks";
+import { useMenu, useWebsocketContext } from "apps/frontend/hooks";
 import { useRouter } from "next/router";
 import NextLink from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -34,7 +34,6 @@ import {
 import { TrophyFill } from "@styled-icons/bootstrap";
 import { Crown } from "@styled-icons/fa-solid";
 import MultiplayerGame from "apps/frontend/components/MultiplayerGame";
-import { Menu } from "apps/frontend/components/Menu";
 import { toast } from "react-toastify";
 import { RoomActions } from "apps/frontend/reducers/roomReducer";
 import LobbyResult from "apps/frontend/components/LobbyResult";
@@ -45,7 +44,8 @@ import { scrollbar } from "apps/frontend/layout/styles";
 const difficulties: Difficulty[] = ["easy", "medium", "hard"];
 
 export default function Room() {
-	const { query, push } = useRouter();
+	const { query } = useRouter();
+	const navigate = useMenu();
 	const { socket, room, isMe, dispatchRooms } = useWebsocketContext();
 	const isOwner = useMemo(() => {
 		if (!room?.ownerId || !socket) {
@@ -417,11 +417,7 @@ export default function Room() {
 				</Flex>
 			</Flex>
 			<Flex justifyContent="space-between" bgColor="gray.100" p={4}>
-				<Button
-					px={12}
-					size="lg"
-					onClick={() => push({ pathname: "/", query: { menu: "multiplayer" as Menu } })}
-				>
+				<Button px={12} size="lg" onClick={navigate("multiplayer")}>
 					Back
 				</Button>
 				<Button
