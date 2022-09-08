@@ -396,7 +396,7 @@ export default function Room() {
 				<Flex h={200} overflowY="auto" p={4} pb={0} flexDir="column" gap={2} ref={chatBox} sx={scrollbar}>
 					{room.messages.map(message => (
 						<Flex key={message.id} gap={2}>
-							<Text whiteSpace="nowrap" color={isMe(message.authorId) ? "yellow.500" : undefined}>
+							<Text whiteSpace="nowrap" color={isMe(message.authorId) ? "yellow.600" : undefined}>
 								{message.name}:
 							</Text>
 							<Text>{message.content}</Text>
