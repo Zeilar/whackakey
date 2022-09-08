@@ -10,11 +10,13 @@ import {
 	Table,
 	Tbody,
 	Td,
+	Text,
 	Th,
 	Thead,
 	Tr,
 } from "@chakra-ui/react";
 import { difficulties, Difficulty, PER_PAGE } from "@shared";
+import { TrophyFill } from "@styled-icons/bootstrap";
 import { Close, ChevronLeft, ChevronRight } from "@styled-icons/evaicons-solid";
 import { useMenu } from "apps/frontend/hooks";
 import { scrollbar } from "apps/frontend/layout/styles";
@@ -38,6 +40,10 @@ interface DifficultyButtonProps {
 	children: React.ReactNode;
 }
 
+interface PlacementCellProps {
+	placement: number;
+}
+
 const difficultyKeys = Object.keys(difficulties) as Difficulty[];
 
 function DifficultyButton({ children, isActive, onClick }: DifficultyButtonProps) {
@@ -59,6 +65,35 @@ function DifficultyButton({ children, isActive, onClick }: DifficultyButtonProps
 		>
 			{children}
 		</Button>
+	);
+}
+
+function PlacementCell({ placement }: PlacementCellProps) {
+	const { trophyColor, showTrophy } = useMemo(() => {
+		let trophyColor = "";
+		switch (placement) {
+			case 3:
+				trophyColor = "orange.700";
+				break;
+			case 2:
+				trophyColor = "gray.500";
+				break;
+			case 1:
+				trophyColor = "yellow.500";
+				break;
+		}
+		return {
+			trophyColor,
+			showTrophy: placement < 4,
+		};
+	}, [placement]);
+	return (
+		<Td border={0} w={150} maxW={150}>
+			<Text display="inline-flex" as="span" w={showTrophy ? 2 : undefined}>
+				{placement}
+			</Text>
+			{showTrophy && <Icon w={10} color={trophyColor} as={TrophyFill} />}
+		</Td>
 	);
 }
 
@@ -159,9 +194,7 @@ export default function Leaderboard() {
 							{Array.isArray(data?.leaderboard) &&
 								data?.leaderboard.map((record, i) => (
 									<Tr key={i} bgColor="gray.300" _odd={{ bgColor: "gray.200" }}>
-										<Td w={150} border={0} maxW={150}>
-											{i + 1 + (page - 1) * PER_PAGE}
-										</Td>
+										<PlacementCell placement={i + 1 + (page - 1) * PER_PAGE} />
 										<Td border={0} w="40%" maxW="40%">
 											{record.name} {record.difficulty}
 										</Td>
