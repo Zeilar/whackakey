@@ -7,7 +7,7 @@ export function useMenu() {
 	const navigate = useCallback(
 		(menu: Menu, args?: Record<string, string>) => {
 			return () => {
-				push("/", { query: { menu, ...args } });
+				push({ pathname: "/", query: { menu, ...args } });
 			};
 		},
 		[push]
