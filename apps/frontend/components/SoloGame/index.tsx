@@ -80,7 +80,7 @@ export default function SoloGame() {
 					justifySelf="flex-end"
 					px={4}
 					py={2}
-					bgColor={"yellow.500"}
+					bgColor={"cyan.600"}
 					color="gray.100"
 					gap={1}
 					alignItems="center"

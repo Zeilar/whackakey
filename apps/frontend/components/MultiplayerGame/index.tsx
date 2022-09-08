@@ -126,8 +126,8 @@ export default function MultiplayerGame({ timestamp }: Props) {
 								key={element.id}
 								rounded="lg"
 								borderWidth={3}
-								borderColor={isMe(element.id) ? "yellow.600" : "blue.900"}
-								color={isMe(element.id) ? "yellow.600" : "blue.900"}
+								borderColor={isMe(element.id) ? "cyan.700" : "blue.900"}
+								color={isMe(element.id) ? "cyan.700" : "blue.900"}
 								py={2}
 								px={4}
 								justifyContent="space-between"
@@ -148,7 +148,7 @@ export default function MultiplayerGame({ timestamp }: Props) {
 							</Flex>
 							<Flex
 								px={4}
-								bgColor={isMe(element.id) ? "yellow.500" : "blue.700"}
+								bgColor={isMe(element.id) ? "cyan.600" : "blue.700"}
 								color="gray.100"
 								gap={1}
 								alignItems="center"

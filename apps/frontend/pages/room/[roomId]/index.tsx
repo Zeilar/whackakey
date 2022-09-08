@@ -225,8 +225,8 @@ export default function Room() {
 									rounded="md"
 									color="gray.100"
 									borderWidth={3}
-									borderColor={isMe(player.id) ? "yellow.600" : "blue.900"}
-									bgColor={isMe(player.id) ? "yellow.500" : "blue.700"}
+									borderColor={isMe(player.id) ? "cyan.700" : "blue.900"}
+									bgColor={isMe(player.id) ? "cyan.600" : "blue.700"}
 									w="44px"
 									opacity={player.id === room.ownerId ? 1 : 0.5}
 									_hover={
@@ -248,7 +248,7 @@ export default function Room() {
 								/>
 							</Tooltip>
 							<Flex
-								borderColor={isMe(player.id) ? "yellow.600" : "blue.900"}
+								borderColor={isMe(player.id) ? "cyan.700" : "blue.900"}
 								borderWidth={3}
 								bgColor="gray.100"
 								rounded="md"
@@ -262,7 +262,7 @@ export default function Room() {
 										py={2}
 										px={4}
 										size="lg"
-										color={isMe(player.id) ? "yellow.600" : undefined}
+										color={isMe(player.id) ? "cyan.700" : undefined}
 										whiteSpace="nowrap"
 									>
 										{isMe(player.id) ? (
@@ -282,7 +282,7 @@ export default function Room() {
 										color="gray.100"
 										borderLeftWidth={3}
 										borderLeftColor="inherit"
-										bgColor={isMe(player.id) ? "yellow.500" : "blue.700"}
+										bgColor={isMe(player.id) ? "cyan.600" : "blue.700"}
 									>
 										<Icon as={TrophyFill} w={10} h="100%" p={3} />
 										{player.wins}
@@ -396,7 +396,7 @@ export default function Room() {
 				<Flex h={200} overflowY="auto" p={4} pb={0} flexDir="column" gap={2} ref={chatBox} sx={scrollbar}>
 					{room.messages.map(message => (
 						<Flex key={message.id} gap={2}>
-							<Text whiteSpace="nowrap" color={isMe(message.authorId) ? "yellow.600" : undefined}>
+							<Text whiteSpace="nowrap" color={isMe(message.authorId) ? "cyan.700" : undefined}>
 								{message.name}:
 							</Text>
 							<Text>{message.content}</Text>

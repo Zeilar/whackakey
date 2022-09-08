@@ -35,7 +35,7 @@ export default function LobbyResult({ type, winner, onClose }: Props) {
 					<Heading size="lg" color="gray.100" textStyle="stroke" p={4}>
 						{type === "winner" ? (
 							<>
-								<Box as="span" color={name === winner ? "yellow.500" : undefined}>
+								<Box as="span" color={name === winner ? "cyan.600" : undefined}>
 									{`${winner} `}
 								</Box>
 								won the round
