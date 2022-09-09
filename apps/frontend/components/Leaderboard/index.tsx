@@ -57,8 +57,8 @@ function DifficultyButton({ children, isActive, onClick }: DifficultyButtonProps
 			paddingInline={4}
 			rounded="md"
 			borderWidth={3}
-			bgColor={isActive ? "gray.100" : "blue.700"}
-			borderColor={isActive ? "blue.900" : "blue.900"}
+			bgColor={isActive ? "gray.100" : "blue.800"}
+			borderColor="blue.900"
 			color={isActive ? "blue.900" : "gray.100"}
 			_hover={!isActive ? { bgColor: "blue.800" } : undefined}
 			_focus={{}}
