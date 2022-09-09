@@ -32,6 +32,7 @@ interface Highscore {
 interface LeaderboardResponse {
 	leaderboard: Highscore[];
 	total: number;
+	pages: number;
 }
 
 interface DifficultyButtonProps {
@@ -111,6 +112,7 @@ export default function Leaderboard() {
 		return page * PER_PAGE <= data?.total;
 	}, [data?.total, page]);
 	const navigate = useMenu();
+	const pages = useMemo(() => data?.pages || 1, [data?.pages]);
 
 	useEffect(() => {
 		setPage(1);
@@ -209,10 +211,14 @@ export default function Leaderboard() {
 					mt="auto"
 					justifyContent="space-between"
 					userSelect="none"
+					alignItems="center"
 				>
 					<Button onClick={() => setPage(p => Math.max(p - 1, 0))} disabled={page <= 1}>
 						<Icon w={8} h={8} as={ChevronLeft} />
 					</Button>
+					<Text fontSize="2xl">
+						{page} / {pages}
+					</Text>
 					<Button onClick={() => setPage(p => (hasNextPage ? p + 1 : p))} disabled={!hasNextPage}>
 						<Icon w={8} h={8} as={ChevronRight} />
 					</Button>
