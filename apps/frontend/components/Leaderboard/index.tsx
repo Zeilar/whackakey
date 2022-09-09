@@ -50,17 +50,16 @@ function DifficultyButton({ children, isActive, onClick }: DifficultyButtonProps
 	return (
 		<Button
 			onClick={onClick}
-			transitionDuration="0.15s"
+			transitionDuration="0.1s"
 			textTransform="uppercase"
 			variant="unstyled"
 			paddingInline={4}
 			rounded="md"
 			borderWidth={3}
-			bgColor={isActive ? "blue.700" : "gray.100"}
-			borderColor={isActive ? "blue.900" : "gray.300"}
-			color={isActive ? "gray.100" : "blue.900"}
-			_hover={!isActive ? { bgColor: "gray.200" } : undefined}
-			_active={!isActive ? { bgColor: "gray.300" } : undefined}
+			bgColor={isActive ? "gray.100" : "blue.700"}
+			borderColor={isActive ? "blue.900" : "blue.900"}
+			color={isActive ? "blue.900" : "gray.100"}
+			_hover={!isActive ? { bgColor: "blue.800" } : undefined}
 			_focus={{}}
 		>
 			{children}
@@ -131,17 +130,10 @@ export default function Leaderboard() {
 				borderColor="blue.900"
 				justifyContent="space-between"
 			>
-				<Flex
-					pt={4}
-					pb={2}
-					bgColor="gray.100"
-					borderBottom="inherit"
-					justifyContent="center"
-					alignItems="center"
-					flexDir="column"
-					gap={2}
-				>
-					<Heading>Leaderboard</Heading>
+				<Flex flexDir="column" gap={2} bgColor="blue.700" borderBottom="inherit" py={4}>
+					<Heading size="2xl" textStyle="stroke" textAlign="center">
+						Leaderboard
+					</Heading>
 					<IconButton
 						variant="unstyled"
 						borderWidth={3}

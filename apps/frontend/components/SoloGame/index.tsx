@@ -1,14 +1,18 @@
-import { Flex, Grid, Heading, Icon } from "@chakra-ui/react";
-import { useEffect, useRef } from "react";
+import { Button, Flex, FormControl, FormLabel, Grid, Heading, Icon, Input } from "@chakra-ui/react";
+import { useEffect, useRef, useState } from "react";
 import Keyboard from "./Keyboard";
-import { useSoloGameContext } from "../../hooks";
-import SolidButton from "../SolidButton";
+import { useMenu, useSoloGameContext } from "../../hooks";
 import { Heart } from "@styled-icons/evaicons-solid";
+import { Menu } from "../Menu";
+import { CheckmarkCircle2Outline } from "@styled-icons/evaicons-outline";
 
 export default function SoloGame() {
 	const { score, letter, isGameOver, userInput, miss, lives, reset, nextDeadline, hit, nextRound, setTimeLeft } =
 		useSoloGameContext();
 	const animationFrameRef = useRef<number | undefined>();
+	const navigate = useMenu();
+	const [hasSubmitted, setHasSubmitted] = useState(false);
+	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	useEffect(() => {
 		function frameHandler() {
@@ -49,16 +53,54 @@ export default function SoloGame() {
 		};
 	}, []);
 
+	useEffect(() => {
+		return () => {
+			reset();
+		};
+	}, [reset]);
+
+	function resetAndNavigate(menu: Menu) {
+		return () => {
+			reset();
+			navigate(menu)();
+		};
+	}
+
 	if (isGameOver) {
 		return (
-			<div>
-				<Heading size="3xl" textStyle="stroke" textAlign="center" mb={4}>
+			<Flex
+				textAlign="center"
+				bgColor="gray.300"
+				rounded="xl"
+				borderWidth={4}
+				borderColor="blue.900"
+				flexDir="column"
+				overflow="hidden"
+				w={600}
+			>
+				<Heading size="3xl" borderBottom="inherit" bgColor="blue.700" textStyle="stroke" p={4}>
 					Game over
 				</Heading>
-				<SolidButton onClick={reset} autoFocus>
-					Play again
-				</SolidButton>
-			</div>
+				<Heading size="2xl">Score: {score}</Heading>
+				<FormControl as="form" p={4}>
+					<FormLabel w="fit-content">Name</FormLabel>
+					<Flex>
+						<Input variant="filled" colorScheme="blue" placeholder="John Doe" autoFocus />
+						<Button type="submit" disabled={hasSubmitted || isSubmitting}>
+							Submit
+							{hasSubmitted && <Icon w={6} h={6} ml={1} as={CheckmarkCircle2Outline} />}
+						</Button>
+					</Flex>
+				</FormControl>
+				<Flex p={4} justifyContent="space-between" bgColor="gray.100">
+					<Button onClick={resetAndNavigate("main")} size="lg">
+						Main menu
+					</Button>
+					<Button onClick={resetAndNavigate("solo")} size="lg">
+						Play again
+					</Button>
+				</Flex>
+			</Flex>
 		);
 	}
 

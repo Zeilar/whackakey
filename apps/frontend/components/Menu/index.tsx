@@ -11,7 +11,7 @@ import Countdown from "../Countdown";
 import Leaderboard from "../Leaderboard";
 import { useMenu } from "apps/frontend/hooks";
 
-export type Menu = "solo" | "multiplayer" | "tutorial" | "rooms";
+export type Menu = "solo" | "multiplayer" | "tutorial" | "rooms" | "main";
 
 function BackButton() {
 	const { push } = useRouter();
@@ -36,7 +36,8 @@ export default function Menu() {
 				return "Tutorial";
 			case "rooms":
 				return "Rooms";
-			case undefined:
+			case "main":
+			default:
 				return "Main menu";
 		}
 	}, [menu]);
@@ -76,7 +77,7 @@ export default function Menu() {
 			<Heading size="4xl" textStyle="stroke" textAlign="center" mb={4}>
 				{heading}
 			</Heading>
-			{menu === undefined && (
+			{(menu === "main" || menu === undefined) && (
 				<MenuWrapper>
 					<SolidButton onClick={navigate("solo")}>Solo</SolidButton>
 					<SolidButton onClick={navigate("multiplayer")}>Multiplayer</SolidButton>
