@@ -3,19 +3,40 @@
 	"sourceRoot": "apps/frontend",
 	"projectType": "application",
 	"targets": {
+		"docker:run": {
+			"executor": "nx:run-commands",
+			"options": {
+				"command": "docker run --name whackakey -p 3080:3080 -d zeilar/whackakey"
+			}
+		},
+		"docker:push": {
+			"executor": "nx:run-commands",
+			"options": {
+				"command": "docker push zeilar/whackakey"
+			}
+		},
+		"docker:build": {
+			"executor": "nx:run-commands",
+			"options": {
+				"command": "docker build -f ./Dockerfile -t zeilar/whackakey dist/apps/frontend"
+			}
+		},
 		"build": {
 			"executor": "@nrwl/next:build",
 			"outputs": ["{options.outputPath}"],
 			"defaultConfiguration": "production",
 			"options": {
 				"root": "apps/frontend",
-				"outputPath": "dist/apps/frontend"
+				"outputPath": "dist/apps/frontend",
+				"port": 3080
 			},
 			"configurations": {
 				"development": {
 					"outputPath": "tmp/apps/frontend"
 				},
-				"production": {}
+				"production": {
+					"port": 3080
+				}
 			}
 		},
 		"serve": {
