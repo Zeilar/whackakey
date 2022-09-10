@@ -53,6 +53,20 @@ export default function MultiplayerGame({ timestamp }: Props) {
 	}, [room?.difficulty, stopAll, playAudio, room?.isGameActive]);
 
 	useEffect(() => {
+		if (!room?.isGameActive || player?.pick == null) {
+			return;
+		}
+		playAudio(player.pick === room.letter ? "hit" : "hurt");
+	}, [player?.pick, room?.isGameActive, room?.letter, playAudio]);
+
+	useEffect(() => {
+		if (typeof player?.pick === "string" || player?.lives === room?.lives) {
+			return;
+		}
+		playAudio("hurt");
+	}, [playAudio, room?.letter, player?.pick, player?.lives, room?.lives]);
+
+	useEffect(() => {
 		return () => {
 			stopAll();
 		};
