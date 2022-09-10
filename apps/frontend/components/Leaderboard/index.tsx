@@ -15,19 +15,13 @@ import {
 	Thead,
 	Tr,
 } from "@chakra-ui/react";
-import { difficulties, Difficulty, PER_PAGE } from "@shared";
+import { difficulties, Difficulty, Highscore, PER_PAGE } from "@shared";
 import { TrophyFill } from "@styled-icons/bootstrap";
 import { Close, ChevronLeft, ChevronRight } from "@styled-icons/evaicons-solid";
 import { useMenu } from "apps/frontend/hooks";
 import { scrollbar } from "apps/frontend/layout/styles";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import useSWRImmutable from "swr/immutable";
-
-interface Highscore {
-	score: number;
-	name: string;
-	difficulty: Difficulty;
-}
 
 interface LeaderboardResponse {
 	leaderboard: Highscore[];
@@ -190,7 +184,7 @@ export default function Leaderboard() {
 									<Tr key={i} bgColor="gray.300" _odd={{ bgColor: "gray.200" }}>
 										<PlacementCell placement={i + 1 + (page - 1) * PER_PAGE} />
 										<Td border={0} w="40%" maxW="40%">
-											{record.name} {record.difficulty}
+											{record.name}
 										</Td>
 										<Td border={0}>{record.score}</Td>
 									</Tr>

@@ -14,3 +14,9 @@ export interface Player {
 	wins: number;
 	pick: string | null;
 }
+
+export interface Highscore {
+	difficulty: Difficulty;
+	name: string;
+	score: number;
+}

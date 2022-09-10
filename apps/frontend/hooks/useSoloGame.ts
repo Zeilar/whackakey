@@ -30,7 +30,7 @@ export interface SoloGame {
 type Letter = string | null;
 
 export function useSoloGame(): SoloGame {
-	const { playAudio } = useSoundContext();
+	const { playAudio, stopAll } = useSoundContext();
 	const [lives, setLives] = useState(DEFAULT_LIVES);
 	const [isGameOver, setIsGameOver] = useState(false);
 	const [userInput, setUserInput] = useState<Letter>(null);
@@ -111,6 +111,20 @@ export function useSoloGame(): SoloGame {
 		}
 		reset();
 	}, [isPlaying, reset]);
+
+	useEffect(() => {
+		if (isGameOver) {
+			stopAll();
+			return;
+		}
+		if (!isPlaying) {
+			return;
+		}
+		playAudio(`level-${difficulty}`);
+		return () => {
+			stopAll();
+		};
+	}, [isPlaying, playAudio, stopAll, difficulty, isGameOver]);
 
 	return {
 		difficulty,

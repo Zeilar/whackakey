@@ -1,18 +1,60 @@
-import { Button, Flex, FormControl, FormLabel, Grid, Heading, Icon, Input } from "@chakra-ui/react";
-import { useEffect, useRef, useState } from "react";
+import { Button, Flex, FormControl, Grid, Heading, Icon, Input } from "@chakra-ui/react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Keyboard from "./Keyboard";
 import { useMenu, useSoloGameContext } from "../../hooks";
 import { Heart } from "@styled-icons/evaicons-solid";
 import { Menu } from "../Menu";
 import { CheckmarkCircle2Outline } from "@styled-icons/evaicons-outline";
+import { useForm } from "react-hook-form";
+import { Highscore, NAME_MAX_LENGTH, NAME_MIN_LENGTH } from "@shared";
+
+interface SubmitFields {
+	name: string;
+}
 
 export default function SoloGame() {
-	const { score, letter, isGameOver, userInput, miss, lives, reset, nextDeadline, hit, nextRound, setTimeLeft } =
-		useSoloGameContext();
+	const {
+		score,
+		letter,
+		isGameOver,
+		userInput,
+		miss,
+		lives,
+		reset,
+		nextDeadline,
+		hit,
+		nextRound,
+		setTimeLeft,
+		difficulty,
+	} = useSoloGameContext();
 	const animationFrameRef = useRef<number | undefined>();
 	const navigate = useMenu();
 	const [hasSubmitted, setHasSubmitted] = useState(false);
-	const [isSubmitting, setIsSubmitting] = useState(false);
+	const { handleSubmit, register, formState } = useForm<SubmitFields>({ defaultValues: { name: "" } });
+
+	const submit = useCallback(
+		async ({ name }: SubmitFields) => {
+			if (hasSubmitted) {
+				return;
+			}
+			const { ok } = await fetch(`${process.env.NX_API_ENDPOINT}/leaderboard`, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					name,
+					difficulty,
+					score,
+				} as Highscore),
+			});
+			if (ok) {
+				setHasSubmitted(true);
+				return;
+			}
+		},
+		[difficulty, score, hasSubmitted]
+	);
 
 	useEffect(() => {
 		function frameHandler() {
@@ -53,12 +95,6 @@ export default function SoloGame() {
 		};
 	}, []);
 
-	useEffect(() => {
-		return () => {
-			reset();
-		};
-	}, [reset]);
-
 	function resetAndNavigate(menu: Menu) {
 		return () => {
 			reset();
@@ -81,18 +117,53 @@ export default function SoloGame() {
 				<Heading size="3xl" borderBottom="inherit" bgColor="blue.700" textStyle="stroke" p={4}>
 					Game over
 				</Heading>
-				<Heading size="2xl">Score: {score}</Heading>
-				<FormControl as="form" p={4}>
-					<FormLabel w="fit-content">Name</FormLabel>
-					<Flex>
-						<Input variant="filled" colorScheme="blue" placeholder="John Doe" autoFocus />
-						<Button type="submit" disabled={hasSubmitted || isSubmitting}>
+				<Flex gap={2} justifyContent="center" flexDir="column" px={4} py={12}>
+					<Heading size="2xl">Score: {score}</Heading>
+					<FormControl
+						display="flex"
+						justifyContent="center"
+						as="form"
+						p={4}
+						gap={2}
+						onSubmit={handleSubmit(submit)}
+					>
+						<Input
+							{...register("name", {
+								required: {
+									message: "Please enter a name",
+									value: true,
+								},
+								maxLength: {
+									message: "Max 15 characters",
+									value: NAME_MAX_LENGTH,
+								},
+								minLength: {
+									message: "Minimum 3 characters",
+									value: NAME_MIN_LENGTH,
+								},
+							})}
+							required
+							borderWidth={3}
+							borderColor="blue.900"
+							w="50%"
+							variant="filled"
+							colorScheme="blue"
+							placeholder="Name"
+							autoFocus
+							_hover={{}}
+							_focusVisible={{}}
+						/>
+						<Button
+							type="submit"
+							disabled={hasSubmitted || formState.isSubmitting}
+							isLoading={formState.isSubmitting}
+						>
 							Submit
 							{hasSubmitted && <Icon w={6} h={6} ml={1} as={CheckmarkCircle2Outline} />}
 						</Button>
-					</Flex>
-				</FormControl>
-				<Flex p={4} justifyContent="space-between" bgColor="gray.100">
+					</FormControl>
+				</Flex>
+				<Flex p={4} justifyContent="space-between" bgColor="gray.100" borderTop="inherit">
 					<Button onClick={resetAndNavigate("main")} size="lg">
 						Main menu
 					</Button>
