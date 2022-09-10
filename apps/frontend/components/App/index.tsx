@@ -1,5 +1,6 @@
-import { Flex, Progress } from "@chakra-ui/react";
+import { Flex, Heading, Progress, useMediaQuery } from "@chakra-ui/react";
 import { useSoundContext } from "apps/frontend/hooks";
+import { useMemo } from "react";
 import Header from "../Header";
 import Latency from "../Latency";
 import SoundToggler from "../SoundToggler";
@@ -9,7 +10,28 @@ interface Props {
 }
 
 export default function App({ children }: Props) {
+	const [isTouch, isSmall] = useMediaQuery(["(hover: none)", "(max-width: 1280px)"]);
+	const isSupported = useMemo(() => !isTouch && !isSmall, [isTouch, isSmall]);
 	const { hasLoadedSounds, progress } = useSoundContext();
+
+	function Children() {
+		if (!isSupported) {
+			return (
+				<Heading size="2xl" textStyle="stroke" textAlign="center">
+					Your device is not supported
+				</Heading>
+			);
+		}
+		return (
+			<>
+				<SoundToggler />
+				<Latency />
+				<Header />
+				{children}
+			</>
+		);
+	}
+
 	return (
 		<Flex
 			h="100%"
@@ -22,12 +44,7 @@ export default function App({ children }: Props) {
 			{!hasLoadedSounds ? (
 				<Progress size="lg" width={750} rounded="sm" isAnimated hasStripe value={progress} />
 			) : (
-				<>
-					<SoundToggler />
-					<Latency />
-					<Header />
-					{children}
-				</>
+				<Children />
 			)}
 		</Flex>
 	);
