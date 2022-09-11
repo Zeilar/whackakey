@@ -10,6 +10,6 @@ FROM node:alpine as main
 
 COPY --from=build /usr/src/app /
 
-EXPOSE 3080 3085 3086
+EXPOSE 3080
 
 CMD ["npm", "start"]

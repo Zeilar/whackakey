@@ -3,6 +3,24 @@
 	"sourceRoot": "apps/api/src",
 	"projectType": "application",
 	"targets": {
+		"docker:run": {
+			"executor": "nx:run-commands",
+			"options": {
+				"command": "docker run --name whackakey-api -p 3085:3085 -p 3086:3086 zeilar/whackakey-api"
+			}
+		},
+		"docker:push": {
+			"executor": "nx:run-commands",
+			"options": {
+				"command": "docker push zeilar/whackakey-api"
+			}
+		},
+		"docker:build": {
+			"executor": "nx:run-commands",
+			"options": {
+				"command": "docker build -f ./api.Dockerfile -t zeilar/whackakey-api ."
+			}
+		},
 		"build": {
 			"executor": "@nrwl/node:webpack",
 			"outputs": ["{options.outputPath}"],
