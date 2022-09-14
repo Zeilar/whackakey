@@ -17,7 +17,7 @@ import { Difficulty } from "@shared";
 
 const { port } = config.ws;
 
-@WebSocketGateway(port, { transports: ["websocket"], cors: config.app.corsOrigin })
+@WebSocketGateway(port, { transports: ["websocket", "polling"], cors: config.app.corsOrigin })
 export class WebsocketGateway implements OnGatewayDisconnect, OnGatewayConnection, OnGatewayInit {
 	private rooms: Room[] = [];
 	private clients: Client[] = [];

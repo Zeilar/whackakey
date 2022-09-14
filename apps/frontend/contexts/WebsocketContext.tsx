@@ -45,7 +45,8 @@ export function WebsocketContextProvider({ children }: WebsocketProps) {
 	);
 
 	useEffect(() => {
-		setSocket(io(env.get<string>("WS_ENDPOINT"), { transports: ["websocket"] }));
+		console.log(env.get<string>("WS_ENDPOINT"), { transports: ["polling", "polling"] });
+		setSocket(io(env.get<string>("WS_ENDPOINT"), { transports: ["polling", "polling"] }));
 	}, []);
 
 	useEffect(() => {

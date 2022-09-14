@@ -6,7 +6,7 @@
 		"docker:run": {
 			"executor": "nx:run-commands",
 			"options": {
-				"command": "docker run --name whackakey-api -p 3085:3085 -p 3086:3086 zeilar/whackakey-api"
+				"command": "docker run --name whackakey-api -p 3085:3085 -p 3086:3086 --network db zeilar/whackakey-api"
 			}
 		},
 		"docker:push": {
