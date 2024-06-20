@@ -24,7 +24,7 @@ import {
 	ChangeDifficultyDto,
 	DEFAULT_LIVES,
 	Difficulty,
-	MAX_LILVES,
+	MAX_LIVES,
 	MAX_PLAYERS,
 	NewMessageDto,
 	NewOwnerDto,
@@ -375,7 +375,7 @@ export default function Room() {
 							isDisabled={!isOwner}
 							size="lg"
 							onChange={setLives}
-							max={MAX_LILVES}
+							max={MAX_LIVES}
 							defaultValue={DEFAULT_LIVES}
 						>
 							<SliderTrack bgColor="gray.100" _disabled={{ bgColor: "gray.200" }}>
