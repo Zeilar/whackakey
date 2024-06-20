@@ -26,17 +26,17 @@ function CustomApp({ Component, pageProps }: AppProps) {
 				limit={5}
 				hideProgressBar
 			/>
-			<SoundContextProvider>
-				<WebsocketContextProvider>
-					<SoloGameContextProvider>
-						<ChakraProvider theme={theme}>
+			<WebsocketContextProvider>
+				<SoloGameContextProvider>
+					<ChakraProvider theme={theme}>
+						<SoundContextProvider>
 							<App>
 								<Component {...pageProps} />
 							</App>
-						</ChakraProvider>
-					</SoloGameContextProvider>
-				</WebsocketContextProvider>
-			</SoundContextProvider>
+						</SoundContextProvider>
+					</ChakraProvider>
+				</SoloGameContextProvider>
+			</WebsocketContextProvider>
 		</>
 	);
 }

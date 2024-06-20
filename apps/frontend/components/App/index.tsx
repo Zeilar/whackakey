@@ -9,28 +9,33 @@ interface Props {
 	children: React.ReactNode;
 }
 
-export default function App({ children }: Props) {
-	const [isTouch, isSmall] = useMediaQuery(["(hover: none)", "(max-width: 1280px)"]);
-	const isSupported = useMemo(() => !isTouch && !isSmall, [isTouch, isSmall]);
-	const { hasLoadedSounds, progress } = useSoundContext();
+interface ChildrenProps {
+	isSupported: boolean;
+	children: React.ReactNode;
+}
 
-	function Children() {
-		if (!isSupported) {
-			return (
-				<Heading size="2xl" textStyle="stroke" textAlign="center">
-					Your device is not supported
-				</Heading>
-			);
-		}
+function Children({ children, isSupported }: ChildrenProps) {
+	if (!isSupported) {
 		return (
-			<>
-				<SoundToggler />
-				<Latency />
-				<Header />
-				{children}
-			</>
+			<Heading size="2xl" textStyle="stroke" textAlign="center">
+				Your device is not supported
+			</Heading>
 		);
 	}
+	return (
+		<>
+			<SoundToggler />
+			<Latency />
+			<Header />
+			{children}
+		</>
+	);
+}
+
+export default function App({ children }: Props) {
+	const [isTouch, isSmall] = useMediaQuery(["(hover: none)", "(max-width: 1280px)"]);
+	const isSupported = useMemo(() => !isTouch || !isSmall, [isTouch, isSmall]);
+	const { hasLoadedSounds, progress } = useSoundContext();
 
 	return (
 		<Flex
@@ -44,7 +49,7 @@ export default function App({ children }: Props) {
 			{!hasLoadedSounds ? (
 				<Progress size="lg" width={750} rounded="sm" isAnimated hasStripe value={progress} />
 			) : (
-				<Children />
+				<Children isSupported={isSupported}>{children}</Children>
 			)}
 		</Flex>
 	);
