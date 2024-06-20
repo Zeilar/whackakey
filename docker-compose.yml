@@ -1,0 +1,43 @@
+version: "3.8"
+
+services:
+    frontend:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: whackakey-frontend
+        networks:
+            - whackakey-network
+        ports:
+            - "3080:3080"
+        depends_on:
+            - db
+    api:
+        build:
+            context: .
+            dockerfile: api.Dockerfile
+        container_name: whackakey-api
+        networks:
+            - whackakey-network
+        ports:
+            - "3085:3085"
+            - "3086:3086"
+        depends_on:
+            - db
+    db:
+        image: postgres:latest
+        container_name: whackakey-db
+        environment:
+            POSTGRES_USER: root
+            POSTGRES_PASSWORD: 123
+            POSTGRES_DB: whackakey
+        networks:
+            - whackakey-network
+        ports:
+            - "5432:5432"
+        volumes:
+            - db-data:/var/lib/postgresql/data
+networks:
+    whackakey-network:
+volumes:
+    db-data:

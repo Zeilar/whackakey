@@ -16,4 +16,4 @@ RUN npm i -g nx
 
 EXPOSE 3085 3086
 
-CMD ["nx", "serve", "api"]
+CMD ["nx", "serve", "api", "--prod"]

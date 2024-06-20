@@ -8,8 +8,12 @@ RUN npm i
 
 FROM node:alpine as main
 
-COPY --from=build /usr/src/app /
+COPY --from=build /usr/src/app /app
 
-EXPOSE 3080
+WORKDIR /app
 
-CMD ["npm", "start"]
+RUN npm i -g nx
+
+EXPOSE 3085 3086
+
+CMD ["nx", "serve", "frontend", "--prod"]
