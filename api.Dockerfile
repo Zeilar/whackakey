@@ -10,10 +10,10 @@ FROM node:alpine as main
 
 COPY --from=build /usr/src/app /app
 
-WORKDIR /app
+WORKDIR /app/dist/apps/api
 
-RUN npm i -g nx
+RUN npm i -g nx dotenv-cli
 
 EXPOSE 3085 3086
 
-CMD ["nx", "serve", "api", "--prod"]
+CMD ["dotenv", "-e", "../../../apps/api/.env", "--", "node", "main.js"]

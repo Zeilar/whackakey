@@ -10,10 +10,10 @@ FROM node:alpine as main
 
 COPY --from=build /usr/src/app /app
 
-WORKDIR /app
+WORKDIR /app/dist/apps/frontend
 
 RUN npm i -g nx
 
 EXPOSE 3085 3086
 
-CMD ["nx", "serve", "frontend", "--prod"]
+CMD ["npm", "start", "--", "-p", "3080"]
